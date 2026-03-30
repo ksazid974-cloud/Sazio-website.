@@ -1,12 +1,79 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SAZIO</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SAZIO</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #000000, #1a1a1a);
+      color: white;
+      text-align: center;
+    }
+
+    header {
+      padding: 30px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .hero {
+      margin-top: 80px;
+    }
+
+    .hero h1 {
+      font-size: 42px;
+    }
+
+    .hero p {
+      color: #aaa;
+      margin-top: 10px;
+    }
+
+    .btn {
+      margin-top: 25px;
+      padding: 12px 25px;
+      background: #ff4d4d;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+    }
+
+    .features {
+      margin-top: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding: 20px;
+    }
+
+    .card {
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>SAZIO 🚀</header>
+
+<div class="hero">
+  <h1>Build. Earn. Grow 🌍</h1>
+  <p>AI-powered earning system for creators</p>
+  <button class="btn">Get Started</button>
+</div>
+
+<div class="features">
+  <div class="card">💡 AI Content Creation</div>
+  <div class="card">🔗 Smart Link Tracking</div>
+  <div class="card">💰 Earn Worldwide</div>
+</div>
+
+</body>
 </html>
