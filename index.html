@@ -1,146 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SAZIO Firebase Fix</title>
-  <style>
-    body{background:#000;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:20px}
-    .wrap{max-width:700px;margin:auto}
-    input{width:100%;max-width:320px;padding:12px;margin:8px 0;border:none;border-radius:10px;font-size:16px}
-    button{padding:12px 18px;margin:6px;border:none;border-radius:10px;background:#ff4d4d;color:#fff;font-weight:700;cursor:pointer}
-    .box{background:#111;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:20px;margin:14px 0}
-    .hidden{display:none}
-    #msg{margin-top:12px;color:#ffd166;white-space:pre-wrap}
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>🚀 SAZIO FINAL SYSTEM</h1>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
+from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
-    <div id="authBox" class="box">
-      <input id="email" type="email" placeholder="Email" />
-      <input id="password" type="password" placeholder="Password" />
-      <div>
-        <button onclick="signup()">Signup</button>
-        <button onclick="login()">Login</button>
-      </div>
-      <div id="msg"></div>
-    </div>
+const firebaseConfig = {
+  apiKey: "AIzaSyAsCSXhw4939IEx379MDiXl9CTVJjvJLEI",
+  authDomain: "sazio-1.firebaseapp.com",
+  projectId: "sazio-1",
+  storageBucket: "sazio-1.firebasestorage.app",
+  messagingSenderId: "82743199739",
+  appId: "1:82743199739:web:952840299f517d1e47ed5e",
+  measurementId: "G-94DZEMDQX6"
+};
 
-    <div id="dashboard" class="box hidden">
-      <h2 id="user"></h2>
-      <button onclick="logout()">Logout</button>
-    </div>
-  </div>
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      signOut,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      setDoc
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+window.signup = () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAsCSXhw4939IEx379MDiXl9C",
-      authDomain: "sazio-1.firebaseapp.com",
-      projectId: "sazio-1",
-      storageBucket: "sazio-1.appspot.com",
-      messagingSenderId: "82743199739",
-      appId: "1:82743199739:web:952840299f517d1e47ed5e",
-      measurementId: "G-94DZEMDQ"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    const msg = document.getElementById("msg");
-    const authBox = document.getElementById("authBox");
-    const dashboard = document.getElementById("dashboard");
-    const userEl = document.getElementById("user");
-
-    function showMsg(text) {
-      msg.innerText = text;
-    }
-
-    function prettyError(err) {
-      const code = err?.code || "";
-      if (code.includes("auth/invalid-credential")) return "Email ya password galat hai.";
-      if (code.includes("auth/user-not-found")) return "Ye user mila nahi. Pehle signup karo.";
-      if (code.includes("auth/wrong-password")) return "Password galat hai.";
-      if (code.includes("auth/email-already-in-use")) return "Ye email already use ho rahi hai. Login karo.";
-      if (code.includes("auth/weak-password")) return "Password kam se kam 6 characters ka hona chahiye.";
-      if (code.includes("auth/invalid-email")) return "Email format sahi nahi hai.";
-      if (code.includes("auth/network-request-failed")) return "Internet/network issue hai.";
-      return err?.message || "Unknown error aaya.";
-    }
-
-    window.signup = async () => {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-
-      if (!email || !password) {
-        showMsg("Email aur password dono bharo.");
-        return;
-      }
-
-      try {
-        showMsg("Signup ho raha hai...");
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-        await setDoc(doc(db, "users", cred.user.uid), {
-          email,
-          earnings: 0,
-          clicks: 0,
-          createdAt: Date.now()
-        });
-        showMsg("Signup success ✅ Ab login kar sakte ho, ya auto-login ho jayega.");
-      } catch (err) {
-        showMsg(prettyError(err));
-      }
-    };
-
-    window.login = async () => {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-
-      if (!email || !password) {
-        showMsg("Email aur password dono bharo.");
-        return;
-      }
-
-      try {
-        showMsg("Login ho raha hai...");
-        await signInWithEmailAndPassword(auth, email, password);
-        showMsg("Login success ✅");
-      } catch (err) {
-        showMsg(prettyError(err));
-      }
-    };
-
-    window.logout = async () => {
-      await signOut(auth);
-      showMsg("Logout success.");
-    };
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        authBox.classList.add("hidden");
-        dashboard.classList.remove("hidden");
-        userEl.innerText = "Logged in: " + user.email;
-      } else {
-        authBox.classList.remove("hidden");
-        dashboard.classList.add("hidden");
-      }
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      alert("Signup Successful ✅");
+    })
+    .catch(error => {
+      alert(error.message);
     });
-  </script>
-</body>
-</html>
+};
+
+window.login = () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      alert("Login Successful 🚀");
+    })
+    .catch(error => {
+      alert(error.message);
+    });
+};
+</script>
