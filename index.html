@@ -1,44 +1,304 @@
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAZIO FINAL SYSTEM</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAsCSXhw4939IEx379MDiXl9CTVJjvJLEI",
-  authDomain: "sazio-1.firebaseapp.com",
-  projectId: "sazio-1",
-  storageBucket: "sazio-1.firebasestorage.app",
-  messagingSenderId: "82743199739",
-  appId: "1:82743199739:web:952840299f517d1e47ed5e",
-  measurementId: "G-94DZEMDQX6"
-};
+    h1 {
+      font-size: 52px;
+      margin-top: 40px;
+      margin-bottom: 30px;
+      line-height: 1.1;
+    }
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+    .box {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #0f0f0f;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 28px;
+      padding: 34px 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
 
-window.signup = () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+    input {
+      width: 100%;
+      max-width: 500px;
+      padding: 18px 16px;
+      margin: 14px 0;
+      border: none;
+      border-radius: 16px;
+      font-size: 18px;
+      box-sizing: border-box;
+    }
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Signup Successful ✅");
-    })
-    .catch(error => {
-      alert(error.message);
+    button {
+      padding: 16px 28px;
+      margin: 12px 8px;
+      border: none;
+      border-radius: 16px;
+      background: #ff5252;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    #msg {
+      margin-top: 18px;
+      color: #ffd166;
+      font-size: 18px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    #dashboard {
+      display: none;
+      max-width: 700px;
+      margin: 30px auto 0;
+    }
+
+    .card {
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 20px;
+      margin: 14px 0;
+    }
+
+    .value {
+      font-size: 38px;
+      font-weight: 800;
+      color: #ff5b5b;
+      margin-top: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🚀 SAZIO FINAL SYSTEM</h1>
+
+  <div class="box" id="authBox">
+    <input id="email" type="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Password" />
+
+    <div>
+      <button onclick="signup()">Signup</button>
+      <button onclick="login()">Login</button>
+    </div>
+
+    <div id="msg"></div>
+  </div>
+
+  <div id="dashboard">
+    <div class="card">
+      <h2 id="userText">Logged in</h2>
+      <button onclick="logout()">Logout</button>
+    </div>
+
+    <div class="card">
+      <h3>Total Clicks</h3>
+      <div class="value" id="clicks">0</div>
+      <button onclick="addClicks()">Add Click</button>
+    </div>
+
+    <div class="card">
+      <h3>Estimated Earnings</h3>
+      <div class="value" id="earnings">$0</div>
+      <button onclick="addMoney()">Add $5</button>
+    </div>
+
+    <div class="card">
+      <h3>AI Output</h3>
+      <div id="aiOutput">AI output yahan dikhega.</div>
+      <button onclick="generateAI()">Generate Idea</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc,
+      updateDoc,
+      increment
+    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAsCSXhw4939IEx379MDiXl9CTVJjvJLEI",
+      authDomain: "sazio-1.firebaseapp.com",
+      projectId: "sazio-1",
+      storageBucket: "sazio-1.appspot.com",
+      messagingSenderId: "82743199739",
+      appId: "1:82743199739:web:952840299f517d1e47ed5e",
+      measurementId: "G-94DZEMDQX6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const authBox = document.getElementById("authBox");
+    const dashboard = document.getElementById("dashboard");
+    const msg = document.getElementById("msg");
+    const userText = document.getElementById("userText");
+    const clicksEl = document.getElementById("clicks");
+    const earningsEl = document.getElementById("earnings");
+    const aiOutput = document.getElementById("aiOutput");
+
+    let currentUid = null;
+
+    function showMsg(text) {
+      msg.innerText = text;
+    }
+
+    function prettyError(err) {
+      const code = err?.code || "";
+      if (code.includes("auth/email-already-in-use")) return "Ye email pehle se registered hai. Login karo.";
+      if (code.includes("auth/invalid-email")) return "Email sahi format me likho.";
+      if (code.includes("auth/weak-password")) return "Password kam se kam 6 characters ka hona chahiye.";
+      if (code.includes("auth/invalid-credential")) return "Email ya password galat hai.";
+      if (code.includes("auth/user-not-found")) return "User nahi mila. Pehle signup karo.";
+      if (code.includes("auth/network-request-failed")) return "Internet ya network issue hai.";
+      return err?.message || "Kuch error aaya hai.";
+    }
+
+    async function loadUserData(uid, email) {
+      currentUid = uid;
+      authBox.style.display = "none";
+      dashboard.style.display = "block";
+      userText.innerText = "Logged in: " + email;
+
+      const ref = doc(db, "users", uid);
+      const snap = await getDoc(ref);
+
+      if (snap.exists()) {
+        const data = snap.data();
+        clicksEl.innerText = data.clicks ?? 0;
+        earningsEl.innerText = "$" + (data.earnings ?? 0);
+      } else {
+        await setDoc(ref, {
+          email: email,
+          clicks: 0,
+          earnings: 0,
+          createdAt: Date.now()
+        });
+        clicksEl.innerText = "0";
+        earningsEl.innerText = "$0";
+      }
+    }
+
+    window.signup = async function () {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!email || !password) {
+        showMsg("Email aur password dono bharo.");
+        return;
+      }
+
+      try {
+        showMsg("Signup ho raha hai...");
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+
+        await setDoc(doc(db, "users", cred.user.uid), {
+          email: email,
+          clicks: 0,
+          earnings: 0,
+          createdAt: Date.now()
+        });
+
+        showMsg("Signup successful ✅");
+      } catch (err) {
+        showMsg(prettyError(err));
+      }
+    };
+
+    window.login = async function () {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!email || !password) {
+        showMsg("Email aur password dono bharo.");
+        return;
+      }
+
+      try {
+        showMsg("Login ho raha hai...");
+        await signInWithEmailAndPassword(auth, email, password);
+        showMsg("Login successful ✅");
+      } catch (err) {
+        showMsg(prettyError(err));
+      }
+    };
+
+    window.logout = async function () {
+      await signOut(auth);
+      location.reload();
+    };
+
+    window.addClicks = async function () {
+      if (!currentUid) return;
+      const ref = doc(db, "users", currentUid);
+      await updateDoc(ref, {
+        clicks: increment(1)
+      });
+      const snap = await getDoc(ref);
+      clicksEl.innerText = snap.data().clicks ?? 0;
+    };
+
+    window.addMoney = async function () {
+      if (!currentUid) return;
+      const ref = doc(db, "users", currentUid);
+      await updateDoc(ref, {
+        earnings: increment(5)
+      });
+      const snap = await getDoc(ref);
+      earningsEl.innerText = "$" + (snap.data().earnings ?? 0);
+    };
+
+    window.generateAI = function () {
+      const ideas = [
+        "Strong hook: first 2 seconds me sudden shock scene dikhao.",
+        "Story idea: struggle → twist → emotional reward ending.",
+        "Shorts idea: viral title + thumbnail contrast + CTA use karo.",
+        "Growth idea: daily upload + pinned comment + retention hook."
+      ];
+      const pick = ideas[Math.floor(Math.random() * ideas.length)];
+      aiOutput.innerText = pick;
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        await loadUserData(user.uid, user.email);
+      } else {
+        authBox.style.display = "block";
+        dashboard.style.display = "none";
+      }
     });
-};
-
-window.login = () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Login Successful 🚀");
-    })
-    .catch(error => {
-      alert(error.message);
-    });
-};
-</script>
+  </script>
+</body>
+</html>
