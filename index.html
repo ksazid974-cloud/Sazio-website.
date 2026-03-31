@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SAZIO FINAL SYSTEM</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       background: #000;
@@ -15,43 +19,49 @@
     }
 
     h1 {
-      font-size: 52px;
-      margin-top: 40px;
-      margin-bottom: 30px;
+      font-size: 48px;
       line-height: 1.1;
+      margin: 30px 0 24px;
+      font-weight: 800;
     }
 
-    .box {
-      max-width: 600px;
-      margin: 0 auto;
+    .box,
+    .card {
+      width: 100%;
+      max-width: 650px;
+      margin: 20px auto;
       background: #0f0f0f;
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 28px;
-      padding: 34px 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      padding: 28px 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
     }
 
     input {
       width: 100%;
-      max-width: 500px;
+      max-width: 540px;
       padding: 18px 16px;
-      margin: 14px 0;
+      margin: 12px 0;
       border: none;
-      border-radius: 16px;
+      border-radius: 18px;
       font-size: 18px;
-      box-sizing: border-box;
+      outline: none;
     }
 
     button {
       padding: 16px 28px;
-      margin: 12px 8px;
+      margin: 10px 8px;
       border: none;
-      border-radius: 16px;
-      background: #ff5252;
+      border-radius: 18px;
+      background: #ff5757;
       color: #fff;
       font-size: 18px;
       font-weight: 700;
       cursor: pointer;
+    }
+
+    .small-btn {
+      min-width: 180px;
     }
 
     #msg {
@@ -65,40 +75,63 @@
     #dashboard {
       display: none;
       max-width: 700px;
-      margin: 30px auto 0;
-    }
-
-    .card {
-      background: #111;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 22px;
-      padding: 20px;
-      margin: 14px 0;
+      margin: 0 auto;
     }
 
     .value {
-      font-size: 38px;
+      font-size: 56px;
       font-weight: 800;
       color: #ff5b5b;
+      margin: 18px 0 8px;
+    }
+
+    .label {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .userline {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      word-break: break-word;
+    }
+
+    #aiOutput {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #f1f1f1;
       margin-top: 10px;
     }
 
-    .hidden {
-      display: none;
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 34px;
+      }
+
+      .value {
+        font-size: 44px;
+      }
+
+      input,
+      button {
+        font-size: 17px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>🚀 SAZIO FINAL SYSTEM</h1>
+  <h1>🚀 SAZIO<br>FINAL SYSTEM</h1>
 
   <div class="box" id="authBox">
     <input id="email" type="email" placeholder="Email" />
     <input id="password" type="password" placeholder="Password" />
 
     <div>
-      <button onclick="signup()">Signup</button>
-      <button onclick="login()">Login</button>
+      <button class="small-btn" onclick="signup()">Signup</button>
+      <button class="small-btn" onclick="login()">Login</button>
     </div>
 
     <div id="msg"></div>
@@ -106,26 +139,26 @@
 
   <div id="dashboard">
     <div class="card">
-      <h2 id="userText">Logged in</h2>
-      <button onclick="logout()">Logout</button>
+      <div class="userline" id="userText">Logged in</div>
+      <button class="small-btn" onclick="logout()">Logout</button>
     </div>
 
     <div class="card">
-      <h3>Total Clicks</h3>
+      <div class="label">Total Clicks</div>
       <div class="value" id="clicks">0</div>
-      <button onclick="addClicks()">Add Click</button>
+      <button class="small-btn" onclick="addClick()">Add Click</button>
     </div>
 
     <div class="card">
-      <h3>Estimated Earnings</h3>
+      <div class="label">Estimated Earnings</div>
       <div class="value" id="earnings">$0</div>
-      <button onclick="addMoney()">Add $5</button>
+      <button class="small-btn" onclick="addMoney()">Add $5</button>
     </div>
 
     <div class="card">
-      <h3>AI Output</h3>
+      <div class="label">AI Idea Generator</div>
+      <button class="small-btn" onclick="generateAI()">Generate Idea</button>
       <div id="aiOutput">AI output yahan dikhega.</div>
-      <button onclick="generateAI()">Generate Idea</button>
     </div>
   </div>
 
@@ -143,8 +176,7 @@
       doc,
       setDoc,
       getDoc,
-      updateDoc,
-      increment
+      updateDoc
     } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -169,14 +201,13 @@
     const earningsEl = document.getElementById("earnings");
     const aiOutput = document.getElementById("aiOutput");
 
-    let currentUid = null;
-
     function showMsg(text) {
       msg.innerText = text;
     }
 
     function prettyError(err) {
       const code = err?.code || "";
+
       if (code.includes("auth/email-already-in-use")) return "Ye email pehle se registered hai. Login karo.";
       if (code.includes("auth/invalid-email")) return "Email sahi format me likho.";
       if (code.includes("auth/weak-password")) return "Password kam se kam 6 characters ka hona chahiye.";
@@ -186,29 +217,28 @@
       return err?.message || "Kuch error aaya hai.";
     }
 
-    async function loadUserData(uid, email) {
-      currentUid = uid;
-      authBox.style.display = "none";
-      dashboard.style.display = "block";
-      userText.innerText = "Logged in: " + email;
+    async function loadUserData(user) {
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
 
-      const ref = doc(db, "users", uid);
-      const snap = await getDoc(ref);
-
-      if (snap.exists()) {
-        const data = snap.data();
-        clicksEl.innerText = data.clicks ?? 0;
-        earningsEl.innerText = "$" + (data.earnings ?? 0);
-      } else {
-        await setDoc(ref, {
-          email: email,
+      if (!snap.exists()) {
+        await setDoc(userRef, {
+          email: user.email,
           clicks: 0,
           earnings: 0,
           createdAt: Date.now()
         });
-        clicksEl.innerText = "0";
-        earningsEl.innerText = "$0";
       }
+
+      const finalSnap = await getDoc(userRef);
+      const data = finalSnap.data();
+
+      userText.innerText = "Logged in: " + user.email;
+      clicksEl.innerText = data.clicks ?? 0;
+      earningsEl.innerText = "$" + (data.earnings ?? 0);
+
+      authBox.style.display = "none";
+      dashboard.style.display = "block";
     }
 
     window.signup = async function () {
@@ -222,16 +252,17 @@
 
       try {
         showMsg("Signup ho raha hai...");
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
 
-        await setDoc(doc(db, "users", cred.user.uid), {
-          email: email,
+        await setDoc(doc(db, "users", user.uid), {
+          email: user.email,
           clicks: 0,
           earnings: 0,
           createdAt: Date.now()
         });
 
-        showMsg("Signup successful ✅");
+        showMsg("Signup successful ✅ Ab login bhi ho gaya hai.");
       } catch (err) {
         showMsg(prettyError(err));
       }
@@ -260,32 +291,39 @@
       location.reload();
     };
 
-    window.addClicks = async function () {
-      if (!currentUid) return;
-      const ref = doc(db, "users", currentUid);
-      await updateDoc(ref, {
-        clicks: increment(1)
-      });
-      const snap = await getDoc(ref);
-      clicksEl.innerText = snap.data().clicks ?? 0;
+    window.addClick = async function () {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
+      const currentClicks = snap.data()?.clicks ?? 0;
+      const newClicks = currentClicks + 1;
+
+      await updateDoc(userRef, { clicks: newClicks });
+      clicksEl.innerText = newClicks;
     };
 
     window.addMoney = async function () {
-      if (!currentUid) return;
-      const ref = doc(db, "users", currentUid);
-      await updateDoc(ref, {
-        earnings: increment(5)
-      });
-      const snap = await getDoc(ref);
-      earningsEl.innerText = "$" + (snap.data().earnings ?? 0);
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
+      const currentEarnings = snap.data()?.earnings ?? 0;
+      const newEarnings = currentEarnings + 5;
+
+      await updateDoc(userRef, { earnings: newEarnings });
+      earningsEl.innerText = "$" + newEarnings;
     };
 
     window.generateAI = function () {
       const ideas = [
-        "Strong hook: first 2 seconds me sudden shock scene dikhao.",
+        "Strong hook: first 2 seconds me sudden danger dikhao.",
         "Story idea: struggle → twist → emotional reward ending.",
-        "Shorts idea: viral title + thumbnail contrast + CTA use karo.",
-        "Growth idea: daily upload + pinned comment + retention hook."
+        "Growth idea: viral title + thumbnail contrast + pinned comment.",
+        "Monetization idea: shorts + affiliate + CTA combo.",
+        "Retention idea: start with shock, then reveal emotional reason."
       ];
       const pick = ideas[Math.floor(Math.random() * ideas.length)];
       aiOutput.innerText = pick;
@@ -293,7 +331,7 @@
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        await loadUserData(user.uid, user.email);
+        await loadUserData(user);
       } else {
         authBox.style.display = "block";
         dashboard.style.display = "none";
