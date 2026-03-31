@@ -2,78 +2,342 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SAZIO</title>
-
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+
+    body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #000000, #1a1a1a);
+      background: linear-gradient(135deg, #000000, #111111, #1a1a1a);
       color: white;
-      text-align: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
     }
 
     header {
-      padding: 30px;
-      font-size: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .logo {
+      font-size: 28px;
       font-weight: bold;
+      letter-spacing: 1px;
     }
 
-    .hero {
-      margin-top: 80px;
-    }
-
-    .hero h1 {
-      font-size: 42px;
-    }
-
-    .hero p {
-      color: #aaa;
-      margin-top: 10px;
-    }
-
-    .btn {
-      margin-top: 25px;
-      padding: 12px 25px;
+    .nav-btn {
       background: #ff4d4d;
-      border: none;
-      border-radius: 6px;
       color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
       font-size: 16px;
     }
 
+    .hero {
+      text-align: center;
+      padding: 80px 20px 50px;
+    }
+
+    .hero h1 {
+      font-size: 52px;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 20px;
+      color: #cfcfcf;
+      max-width: 750px;
+      margin: 0 auto 30px;
+      line-height: 1.6;
+    }
+
+    .hero .cta {
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 16px 34px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
     .features {
-      margin-top: 80px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-top: 50px;
+      padding-bottom: 60px;
     }
 
     .card {
-      background: #222;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 22px;
+    }
+
+    .card p {
+      color: #cfcfcf;
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin: 30px 0 25px;
+      font-size: 34px;
+    }
+
+    .dashboard {
+      display: none;
+      margin-top: 30px;
+      padding: 30px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .dashboard h2 {
+      margin-bottom: 15px;
+      font-size: 30px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .stat-box {
+      background: rgba(255,255,255,0.06);
       padding: 20px;
-      border-radius: 10px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .stat-box h4 {
+      font-size: 16px;
+      color: #cfcfcf;
+      margin-bottom: 8px;
+    }
+
+    .stat-box p {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ff4d4d;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 380px;
+      background: #111;
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .modal-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 30px;
+    }
+
+    .modal-box input {
+      width: 100%;
+      margin-bottom: 14px;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .modal-box button {
+      width: 100%;
+      padding: 13px;
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 17px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .close-btn {
+      margin-top: 12px;
+      background: #333 !important;
+    }
+
+    .note {
+      text-align: center;
+      color: #aaa;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px 40px;
+      color: #9a9a9a;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 38px;
+      }
+
+      .hero p {
+        font-size: 17px;
+      }
+
+      .section-title {
+        font-size: 28px;
+      }
     }
   </style>
 </head>
-
 <body>
+  <div class="container">
+    <header>
+      <div class="logo">SAZIO 🚀</div>
+      <button class="nav-btn" onclick="openLogin()">Login</button>
+    </header>
 
-<header>SAZIO 🚀</header>
+    <section class="hero" id="homeSection">
+      <h1>Build. Earn. Grow. 🌍</h1>
+      <p>
+        SAZIO is an AI-powered earning system for creators to make content,
+        track smart links, grow audience, and build income worldwide.
+      </p>
+      <button class="cta" onclick="openLogin()">Get Started</button>
+    </section>
 
-<div class="hero">
-  <h1>Build. Earn. Grow 🌍</h1>
-  <p>AI-powered earning system for creators</p>
-  <button class="btn" onclick="window.location.href='login.html'">Get Started</button>
-</div>
+    <h2 class="section-title">Powerful Features</h2>
+    <section class="features" id="featuresSection">
+      <div class="card">
+        <h3>🎬 AI Content Creation</h3>
+        <p>Create scripts, captions, post ideas, and creator content faster with smart AI tools.</p>
+      </div>
+      <div class="card">
+        <h3>🔗 Smart Link Tracking</h3>
+        <p>Track clicks, monitor traffic, and optimize your content funnel with easy analytics.</p>
+      </div>
+      <div class="card">
+        <h3>💰 Earn Worldwide</h3>
+        <p>Build digital income streams through content, audience growth, and online tools.</p>
+      </div>
+      <div class="card">
+        <h3>📈 Growth Dashboard</h3>
+        <p>View your creator stats, earnings estimate, and performance in one simple place.</p>
+      </div>
+    </section>
 
-<div class="features">
-  <div class="card">💡 AI Content Creation</div>
-  <div class="card">🔗 Smart Link Tracking</div>
-  <div class="card">💰 Earn Worldwide</div>
-</div>
+    <section class="dashboard" id="dashboardSection">
+      <h2>Welcome to SAZIO Dashboard ✅</h2>
+      <p>You are logged in successfully.</p>
 
+      <div class="stats">
+        <div class="stat-box">
+          <h4>Total Clicks</h4>
+          <p>1,245</p>
+        </div>
+        <div class="stat-box">
+          <h4>Estimated Earnings</h4>
+          <p>$320</p>
+        </div>
+        <div class="stat-box">
+          <h4>Content Projects</h4>
+          <p>18</p>
+        </div>
+        <div class="stat-box">
+          <h4>Active Users</h4>
+          <p>89</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      © 2026 SAZIO. All rights reserved.
+    </footer>
+  </div>
+
+  <div class="modal" id="loginModal">
+    <div class="modal-box">
+      <h2>Login 🔐</h2>
+      <input id="username" type="text" placeholder="Username" />
+      <input id="password" type="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <button class="close-btn" onclick="closeLogin()">Close</button>
+      <div class="note">Demo login: admin / 12345</div>
+    </div>
+  </div>
+
+  <script>
+    function openLogin() {
+      document.getElementById("loginModal").style.display = "flex";
+    }
+
+    function closeLogin() {
+      document.getElementById("loginModal").style.display = "none";
+    }
+
+    function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      if (username === "admin" && password === "12345") {
+        alert("Login Successful ✅");
+        closeLogin();
+        document.getElementById("homeSection").style.display = "none";
+        document.getElementById("featuresSection").style.display = "none";
+        document.querySelector(".section-title").style.display = "none";
+        document.getElementById("dashboardSection").style.display = "block";
+      } else {
+        alert("Wrong Username or Password ❌");
+      }
+    }
+
+    window.onclick = function (e) {
+      const modal = document.getElementById("loginModal");
+      if (e.target === modal) {
+        closeLogin();
+      }
+    };
+  </script>
 </body>
 </html>
