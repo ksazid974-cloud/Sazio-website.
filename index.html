@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SAZIO - Premium Creator Platform</title>
+  <title>SAZIO - Final All-in-One Setup</title>
   <style>
     * {
       box-sizing: border-box;
@@ -14,19 +14,18 @@
 
     :root {
       --bg-1: #000000;
-      --bg-2: #111111;
+      --bg-2: #101010;
       --bg-3: #1a1a1a;
       --panel: rgba(255,255,255,0.05);
       --panel-2: rgba(255,255,255,0.08);
       --border: rgba(255,255,255,0.10);
       --text: #ffffff;
       --muted: #cfcfcf;
-      --muted-2: #9f9f9f;
+      --muted-2: #9b9b9b;
       --accent: #ff4d4d;
-      --accent-2: #ff7b7b;
-      --success: #16a34a;
-      --warning: #f59e0b;
-      --radius: 20px;
+      --accent-2: #ff7979;
+      --green: #16a34a;
+      --gold: #f59e0b;
     }
 
     body {
@@ -41,6 +40,10 @@
       max-width: 1220px;
       margin: 0 auto;
       padding: 20px;
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     header {
@@ -81,36 +84,22 @@
       opacity: 0.95;
     }
 
-    .btn.secondary {
-      background: #262626;
-    }
-
+    .btn.secondary { background: #262626; }
     .btn.outline {
       background: transparent;
       border: 1px solid var(--border);
     }
-
-    .btn.green {
-      background: var(--success);
-    }
-
-    .btn.gold {
-      background: var(--warning);
-      color: black;
-    }
-
-    .hidden {
-      display: none !important;
-    }
+    .btn.green { background: var(--green); }
+    .btn.gold { background: var(--gold); color: black; }
 
     .hero {
       text-align: center;
-      padding: 52px 15px 34px;
+      padding: 52px 15px 36px;
     }
 
     .hero h1 {
       font-size: 54px;
-      line-height: 1.12;
+      line-height: 1.1;
       margin-bottom: 16px;
     }
 
@@ -153,7 +142,7 @@
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 999px;
-      color: #e3e3e3;
+      color: #e6e6e6;
       font-size: 14px;
     }
 
@@ -166,18 +155,18 @@
     .section-sub {
       text-align: center;
       color: var(--muted-2);
-      max-width: 800px;
+      max-width: 760px;
       margin: -8px auto 24px;
       line-height: 1.7;
     }
 
-    .grid,
     .features,
     .pricing-grid,
     .faq-grid,
     .stats,
     .quick-grid,
-    .admin-grid {
+    .admin-grid,
+    .payment-cards {
       display: grid;
       gap: 18px;
     }
@@ -186,7 +175,8 @@
     .pricing-grid,
     .faq-grid,
     .quick-grid,
-    .admin-grid {
+    .admin-grid,
+    .payment-cards {
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     }
 
@@ -202,7 +192,8 @@
     .contact-box,
     .stat-box,
     .tool-card,
-    .admin-card {
+    .admin-card,
+    .payment-box {
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 20px;
@@ -216,7 +207,8 @@
     .panel h3,
     .tool-card h3,
     .admin-card h3,
-    .contact-box h3 {
+    .contact-box h3,
+    .payment-box h4 {
       font-size: 22px;
       margin-bottom: 10px;
     }
@@ -227,7 +219,8 @@
     .tool-card p,
     .admin-card p,
     .contact-box p,
-    .panel p {
+    .panel p,
+    .payment-box p {
       color: var(--muted);
       line-height: 1.6;
       font-size: 15px;
@@ -363,6 +356,44 @@
       line-height: 1.6;
     }
 
+    .admin-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .admin-user {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      border-radius: 14px;
+      padding: 14px;
+      border: none;
+      resize: vertical;
+      font-size: 15px;
+      margin-top: 10px;
+    }
+
+    .ai-output {
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      line-height: 1.7;
+      text-align: left;
+      white-space: pre-wrap;
+    }
+
     .modal {
       display: none;
       position: fixed;
@@ -431,70 +462,6 @@
       cursor: pointer;
     }
 
-    textarea {
-      width: 100%;
-      min-height: 140px;
-      border-radius: 14px;
-      padding: 14px;
-      border: none;
-      resize: vertical;
-      font-size: 15px;
-      margin-top: 10px;
-    }
-
-    .ai-output {
-      margin-top: 14px;
-      padding: 16px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      line-height: 1.7;
-      text-align: left;
-      white-space: pre-wrap;
-    }
-
-    .payment-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
-      margin-top: 20px;
-    }
-
-    .payment-box {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 20px;
-      text-align: left;
-    }
-
-    .payment-box h4 {
-      font-size: 20px;
-      margin-bottom: 8px;
-    }
-
-    .payment-box p {
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 12px;
-    }
-
-    .admin-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .admin-user {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 14px;
-      padding: 14px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
     footer {
       text-align: center;
       padding: 34px 18px 42px;
@@ -561,8 +528,8 @@
     <section class="hero" id="homeSection">
       <h1>Build. Earn. Scale. 🌍</h1>
       <p>
-        SAZIO is your premium creator platform with login, dashboard, admin UI,
-        payment UI, AI generator tools, and monetization workflow in one place.
+        SAZIO is your premium creator platform with working navigation, login flow,
+        dashboard, payment UI, AI tool UI, and admin UI in one final file.
       </p>
       <div class="cta-row">
         <button class="cta" onclick="openSignup()">Get Started</button>
@@ -571,35 +538,35 @@
 
       <div class="hero-badges">
         <div class="badge">⚡ Creator Workflow</div>
-        <div class="badge">🔐 Auth System</div>
-        <div class="badge">💰 Payments</div>
-        <div class="badge">🤖 AI Generator</div>
-        <div class="badge">🛠 Admin Panel</div>
+        <div class="badge">🔐 Login System</div>
+        <div class="badge">💰 Payment UI</div>
+        <div class="badge">🤖 AI UI</div>
+        <div class="badge">🛠 Admin UI</div>
       </div>
     </section>
 
     <section id="publicContent">
       <h2 class="section-title">Premium Features</h2>
       <p class="section-sub">
-        Everything you need to start with a premium creator platform interface.
+        Full frontend premium setup for your SaaS-style creator website.
       </p>
 
       <section class="features">
         <div class="card">
           <h3>🎬 AI Content Tools</h3>
-          <p>Generate hooks, ideas, captions, and content starter text directly from the dashboard.</p>
+          <p>Generate hooks, captions, ideas, and simple creator content blocks with built-in frontend AI demo.</p>
         </div>
         <div class="card">
           <h3>📈 User Dashboard</h3>
-          <p>View creator stats, earnings estimate, task workflow, and account information.</p>
+          <p>Show stats, account details, creator tasks, and premium workflow sections.</p>
         </div>
         <div class="card">
-          <h3>💳 Payments Section</h3>
-          <p>Show pricing plans, payment flow UI, and monetization-ready product structure.</p>
+          <h3>💳 Payment UI</h3>
+          <p>Clean payment-ready section for plan display and monetization presentation.</p>
         </div>
         <div class="card">
-          <h3>🛠 Admin Overview</h3>
-          <p>See registered browser users and manage a basic frontend admin interface.</p>
+          <h3>🛠 Admin UI</h3>
+          <p>Basic admin browser view showing local registered user information.</p>
         </div>
       </section>
 
@@ -611,9 +578,9 @@
           <div class="plan-list">
             <div>✅ Login / Signup</div>
             <div>✅ Dashboard UI</div>
-            <div>✅ Basic creator tools</div>
+            <div>✅ Creator basics</div>
           </div>
-          <button class="btn" onclick="alert('Starter plan selected ✅')">Start Free</button>
+          <button class="btn" onclick="alert('Starter selected ✅')">Start Free</button>
         </div>
 
         <div class="price-card">
@@ -621,8 +588,8 @@
           <div class="price">$19/mo</div>
           <div class="plan-list">
             <div>✅ More tools</div>
-            <div>✅ Better dashboard</div>
-            <div>✅ Monetization planning</div>
+            <div>✅ Better workflow</div>
+            <div>✅ Monetization UI</div>
           </div>
           <button class="btn gold" onclick="alert('Pro plan selected ✅')">Choose Pro</button>
         </div>
@@ -631,9 +598,9 @@
           <h3>Business</h3>
           <div class="price">$49/mo</div>
           <div class="plan-list">
-            <div>✅ Team-ready UI</div>
-            <div>✅ Admin tools</div>
-            <div>✅ Advanced workflow</div>
+            <div>✅ Team-ready layout</div>
+            <div>✅ Admin view</div>
+            <div>✅ Advanced branding</div>
           </div>
           <button class="btn green" onclick="alert('Business plan selected ✅')">Choose Business</button>
         </div>
@@ -642,16 +609,16 @@
       <h2 class="section-title">FAQ</h2>
       <section class="faq-grid">
         <div class="faq-card">
-          <h3>Is SAZIO fully working?</h3>
-          <p>This frontend version is fully working for UI, login flow, dashboard flow, and local browser storage.</p>
+          <h3>Is this final?</h3>
+          <p>Yes, this is the final single-file frontend setup with all premium UI sections combined.</p>
         </div>
         <div class="faq-card">
-          <h3>Are payments real?</h3>
-          <p>The payment section is working as frontend UI. Real payment requires provider keys and backend setup.</p>
+          <h3>Is payment real?</h3>
+          <p>Payment buttons are working UI actions. Real payments need provider setup like Stripe or Razorpay later.</p>
         </div>
         <div class="faq-card">
           <h3>Is AI real?</h3>
-          <p>The AI tool is working as a built-in frontend generator. Real external AI API can be connected later.</p>
+          <p>The AI section is a working frontend generator demo. Real AI API can be connected later.</p>
         </div>
       </section>
 
@@ -659,8 +626,8 @@
       <div class="contact-box">
         <h3>Support</h3>
         <p><strong>Email:</strong> support@sazio.com</p>
-        <p><strong>Status:</strong> Creator support available worldwide 🌍</p>
-        <p><strong>Use case:</strong> Creators, affiliate users, dashboard testers, and SaaS demos.</p>
+        <p><strong>Status:</strong> Open for creators worldwide 🌍</p>
+        <p><strong>Use case:</strong> creator platform, SaaS UI demo, monetization dashboard.</p>
       </div>
     </section>
 
@@ -698,17 +665,17 @@
           <div class="tool-list">
             <div class="tool-item">
               <h4>📝 Script Generator</h4>
-              <p>Generate quick content ideas and concept lines for creator posts.</p>
+              <p>Generate simple content ideas and creator text.</p>
               <button onclick="showAISection()">Open Tool</button>
             </div>
             <div class="tool-item">
               <h4>🏷 Caption Builder</h4>
-              <p>Use AI section for captions, hooks, and posting starter ideas.</p>
+              <p>Use the AI section to create caption-style starter outputs.</p>
               <button onclick="showAISection()">Open Tool</button>
             </div>
             <div class="tool-item">
               <h4>💸 Monetization Planner</h4>
-              <p>Go to payments section to see plans, monetization UI, and upgrade ideas.</p>
+              <p>See pricing and payment UI from the payment section.</p>
               <button onclick="showPaymentSection()">Open Tool</button>
             </div>
           </div>
@@ -720,16 +687,16 @@
             <div class="task-item">
               <h4>✅ Upload Short Video</h4>
               <p>Prepare one high-retention creator post for audience growth.</p>
-              <button onclick="alert('Upload feature coming soon 🚀')">Open</button>
+              <button onclick="alert('Upload workflow coming soon 🚀')">Open</button>
             </div>
             <div class="task-item">
               <h4>✅ Check Dashboard</h4>
-              <p>Review clicks, account details, and monetization ideas.</p>
+              <p>Review clicks, account details, and creator workflow.</p>
               <button onclick="showDashboardOnly()">Open</button>
             </div>
             <div class="task-item">
               <h4>✅ Plan Monetization</h4>
-              <p>Open payment section and choose a monetization plan.</p>
+              <p>Go to the payment section and choose a plan UI.</p>
               <button onclick="showPaymentSection()">Open</button>
             </div>
           </div>
@@ -748,15 +715,15 @@
       <div class="dashboard-head">
         <div>
           <h2>AI Generator 🤖</h2>
-          <p class="welcome-text">Generate quick creator text from one click.</p>
+          <p class="welcome-text">Frontend working AI-style text generator.</p>
         </div>
-        <div class="dashboard-tag">AI Tool UI</div>
+        <div class="dashboard-tag">AI Demo Tool</div>
       </div>
 
       <div class="panel">
         <h3>Enter Topic</h3>
-        <p>Type any topic and generate a quick content idea.</p>
-        <textarea id="aiPrompt" placeholder="Example: puppy emotional story for youtube shorts"></textarea>
+        <p>Type any topic and generate a quick content starter.</p>
+        <textarea id="aiPrompt" placeholder="Example: emotional puppy story for youtube shorts"></textarea>
         <button class="btn" onclick="generateAI()">Generate</button>
         <div class="ai-output" id="aiOutput">Generated text will appear here.</div>
       </div>
@@ -766,26 +733,26 @@
       <div class="dashboard-head">
         <div>
           <h2>Payments & Plans 💳</h2>
-          <p class="welcome-text">Frontend payment-ready UI for monetization flow.</p>
+          <p class="welcome-text">Working payment UI section for your monetization setup.</p>
         </div>
-        <div class="dashboard-tag">Payment UI</div>
+        <div class="dashboard-tag">Payment Demo UI</div>
       </div>
 
       <div class="payment-cards">
         <div class="payment-box">
           <h4>Starter</h4>
-          <p>Use the platform free with core creator tools and dashboard access.</p>
+          <p>Use the free version and access the core creator experience.</p>
           <button class="btn" onclick="alert('Starter activated ✅')">Activate</button>
         </div>
         <div class="payment-box">
           <h4>Pro</h4>
-          <p>Unlock premium creator tools, better workflows, and monetization planning UI.</p>
-          <button class="btn gold" onclick="alert('Redirecting to Pro payment flow 💳')">Pay Now</button>
+          <p>Unlock premium creator tools and better monetization workflow UI.</p>
+          <button class="btn gold" onclick="alert('Pro payment flow UI opened 💳')">Pay Now</button>
         </div>
         <div class="payment-box">
           <h4>Business</h4>
-          <p>Advanced admin and team-ready interface for scaling platform features.</p>
-          <button class="btn green" onclick="alert('Redirecting to Business payment flow 💳')">Upgrade</button>
+          <p>Advanced admin and team-focused plan for bigger growth.</p>
+          <button class="btn green" onclick="alert('Business upgrade flow UI opened 💳')">Upgrade</button>
         </div>
       </div>
     </section>
@@ -794,9 +761,9 @@
       <div class="dashboard-head">
         <div>
           <h2>Admin Dashboard 🛠</h2>
-          <p class="welcome-text">Basic browser-based admin overview.</p>
+          <p class="welcome-text">Browser-based admin overview.</p>
         </div>
-        <div class="dashboard-tag">Admin UI</div>
+        <div class="dashboard-tag">Admin Demo UI</div>
       </div>
 
       <div class="admin-grid">
@@ -809,7 +776,7 @@
           <p>Frontend Active ✅</p>
         </div>
         <div class="admin-card">
-          <h3>Payment Mode</h3>
+          <h3>Payments Status</h3>
           <p>UI Ready ✅</p>
         </div>
       </div>
@@ -915,7 +882,7 @@
       } else {
         if (username === "admin" && password === "12345") {
           const adminUser = {
-            name: "Sazio Admin",
+            name: "Sazio",
             username: "admin",
             password: "12345"
           };
@@ -945,12 +912,11 @@
 
     function showDashboardOnly() {
       const savedUser = JSON.parse(localStorage.getItem("sazioUser"));
-      const isLoggedIn = localStorage.getItem("sazioLoggedIn");
-      if (isLoggedIn === "true" && savedUser) {
+      const isIn = localStorage.getItem("sazioLoggedIn");
+      if (isIn === "true" && savedUser) {
         showDashboard(savedUser);
       } else {
-        alert("Please login first 🔐");
-        openLogin();
+        askLogin();
       }
     }
 
@@ -1030,25 +996,27 @@
       output.innerText =
         "Generated idea for: " + prompt + "\n\n" +
         "Hook: Start with a strong emotional first line.\n" +
-        "Main idea: Show a clear problem, quick twist, and valuable outcome.\n" +
-        "CTA: Ask users to follow, comment, or explore your offer.\n\n" +
-        "This is a built-in frontend generator demo. Real AI API can be connected later.";
+        "Structure: Problem → tension → twist → reward.\n" +
+        "CTA: Ask users to follow, comment, or visit your offer.\n\n" +
+        "This is a frontend AI demo output. Real API can be connected later.";
     }
 
     function refreshAdminData() {
       const savedUser = JSON.parse(localStorage.getItem("sazioUser"));
-      const userList = document.getElementById("adminUserList");
       const total = document.getElementById("adminTotalUsers");
+      const list = document.getElementById("adminUserList");
 
       if (savedUser) {
         total.innerText = "1";
-        userList.innerHTML =
+        list.innerHTML =
           '<div class="admin-user"><strong>Name:</strong> ' + savedUser.name +
           '<br><strong>Username:</strong> ' + savedUser.username +
           '<br><strong>Status:</strong> Active</div>';
+        document.getElementById("statUsers").innerText = "1";
       } else {
         total.innerText = "0";
-        userList.innerHTML = '<div class="admin-user">No user found.</div>';
+        list.innerHTML = '<div class="admin-user">No user found.</div>';
+        document.getElementById("statUsers").innerText = "0";
       }
     }
 
@@ -1062,4 +1030,4 @@
     checkLoginState();
   </script>
 </body>
-  </html>
+                </html>
