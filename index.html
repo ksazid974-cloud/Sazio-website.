@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SAZIO - Creator Earning System</title>
+  <title>SAZIO - Final Version</title>
   <style>
     * {
       box-sizing: border-box;
@@ -13,8 +13,8 @@
 
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #000000, #101010, #1a1a1a);
-      color: white;
+      background: linear-gradient(135deg, #000000, #111111, #1a1a1a);
+      color: #fff;
       min-height: 100vh;
     }
 
@@ -30,11 +30,11 @@
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      padding: 14px 0 24px;
       flex-wrap: wrap;
+      padding: 14px 0 24px;
     }
 
-    .logo  {
+    .logo {
       font-size: 30px;
       font-weight: 800;
       letter-spacing: 1px;
@@ -51,7 +51,7 @@
       color: white;
       border: none;
       padding: 12px 18px;
-      border-radius: 12px;
+      border-radius: 14px;
       cursor: pointer;
       font-size: 15px;
       font-weight: 700;
@@ -64,26 +64,38 @@
     }
 
     .btn.secondary {
-      background: #252525;
+      background: #262626;
+    }
+
+    .btn.outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.12);
     }
 
     .hero {
       text-align: center;
-      padding: 50px 15px 30px;
+      padding: 50px 15px 34px;
     }
 
     .hero h1 {
-      font-size: 52px;
-      line-height: 1.15;
+      font-size: 54px;
+      line-height: 1.12;
       margin-bottom: 16px;
     }
 
     .hero p {
       font-size: 18px;
-      color: #c9c9c9;
-      max-width: 760px;
+      color: #cfcfcf;
+      max-width: 780px;
       margin: 0 auto 28px;
       line-height: 1.7;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     .hero .cta {
@@ -91,7 +103,7 @@
       color: white;
       border: none;
       padding: 16px 34px;
-      border-radius: 14px;
+      border-radius: 16px;
       cursor: pointer;
       font-size: 18px;
       font-weight: 800;
@@ -110,37 +122,46 @@
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 999px;
-      color: #ddd;
+      color: #e3e3e3;
       font-size: 14px;
     }
 
     .section-title {
       text-align: center;
       font-size: 34px;
-      margin: 40px 0 22px;
+      margin: 44px 0 24px;
     }
 
-    .features {
+    .features,
+    .pricing-grid,
+    .faq-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 18px;
-      margin-bottom: 50px;
     }
 
-    .card {
+    .card,
+    .price-card,
+    .faq-card,
+    .panel,
+    .contact-box {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 22px;
       box-shadow: 0 10px 24px rgba(0,0,0,0.2);
     }
 
-    .card h3 {
+    .card h3,
+    .price-card h3,
+    .faq-card h3 {
       font-size: 22px;
       margin-bottom: 10px;
     }
 
-    .card p {
+    .card p,
+    .price-card p,
+    .faq-card p {
       color: #cfcfcf;
       line-height: 1.6;
       font-size: 15px;
@@ -152,7 +173,7 @@
       padding: 26px;
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 22px;
+      border-radius: 24px;
       box-shadow: 0 12px 28px rgba(0,0,0,0.25);
     }
 
@@ -176,9 +197,9 @@
     }
 
     .dashboard-tag {
-      background: rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.07);
       padding: 10px 14px;
-      border-radius: 12px;
+      border-radius: 14px;
       color: #ddd;
       font-size: 14px;
     }
@@ -191,8 +212,8 @@
     }
 
     .stat-box {
-      background: rgba(255,255,255,0.05);
-      border-radius: 18px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 20px;
       padding: 24px;
       text-align: center;
       border: 1px solid rgba(255,255,255,0.08);
@@ -215,13 +236,6 @@
       grid-template-columns: 1.2fr 0.8fr;
       gap: 18px;
       margin-top: 20px;
-    }
-
-    .panel {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 22px;
     }
 
     .panel h3 {
@@ -256,7 +270,7 @@
       margin-top: 20px;
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 22px;
     }
 
@@ -269,6 +283,27 @@
       margin-bottom: 8px;
       color: #d8d8d8;
       line-height: 1.6;
+    }
+
+    .price {
+      font-size: 34px;
+      font-weight: 800;
+      margin: 10px 0 14px;
+      color: #ff4d4d;
+    }
+
+    .plan-list {
+      display: grid;
+      gap: 10px;
+      margin: 12px 0 18px;
+      color: #cfcfcf;
+      font-size: 15px;
+    }
+
+    .contact-box p {
+      color: #cfcfcf;
+      line-height: 1.7;
+      margin-bottom: 10px;
     }
 
     .modal {
@@ -286,7 +321,7 @@
       width: 100%;
       max-width: 400px;
       background: #111;
-      border-radius: 20px;
+      border-radius: 22px;
       padding: 26px;
       box-shadow: 0 14px 34px rgba(0,0,0,0.45);
     }
@@ -346,6 +381,10 @@
       font-size: 14px;
     }
 
+    .hidden {
+      display: none !important;
+    }
+
     @media (max-width: 900px) {
       .grid-2 {
         grid-template-columns: 1fr;
@@ -389,7 +428,7 @@
         <button class="btn" onclick="openLogin()">Login</button>
       </div>
 
-      <div class="top-actions" id="userActions" style="display:none;">
+      <div class="top-actions hidden" id="userActions">
         <button class="btn secondary" onclick="logout()">Logout</button>
       </div>
     </header>
@@ -398,9 +437,12 @@
       <h1>Build. Earn. Grow. 🌍</h1>
       <p>
         SAZIO is your creator earning platform to generate content ideas,
-        manage projects, track progress, and grow online income with one clean dashboard.
+        manage projects, track progress, and grow online income from one premium dashboard.
       </p>
-      <button class="cta" onclick="openSignup()">Get Started</button>
+      <div class="cta-row">
+        <button class="cta" onclick="openSignup()">Get Started</button>
+        <button class="btn outline" onclick="openLogin()">Already a User?</button>
+      </div>
 
       <div class="hero-badges">
         <div class="badge">⚡ Fast Creator Workflow</div>
@@ -410,31 +452,91 @@
       </div>
     </section>
 
-    <h2 class="section-title" id="featuresTitle">Powerful Features</h2>
+    <section id="publicContent">
+      <h2 class="section-title">Powerful Features</h2>
+      <section class="features">
+        <div class="card">
+          <h3>🎬 AI Content Creation</h3>
+          <p>Create hooks, captions, short-form video ideas, and content structure faster.</p>
+        </div>
+        <div class="card">
+          <h3>📈 Growth Dashboard</h3>
+          <p>Monitor creator stats, projects, and audience growth from one place.</p>
+        </div>
+        <div class="card">
+          <h3>🔗 Smart Tracking</h3>
+          <p>Organize your links, funnels, and future tracking system in a clean workflow.</p>
+        </div>
+        <div class="card">
+          <h3>💼 Creator Tools</h3>
+          <p>Use ready tools for scripts, monetization ideas, and project planning.</p>
+        </div>
+      </section>
 
-    <section class="features" id="featuresSection">
-      <div class="card">
-        <h3>🎬 AI Content Creation</h3>
-        <p>Create hooks, captions, short-form video ideas, and content structure faster.</p>
-      </div>
-      <div class="card">
-        <h3>📈 Growth Dashboard</h3>
-        <p>Monitor creator stats, projects, and audience growth from one place.</p>
-      </div>
-      <div class="card">
-        <h3>🔗 Smart Tracking</h3>
-        <p>Organize your links, funnels, and future tracking system in a clean workflow.</p>
-      </div>
-      <div class="card">
-        <h3>💼 Creator Tools</h3>
-        <p>Use ready tools for scripts, monetization ideas, and project planning.</p>
+      <h2 class="section-title">Pricing Plans</h2>
+      <section class="pricing-grid">
+        <div class="price-card">
+          <h3>Starter</h3>
+          <div class="price">Free</div>
+          <div class="plan-list">
+            <div>✅ Basic dashboard</div>
+            <div>✅ Login system</div>
+            <div>✅ Creator tools</div>
+          </div>
+          <button class="btn" onclick="openSignup()">Start Free</button>
+        </div>
+
+        <div class="price-card">
+          <h3>Pro</h3>
+          <div class="price">$19/mo</div>
+          <div class="plan-list">
+            <div>✅ Advanced dashboard</div>
+            <div>✅ More creator tools</div>
+            <div>✅ Priority support</div>
+          </div>
+          <button class="btn" onclick="openSignup()">Choose Pro</button>
+        </div>
+
+        <div class="price-card">
+          <h3>Business</h3>
+          <div class="price">$49/mo</div>
+          <div class="plan-list">
+            <div>✅ Team-ready workflow</div>
+            <div>✅ Analytics planning</div>
+            <div>✅ Premium growth support</div>
+          </div>
+          <button class="btn" onclick="openSignup()">Choose Business</button>
+        </div>
+      </section>
+
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <section class="faq-grid">
+        <div class="faq-card">
+          <h3>What is SAZIO?</h3>
+          <p>SAZIO is a creator-focused earning and workflow dashboard designed to help you build and grow online.</p>
+        </div>
+        <div class="faq-card">
+          <h3>Can I create an account?</h3>
+          <p>Yes. You can sign up directly from this page and your account will be saved in your browser.</p>
+        </div>
+        <div class="faq-card">
+          <h3>Is this mobile friendly?</h3>
+          <p>Yes. This version is built to look clean and work well on mobile devices too.</p>
+        </div>
+      </section>
+
+      <h2 class="section-title">Contact</h2>
+      <div class="contact-box">
+        <p><strong>Email:</strong> support@sazio.com</p>
+        <p><strong>Creator Support:</strong> Fast setup, workflow help, and dashboard assistance.</p>
+        <p><strong>Status:</strong> Open for creators worldwide 🌍</p>
       </div>
     </section>
 
     <section class="dashboard" id="dashboardSection">
       <div class="dashboard-head">
         <div>
-          <h2 id="dashboardTitle">Welcome to SAZIO Dashboard ✅</h2>
+          <h2>Welcome to SAZIO Dashboard ✅</h2>
           <p class="welcome-text" id="welcomeText">You are logged in successfully.</p>
         </div>
         <div class="dashboard-tag">Premium Creator Workspace</div>
@@ -443,19 +545,19 @@
       <div class="stats">
         <div class="stat-box">
           <h4>Total Clicks</h4>
-          <p id="statClicks">1,245</p>
+          <p>1,245</p>
         </div>
         <div class="stat-box">
           <h4>Estimated Earnings</h4>
-          <p id="statEarnings">$320</p>
+          <p>$320</p>
         </div>
         <div class="stat-box">
           <h4>Content Projects</h4>
-          <p id="statProjects">18</p>
+          <p>18</p>
         </div>
         <div class="stat-box">
           <h4>Active Users</h4>
-          <p id="statUsers">89</p>
+          <p>89</p>
         </div>
       </div>
 
@@ -617,17 +719,14 @@
     }
 
     function showDashboard(user) {
-      document.getElementById("homeSection").style.display = "none";
-      document.getElementById("featuresSection").style.display = "none";
-      document.getElementById("featuresTitle").style.display = "none";
+      document.getElementById("homeSection").classList.add("hidden");
+      document.getElementById("publicContent").classList.add("hidden");
       document.getElementById("dashboardSection").style.display = "block";
-      document.getElementById("guestActions").style.display = "none";
-      document.getElementById("userActions").style.display = "flex";
+      document.getElementById("guestActions").classList.add("hidden");
+      document.getElementById("userActions").classList.remove("hidden");
 
-      document.getElementById("dashboardTitle").innerText = "Welcome to SAZIO Dashboard ✅";
       document.getElementById("welcomeText").innerText =
         "Hello " + user.name + ", you are logged in successfully.";
-
       document.getElementById("accountName").innerText = user.name;
       document.getElementById("accountUsername").innerText = user.username;
     }
@@ -650,6 +749,7 @@
     window.onclick = function (e) {
       const loginModal = document.getElementById("loginModal");
       const signupModal = document.getElementById("signupModal");
+
       if (e.target === loginModal) closeLogin();
       if (e.target === signupModal) closeSignup();
     };
