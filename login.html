@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Login - SAZIO</title>
+
   <style>
     body {
       background: black;
@@ -10,6 +11,7 @@
       text-align: center;
       padding-top: 100px;
     }
+
     input {
       display: block;
       margin: 10px auto;
@@ -18,19 +20,40 @@
       border-radius: 6px;
       border: none;
     }
+
     button {
       padding: 12px 24px;
       background: #ff4d4d;
       color: white;
       border: none;
       border-radius: 6px;
+      cursor: pointer;
     }
   </style>
 </head>
+
 <body>
+
   <h1>Login 🔐</h1>
-  <input type="text" placeholder="Username">
-  <input type="password" placeholder="Password">
-  <button>Login</button>
+
+  <input id="username" type="text" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+
+  <button onclick="login()">Login</button>
+
+  <script>
+    function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      if (username === "admin" && password === "12345") {
+        alert("Login Successful ✅");
+        window.location.href = "index.html";
+      } else {
+        alert("Wrong Username or Password ❌");
+      }
+    }
+  </script>
+
 </body>
 </html>
