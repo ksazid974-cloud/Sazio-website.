@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAZIO X Pro Max</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root{
+      --bg:#050505;
+      --panel:#101010;
+      --panel2:#181818;
+      --line:rgba(255,255,255,.08);
+      --text:#ffffff;
+      --muted:#b9b9b9;
+      --accent:#ff5a5a;
+      --accent2:#ffd166;
+      --ok:#25c46b;
+      --bad:#ff7b7b;
+      --shadow:0 16px 40px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+    body{
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255,90,90,.12), transparent 22%),
+        radial-gradient(circle at top right, rgba(255,209,102,.08), transparent 18%),
+        linear-gradient(180deg,#000,#090909 45%, #050505);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .hidden{ display:none !important; }
+    .shell{ max-width: 1300px; margin: 0 auto; padding: 18px; }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+    .auth-wrap{
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+    .auth-card{
+      width: 100%;
+      max-width: 520px;
+    }
+    .logo{
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1.03;
+      margin-bottom: 10px;
+      letter-spacing: -.5px;
+    }
+    .muted{ color: var(--muted); line-height: 1.6; }
+    .tabs, .toolbar, .nav{
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .tabs{ margin-top: 14px; }
+    .btn{
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      color: white;
+      border-radius: 14px;
+      padding: 11px 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn.primary{ background: var(--accent); }
+    .btn.good{ background: var(--ok); color:#07140b; }
+    .btn.warn{ background: var(--accent2); color:#201500; }
+    .btn.bad{ background: var(--bad); color:#220606; }
+    input, textarea, select{
+      width: 100%;
+      margin-top: 12px;
+      background: #0a0a0a;
+      color: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 15px;
+      outline: none;
+    }
+    textarea{ min-height: 130px; resize: vertical; }
+    .msg{
+      margin-top: 12px;
+      min-height: 24px;
+      white-space: pre-wrap;
+      color: var(--accent2);
+    }
+
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(8px);
+      background: rgba(0,0,0,.78);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar-inner{
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 12px 18px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand{
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: .3px;
+    }
+    .nav button{
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      color: white;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .nav button.active{ background: var(--accent); }
+
+    .hero{
+      display: grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap: 18px;
+      padding: 24px 0 18px;
+    }
+    .hero h1{
+      font-size: 48px;
+      line-height: 1.03;
+      margin-bottom: 10px;
+    }
+    .badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+    .badge{
+      background: var(--panel2);
+      border:1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 13px;
+      color: #f0f0f0;
+    }
+    .grid{ display:grid; gap:18px; }
+    .grid-4{ grid-template-columns: repeat(4, minmax(0,1fr)); }
+    .grid-3{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .grid-2{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+
+    .stat .label{ color: var(--muted); font-size: 14px; }
+    .stat .num{
+      font-size: 36px;
+      font-weight: 900;
+      margin-top: 10px;
+      color: var(--accent2);
+    }
+
+    .section{ display:none; padding-bottom: 24px; }
+    .section.active{ display:block; }
+
+    .output{
+      background: #090909;
+      border:1px solid var(--line);
+      border-radius: 16px;
+      min-height: 130px;
+      padding: 16px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    h2{ font-size: 30px; margin-bottom: 10px; }
+    h3{ font-size: 20px; margin-bottom: 8px; }
+
+    .footer{
+      text-align:center;
+      color:#8f8f8f;
+      padding: 28px 0 50px;
+    }
+
+    @media (max-width: 980px){
+      .hero, .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+      .hero h1, .logo { font-size: 34px; }
+      .topbar-inner { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div id="authView" class="auth-wrap">
+    <div class="card auth-card">
+      <div class="logo">SAZIO X PRO MAX 🚀</div>
+      <p class="muted">Login ya signup karke apna premium dashboard open karo.</p>
+
+      <div class="tabs">
+        <button id="loginTab" class="btn primary" type="button">Login</button>
+        <button id="signupTab" class="btn" type="button">Signup</button>
+      </div>
+
+      <input id="email" type="email" placeholder="Email address" />
+      <input id="password" type="password" placeholder="Password" />
+      <div class="toolbar" style="margin-top:12px;">
+        <button id="authSubmit" class="btn primary" type="button">Login</button>
+      </div>
+      <div id="authMsg" class="msg"></div>
+    </div>
+  </div>
+
+  <div id="appView" class="hidden">
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">SAZIO X 🚀</div>
+        <div class="nav" id="navTabs">
+          <button data-tab="dashboard" class="active">Dashboard</button>
+          <button data-tab="earn">Earn</button>
+          <button data-tab="withdraw">Withdraw</button>
+          <button data-tab="referral">Referral</button>
+          <button data-tab="analytics">Analytics</button>
+          <button data-tab="ai">AI Studio</button>
+          <button data-tab="seo">SEO</button>
+          <button data-tab="product">Product AI</button>
+          <button data-tab="profile">Profile</button>
+          <button data-tab="admin" id="adminNav" class="hidden">Admin</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell">
+      <section class="hero">
+        <div class="card">
+          <h1>AI Creator + Earning + Referral + Withdraw Platform</h1>
+          <p class="muted" id="heroText">Welcome. Yahan earning, referral, bonus, withdraw aur starter AI tools ek jagah milenge.</p>
+          <div class="toolbar" style="margin-top:14px;">
+            <button class="btn primary" onclick="sazioLogout()">Logout</button>
+            <button class="btn" onclick="addClick()">Add Click</button>
+            <button class="btn" onclick="addMoney()">Add $5</button>
+            <button class="btn good" onclick="claimDailyBonus()">Daily Bonus +2</button>
+            <button class="btn warn" onclick="claimTaskReward()">Task Reward +3</button>
+          </div>
+          <div class="badges">
+            <span class="badge">Premium UI</span>
+            <span class="badge">Referral Ready</span>
+            <span class="badge">Daily Bonus</span>
+            <span class="badge">Withdraw Requests</span>
+            <span class="badge">Admin Ready</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>System Status</h3>
+          <div class="output" id="statusBox">Loading status...</div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="section active">
+        <div class="grid grid-4">
+          <div class="card stat">
+            <div class="label">Total Clicks</div>
+            <div class="num" id="statClicks">0</div>
+          </div>
+          <div class="card stat">
+            <div class="label">Total Earnings</div>
+            <div class="num" id="statEarnings">$0</div>
+          </div>
+          <div class="card stat">
+            <div class="label">Referrals</div>
+            <div class="num" id="statReferrals">0</div>
+          </div>
+          <div class="card stat">
+            <div class="label">Withdraw Requests</div>
+            <div class="num" id="statWithdrawCount">0</div>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:18px;">
+          <div class="card">
+            <h2>Quick Start</h2>
+            <p class="muted">Click add karo, daily bonus claim karo, task reward lo, referral link share karo aur withdraw test karo.</p>
+            <div class="toolbar" style="margin-top:12px;">
+              <button class="btn primary" onclick="goTab('earn')">Open Earn</button>
+              <button class="btn" onclick="goTab('referral')">Open Referral</button>
+              <button class="btn" onclick="goTab('withdraw')">Open Withdraw</button>
+            </div>
+          </div>
+          <div class="card">
+            <h2>Rules</h2>
+            <div class="output" id="rulesBox">Loading rules...</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="earn" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Earning Tools</h2>
+            <div class="toolbar">
+              <button class="btn" onclick="addClick()">Add Click</button>
+              <button class="btn" onclick="addMoney()">Add $5</button>
+              <button class="btn good" onclick="claimDailyBonus()">Daily Bonus +2</button>
+              <button class="btn warn" onclick="claimTaskReward()">Task Reward +3</button>
+            </div>
+            <div class="output" id="earnStatus">Loading earn status...</div>
+          </div>
+          <div class="card">
+            <h2>Reward Status</h2>
+            <div class="output" id="rewardBox">Loading reward status...</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="withdraw" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Withdraw Request</h2>
+            <input id="withdrawUpi" placeholder="UPI ID (example: name@upi)" />
+            <input id="withdrawAmount" type="number" placeholder="Amount" />
+            <textarea id="withdrawNote" placeholder="Optional note"></textarea>
+            <div class="toolbar" style="margin-top:12px;">
+              <button class="btn primary" onclick="submitWithdraw()">Submit Withdraw</button>
+            </div>
+            <div class="output" id="withdrawMsg">Request status yahan aayega.</div>
+          </div>
+          <div class="card">
+            <h2>Your Withdraw History</h2>
+            <div class="output" id="withdrawHistory">Loading history...</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="referral" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Referral System</h2>
+            <div class="output" id="refCodeBox">Loading referral code...</div>
+            <div class="output" id="refLinkBox" style="margin-top:12px;">Loading referral link...</div>
+            <div class="toolbar" style="margin-top:12px;">
+              <button class="btn primary" onclick="copyOutput('refCodeBox')">Copy Code</button>
+              <button class="btn" onclick="copyOutput('refLinkBox')">Copy Link</button>
+            </div>
+          </div>
+          <div class="card">
+            <h2>Referral Rules</h2>
+            <div class="output">Rules:
+- हर user ka unique referral code
+- referral signup par +1 referral
+- referrer ko +10 earnings
+- self-referral blocked
+- referredBy once set hota hai</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="analytics" class="section">
+        <div class="grid grid-3">
+          <div class="card">
+            <h2>Clicks</h2>
+            <div class="output" id="analyticsClicks">0</div>
+          </div>
+          <div class="card">
+            <h2>Earnings</h2>
+            <div class="output" id="analyticsEarnings">$0</div>
+          </div>
+          <div class="card">
+            <h2>Referrals</h2>
+            <div class="output" id="analyticsReferrals">0</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="ai" class="section">
+        <div class="card">
+          <h2>AI Studio</h2>
+          <div class="grid grid-3">
+            <select id="aiMode">
+              <option value="script">Script Generator</option>
+              <option value="hook">Hook Generator</option>
+              <option value="thumbnail">Thumbnail Text</option>
+              <option value="caption">Caption Generator</option>
+              <option value="prompt">Prompt Fixer</option>
+              <option value="analysis">Deep Analysis</option>
+            </select>
+            <select id="aiStyle">
+              <option>Luxury</option>
+              <option>Emotional</option>
+              <option>Natural</option>
+              <option>Cinematic</option>
+              <option>Business</option>
+            </select>
+            <select id="aiDuration">
+              <option>30 sec</option>
+              <option>1 min</option>
+              <option>5 min</option>
+            </select>
+          </div>
+          <textarea id="aiInput" placeholder="Topic / idea likho"></textarea>
+          <div class="toolbar" style="margin-top:12px;">
+            <button class="btn primary" onclick="runAIStudio()">Generate</button>
+            <button class="btn" onclick="saveOutput('aiOutput')">Save</button>
+            <button class="btn" onclick="copyOutput('aiOutput')">Copy</button>
+          </div>
+          <div class="output" id="aiOutput">AI output yahan aayega.</div>
+        </div>
+      </section>
+
+      <section id="seo" class="section">
+        <div class="card">
+          <h2>SEO Pack</h2>
+          <textarea id="seoTopic" placeholder="Topic likho"></textarea>
+          <div class="toolbar" style="margin-top:12px;">
+            <button class="btn primary" onclick="generateSEO()">Generate</button>
+            <button class="btn" onclick="copyOutput('seoOutput')">Copy</button>
+          </div>
+          <div class="output" id="seoOutput">SEO output yahan aayega.</div>
+        </div>
+      </section>
+
+      <section id="product" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Product Analysis</h2>
+            <input id="productName" placeholder="Product name" />
+            <input id="productBudget" placeholder="Budget" />
+            <div class="toolbar" style="margin-top:12px;">
+              <button class="btn primary" onclick="analyzeProduct()">Analyze Product</button>
+            </div>
+            <div class="output" id="productOutput">Analysis yahan aayega.</div>
+          </div>
+          <div class="card">
+            <h2>Starter Deals</h2>
+            <div class="output">Amazon — ₹72,999
+Flipkart — ₹71,499
+Croma — ₹73,200
+
+Live API later add ki ja sakti hai.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="profile" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Profile</h2>
+            <input id="profileName" placeholder="Your name" />
+            <input id="profileRole" placeholder="Role" />
+            <input id="profileLanguage" placeholder="Preferred language" />
+            <div class="toolbar" style="margin-top:12px;">
+              <button class="btn primary" onclick="saveProfile()">Save Profile</button>
+              <button class="btn" onclick="loadProfile()">Load Profile</button>
+            </div>
+            <div class="output" id="profileOutput">Profile status yahan aayega.</div>
+          </div>
+          <div class="card">
+            <h2>Saved Outputs</h2>
+            <div class="output" id="savedOutputs">Abhi koi saved output nahi.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Admin Summary</h2>
+            <div class="output" id="adminSummary">Loading admin summary...</div>
+          </div>
+          <div class="card">
+            <h2>Withdraw Requests</h2>
+            <div class="output" id="adminRequests">Loading requests...</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">SAZIO X Pro Max beta build.</div>
+    </div>
+  </div>
+
+  <script>
+    const authView = document.getElementById('authView');
+    const appView = document.getElementById('appView');
+    const loginTab = document.getElementById('loginTab');
+    const signupTab = document.getElementById('signupTab');
+    const authSubmit = document.getElementById('authSubmit');
+    const authMsg = document.getElementById('authMsg');
+    let authMode = 'login';
+
+    loginTab.addEventListener('click', () => {
+      authMode = 'login';
+      loginTab.classList.add('primary');
+      signupTab.classList.remove('primary');
+      authSubmit.textContent = 'Login';
+      authMsg.textContent = '';
+    });
+
+    signupTab.addEventListener('click', () => {
+      authMode = 'signup';
+      signupTab.classList.add('primary');
+      loginTab.classList.remove('primary');
+      authSubmit.textContent = 'Signup';
+      authMsg.textContent = '';
+    });
+
+    const tabs = () => document.querySelectorAll('#navTabs button');
+    const sections = () => document.querySelectorAll('.section');
+
+    window.goTab = function(tab) {
+      tabs().forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      sections().forEach(sec => sec.classList.toggle('active', sec.id === tab));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    function setText(id, text){
+      document.getElementById(id).textContent = text;
+    }
+    function getInput(id){
+      return document.getElementById(id).value.trim();
+    }
+
+    window.copyOutput = function(id){
+      navigator.clipboard.writeText(document.getElementById(id).textContent);
+      alert('Copied ✅');
+    };
+
+    window.saveOutput = function(id){
+      const text = document.getElementById(id).textContent.trim();
+      const arr = JSON.parse(localStorage.getItem('sazio_saved_outputs') || '[]');
+      if (text && !arr.includes(text)) arr.unshift(text);
+      localStorage.setItem('sazio_saved_outputs', JSON.stringify(arr.slice(0, 20)));
+      renderSaved();
+      alert('Saved ✅');
+    };
+
+    function renderSaved(){
+      const arr = JSON.parse(localStorage.getItem('sazio_saved_outputs') || '[]');
+      setText('savedOutputs', arr.length ? arr.join('\n\n-----\n\n') : 'Abhi koi saved output nahi.');
+    }
+
+    window.saveProfile = function(){
+      const data = {
+        name: getInput('profileName'),
+        role: getInput('profileRole'),
+        language: getInput('profileLanguage')
+      };
+      localStorage.setItem('sazio_profile', JSON.stringify(data));
+      setText('profileOutput', `Saved ✅\nName: ${data.name || '-'}\nRole: ${data.role || '-'}\nLanguage: ${data.language || '-'}`);
+    };
+
+    window.loadProfile = function(){
+      const data = JSON.parse(localStorage.getItem('sazio_profile') || '{}');
+      document.getElementById('profileName').value = data.name || '';
+      document.getElementById('profileRole').value = data.role || '';
+      document.getElementById('profileLanguage').value = data.language || '';
+    };
+
+    window.runAIStudio = function(){
+      const mode = getInput('aiMode');
+      const style = getInput('aiStyle');
+      const duration = getInput('aiDuration');
+      const topic = getInput('aiInput');
+      if (!topic) return setText('aiOutput', 'Pehle topic likho.');
+      let out = '';
+      if (mode === 'script') out = `Mode: Script Generator\nStyle: ${style}\nDuration: ${duration}\n\nTitle: ${capitalize(topic)}\n\nHook: Start with strong curiosity.`;
+      else if (mode === 'hook') out = `Hook Idea:\nNobody expected this twist in ${topic}.`;
+      else if (mode === 'thumbnail') out = `Thumbnail Text:\nWAIT… WHAT?\nTHIS CHANGED EVERYTHING`;
+      else if (mode === 'caption') out = `Caption:\nThis hit hard.\n#viral #sazio #story`;
+      else if (mode === 'prompt') out = `Prompt:\nCreate a ${style.toLowerCase()} scene around ${topic} with clean premium composition.`;
+      else out = `Deep Analysis:\n${topic}\n\nStrengths:\n- strong potential\nWeakness:\n- needs sharper hook`;
+      setText('aiOutput', out);
+    };
+
+    window.generateSEO = function(){
+      const topic = getInput('seoTopic');
+      if (!topic) return setText('seoOutput', 'Pehle topic likho.');
+      setText('seoOutput', `SEO Package for ${topic}\n\nTitle:\nNobody Expected This… ${capitalize(topic)} 😳\n\nTags:\nviral, shorts, trending, sazio`);
+    };
+
+    window.analyzeProduct = function(){
+      const name = getInput('productName');
+      const budget = getInput('productBudget');
+      if (!name) return setText('productOutput', 'Pehle product name likho.');
+      setText('productOutput', `Product Analysis: ${name}\nBudget: ${budget || 'Not specified'}\n\nDecision:\nCompare trusted stores first.`);
+    };
+
+    function capitalize(str){
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    renderSaved();
+    loadProfile();
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAsCSXhw4939IEx379MDiXl9CTVJjvJLEI",
+      authDomain: "sazio-1.firebaseapp.com",
+      projectId: "sazio-1",
+      storageBucket: "sazio-1.firebasestorage.app",
+      messagingSenderId: "82743199739",
+      appId: "1:82743199739:web:952840299f517d1e47ed5e"
+    };
+
+    const ADMIN_EMAIL = "test@gmail.com";
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    function makeCode(uid){
+      return "SAZ" + uid.slice(0,6).toUpperCase();
+    }
+
+    function todayKey(){
+      const d = new Date();
+      return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    }
+
+    async function ensureUserDoc(user){
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) {
+        await setDoc(ref, {
+          email: user.email,
+          clicks: 0,
+          earnings: 0,
+          referrals: 0,
+          refCode: makeCode(user.uid),
+          referredBy: null,
+          lastBonus: null,
+          lastTask: null
+        });
+      } else {
+        const data = snap.data() || {};
+        const patch = {};
+        if (typeof data.referrals === "undefined") patch.referrals = 0;
+        if (!data.refCode) patch.refCode = makeCode(user.uid);
+        if (typeof data.referredBy === "undefined") patch.referredBy = null;
+        if (typeof data.lastBonus === "undefined") patch.lastBonus = null;
+        if (typeof data.lastTask === "undefined") patch.lastTask = null;
+        if (Object.keys(patch).length) await updateDoc(ref, patch);
+      }
+      return ref;
+    }
+
+    async function handleReferral(user){
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get("ref");
+      if (!code) return;
+
+      const myRef = doc(db, "users", user.uid);
+      const mySnap = await getDoc(myRef);
+      const myData = mySnap.data() || {};
+      if (myData.referredBy) return;
+
+      const q = query(collection(db, "users"), where("refCode", "==", code));
+      const res = await getDocs(q);
+      if (res.empty) return;
+
+      const refUser = res.docs[0];
+      if (refUser.id === user.uid) return;
+
+      await updateDoc(doc(db, "users", refUser.id), {
+        referrals: increment(1),
+        earnings: increment(10)
+      });
+
+      await updateDoc(myRef, {
+        referredBy: code
+      });
+    }
+
+    authSubmit.addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!email || !password) {
+        authMsg.textContent = "Email aur password dono bharo.";
+        return;
+      }
+
+      try {
+        authMsg.textContent = authMode === "login" ? "Logging in..." : "Creating account...";
+        if (authMode === "login") {
+          await signInWithEmailAndPassword(auth, email, password);
+        } else {
+          await createUserWithEmailAndPassword(auth, email, password);
+        }
+        authMsg.textContent = "";
+      } catch (err) {
+        authMsg.textContent = err.message;
+      }
+    });
+
+    async function refreshUI(user){
+      const ref = await ensureUserDoc(user);
+      await handleReferral(user);
+      const data = (await getDoc(ref)).data() || {};
+
+      setText("heroText", "Welcome " + user.email + ". Yahan earning, referral, bonus, withdraw aur starter AI tools ek jagah milenge.");
+      setText("statusBox", `Email: ${user.email}\nReferral Code: ${data.refCode}\nReferred By: ${data.referredBy || "-"}\nLast Bonus: ${data.lastBonus || "-"}\nLast Task: ${data.lastTask || "-"}`);
+      setText("rulesBox", "Daily bonus once per day\nTask reward once per day\nReferral reward +10\nWithdraw requests saved in database");
+      setText("earnStatus", `Clicks: ${data.clicks}\nEarnings: $${data.earnings}`);
+      setText("rewardBox", `Today: ${todayKey()}\nLast Daily Bonus: ${data.lastBonus || "-"}\nLast Task Reward: ${data.lastTask || "-"}`);
+
+      setText("statClicks", String(data.clicks || 0));
+      setText("statEarnings", "$" + String(data.earnings || 0));
+      setText("statReferrals", String(data.referrals || 0));
+      setText("analyticsClicks", String(data.clicks || 0));
+      setText("analyticsEarnings", "$" + String(data.earnings || 0));
+      setText("analyticsReferrals", String(data.referrals || 0));
+
+      setText("refCodeBox", data.refCode || makeCode(user.uid));
+      setText("refLinkBox", window.location.origin + window.location.pathname + "?ref=" + (data.refCode || makeCode(user.uid)));
+
+      await loadWithdrawHistory(user);
+
+      if (user.email === ADMIN_EMAIL) {
+        document.getElementById("adminNav").classList.remove("hidden");
+        await loadAdmin();
+      } else {
+        document.getElementById("adminNav").classList.add("hidden");
+      }
+    }
+
+    async function loadWithdrawHistory(user){
+      const q = query(collection(db, "withdraw_requests"), where("userId", "==", user.uid));
+      const res = await getDocs(q);
+      const rows = [];
+      res.forEach(d => rows.push({ id:d.id, ...d.data() }));
+      rows.sort((a,b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+      setText("statWithdrawCount", String(rows.length));
+      setText("withdrawHistory", rows.length
+        ? rows.map(x => `ID: ${x.id}\nAmount: $${x.amount}\nUPI: ${x.upi}\nStatus: ${x.status}\nDate: ${x.createdAt}`).join("\n\n-----\n\n")
+        : "No withdraw requests yet.");
+    }
+
+    async function loadAdmin(){
+      const userRes = await getDocs(collection(db, "users"));
+      const reqRes = await getDocs(collection(db, "withdraw_requests"));
+
+      let totalUsers = 0;
+      let totalClicks = 0;
+      let totalEarnings = 0;
+
+      userRes.forEach(d => {
+        totalUsers++;
+        const x = d.data() || {};
+        totalClicks += Number(x.clicks || 0);
+        totalEarnings += Number(x.earnings || 0);
+      });
+
+      const reqs = [];
+      reqRes.forEach(d => reqs.push({ id:d.id, ...d.data() }));
+      reqs.sort((a,b)=> (b.createdAt || "").localeCompare(a.createdAt || ""));
+
+      setText("adminSummary", `Total Users: ${totalUsers}\nTotal Clicks: ${totalClicks}\nTotal Earnings: $${totalEarnings}\nTotal Withdraw Requests: ${reqs.length}`);
+      setText("adminRequests", reqs.length
+        ? reqs.map(x => `ID: ${x.id}\nEmail: ${x.email}\nAmount: $${x.amount}\nUPI: ${x.upi}\nStatus: ${x.status}\nDate: ${x.createdAt}`).join("\n\n-----\n\n")
+        : "No withdraw requests yet.");
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        authView.classList.remove("hidden");
+        appView.classList.add("hidden");
+        return;
+      }
+      authView.classList.add("hidden");
+      appView.classList.remove("hidden");
+      await refreshUI(user);
+    });
+
+    window.signup = async function(){
+      await createUserWithEmailAndPassword(auth, email.value, password.value);
+    };
+
+    window.login = async function(){
+      await signInWithEmailAndPassword(auth, email.value, password.value);
+    };
+
+    window.sazioLogout = async function(){
+      await signOut(auth);
+    };
+
+    window.addClick = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+      const ref = doc(db, "users", user.uid);
+      await updateDoc(ref, { clicks: increment(1) });
+      await refreshUI(user);
+    };
+
+    window.addMoney = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+      const ref = doc(db, "users", user.uid);
+      await updateDoc(ref, { earnings: increment(5) });
+      await refreshUI(user);
+    };
+
+    window.claimDailyBonus = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      const data = snap.data() || {};
+      const today = todayKey();
+
+      if (data.lastBonus === today) {
+        alert("Daily bonus already claimed today.");
+        return;
+      }
+
+      await updateDoc(ref, {
+        earnings: increment(2),
+        lastBonus: today
+      });
+
+      await refreshUI(user);
+      alert("Daily bonus added ✅");
+    };
+
+    window.claimTaskReward = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      const data = snap.data() || {};
+      const today = todayKey();
+
+      if (data.lastTask === today) {
+        alert("Task reward already claimed today.");
+        return;
+      }
+
+      await updateDoc(ref, {
+        earnings: increment(3),
+        lastTask: today
+      });
+
+      await refreshUI(user);
+      alert("Task reward added ✅");
+    };
+
+    window.submitWithdraw = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const upi = getInput("withdrawUpi");
+      const amount = Number(getInput("withdrawAmount"));
+      const note = getInput("withdrawNote");
+
+      if (!upi) {
+        setText("withdrawMsg", "UPI ID required.");
+        return;
+      }
+      if (!amount || amount <= 0) {
+        setText("withdrawMsg", "Valid amount required.");
+        return;
+      }
+
+      const userRef = doc(db, "users", user.uid);
+      const userData = (await getDoc(userRef)).data() || {};
+      const currentEarnings = Number(userData.earnings || 0);
+
+      if (amount > currentEarnings) {
+        setText("withdrawMsg", "Insufficient earnings.");
+        return;
+      }
+
+      await addDoc(collection(db, "withdraw_requests"), {
+        userId: user.uid,
+        email: user.email,
+        upi,
+        amount,
+        note,
+        status: "pending",
+        createdAt: new Date().toISOString()
+      });
+
+      await updateDoc(userRef, {
+        earnings: currentEarnings - amount
+      });
+
+      document.getElementById("withdrawUpi").value = "";
+      document.getElementById("withdrawAmount").value = "";
+      document.getElementById("withdrawNote").value = "";
+      setText("withdrawMsg", "Withdraw request submitted ✅");
+
+      await refreshUI(user);
+    };
+  </script>
+</body>
+        </html>
