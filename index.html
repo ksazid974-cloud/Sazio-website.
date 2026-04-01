@@ -1,697 +1,161 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SAZIO X</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    :root{
-      --bg:#070707;
-      --panel:#111;
-      --panel2:#171717;
-      --line:rgba(255,255,255,.08);
-      --text:#fff;
-      --muted:#bdbdbd;
-      --accent:#ff5a5a;
-      --accent2:#ffd166;
-      --ok:#25c46b;
-    }
-    body{
-      font-family: Arial, sans-serif;
-      background: linear-gradient(180deg,#000,#0c0c0c);
-      color: var(--text);
-      min-height: 100vh;
-    }
-    .hidden{ display:none !important; }
-    .app{ max-width:1280px; margin:0 auto; padding:18px; }
-    .topbar{
-      position:sticky; top:0; z-index:30; backdrop-filter:blur(8px);
-      background:rgba(0,0,0,.8); border-bottom:1px solid var(--line);
-    }
-    .topbar-inner{
-      max-width:1280px; margin:0 auto; padding:12px 18px;
-      display:flex; gap:12px; align-items:center; justify-content:space-between;
-    }
-    .brand{ font-weight:800; font-size:24px; letter-spacing:.5px; }
-    .nav{ display:flex; flex-wrap:wrap; gap:8px; }
-    .nav button,.btn{
-      border:none; background:var(--panel2); color:#fff; padding:10px 14px;
-      border-radius:12px; cursor:pointer; border:1px solid var(--line); font-weight:700;
-    }
-    .nav button.active,.btn.primary{ background:var(--accent); }
-    .hero{ padding:28px 0 18px; display:grid; grid-template-columns:1.25fr .75fr; gap:18px; }
-    .card{
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.03));
-      border:1px solid var(--line); border-radius:22px; padding:20px;
-      box-shadow:0 14px 36px rgba(0,0,0,.24);
-    }
-    .hero h1{ font-size:46px; line-height:1.04; margin-bottom:10px; }
-    .muted{ color:var(--muted); line-height:1.6; }
-    .badges{ display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
-    .badge{
-      font-size:13px; color:#eee; background:var(--panel2);
-      border:1px solid var(--line); padding:7px 10px; border-radius:999px;
-    }
-    .grid{ display:grid; gap:18px; }
-    .grid-4{ grid-template-columns:repeat(4,minmax(0,1fr)); }
-    .grid-3{ grid-template-columns:repeat(3,minmax(0,1fr)); }
-    .grid-2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
-    .stat .num{ font-size:34px; font-weight:800; color:var(--accent2); margin-top:8px; }
-    .section{ display:none; padding:8px 0 22px; }
-    .section.active{ display:block; }
-    h2{ font-size:30px; margin-bottom:10px; }
-    h3{ font-size:20px; margin-bottom:8px; }
-    .toolbar{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; margin-bottom:12px; }
-    input,textarea,select{
-      width:100%; background:#0b0b0b; color:#fff; border:1px solid var(--line);
-      border-radius:14px; padding:14px; font-size:15px; outline:none; margin-top:12px;
-    }
-    textarea{ min-height:130px; resize:vertical; }
-    .row-3{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
-    .output{
-      background:#090909; border:1px solid var(--line); border-radius:16px;
-      padding:16px; white-space:pre-wrap; line-height:1.65; min-height:140px;
-    }
-    .small{ font-size:13px; color:var(--muted); }
-    .deal{
-      display:flex; justify-content:space-between; gap:10px; padding:10px 0;
-      border-bottom:1px dashed rgba(255,255,255,.08);
-    }
-    .deal:last-child{ border-bottom:none; }
-    .chip{
-      display:inline-block; padding:6px 10px; border-radius:999px;
-      background:#132d1d; border:1px solid rgba(37,196,107,.22);
-      color:#b4ffd3; font-size:12px;
-    }
-    .warn{
-      display:inline-block; padding:6px 10px; border-radius:999px;
-      background:#312400; border:1px solid rgba(255,209,102,.22);
-      color:#ffe1a0; font-size:12px;
-    }
-    .tool-list li{ margin-left:18px; line-height:1.7; }
-    .footer{ padding:24px 0 50px; color:#8b8b8b; text-align:center; }
-
-    /* Auth page */
-    .auth-wrap{
-      min-height:100vh; display:flex; align-items:center; justify-content:center; padding:18px;
-    }
-    .auth-card{
-      width:100%; max-width:520px; background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.03));
-      border:1px solid var(--line); border-radius:24px; padding:24px;
-      box-shadow:0 18px 42px rgba(0,0,0,.28);
-    }
-    .auth-title{ font-size:40px; font-weight:800; line-height:1.05; margin-bottom:10px; }
-    .auth-tabs{ display:flex; gap:10px; margin-top:12px; }
-    .msg{ margin-top:14px; color:var(--accent2); min-height:24px; white-space:pre-wrap; }
-
-    @media (max-width:980px){
-      .hero,.grid-4,.grid-3,.grid-2,.row-3{ grid-template-columns:1fr; }
-      .hero h1,.auth-title{ font-size:34px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<title>SAZIO FINAL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
 
-  <!-- AUTH SCREEN -->
-  <div id="authView" class="auth-wrap">
-    <div class="auth-card">
-      <div class="auth-title">SAZIO X 🚀</div>
-      <p class="muted">Login ya signup karke apna dashboard open karo.</p>
+<body style="background:black;color:white;font-family:Arial;text-align:center;">
 
-      <div class="auth-tabs">
-        <button id="loginTab" class="btn primary" type="button">Login</button>
-        <button id="signupTab" class="btn" type="button">Signup</button>
-      </div>
+<h1>🚀 SAZIO FINAL SYSTEM</h1>
 
-      <input id="email" type="email" placeholder="Email address" />
-      <input id="password" type="password" placeholder="Password" />
+<div id="loginBox">
+<input id="email" placeholder="Email"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
+<button onclick="signup()">Signup</button>
+<button onclick="login()">Login</button>
+</div>
 
-      <div class="toolbar">
-        <button id="authSubmit" class="btn primary" type="button">Login</button>
-      </div>
+<div id="dashboard" style="display:none;">
+<h2 id="userEmail"></h2>
 
-      <div id="authMsg" class="msg"></div>
-    </div>
-  </div>
+<h2>Clicks: <span id="clicks">0</span></h2>
+<button onclick="addClick()">Add Click</button>
 
-  <!-- DASHBOARD SCREEN -->
-  <div id="dashboardView" class="hidden">
-    <div class="topbar">
-      <div class="topbar-inner">
-        <div class="brand">SAZIO X 🚀</div>
-        <div class="nav" id="navTabs">
-          <button data-tab="dashboard" class="active">Dashboard</button>
-          <button data-tab="ai-studio">AI Studio</button>
-          <button data-tab="seo-viral">SEO/Viral</button>
-          <button data-tab="product-ai">Product AI</button>
-          <button data-tab="deals">Deals</button>
-          <button data-tab="trends">Trends</button>
-          <button data-tab="language">Language</button>
-          <button data-tab="freelance">Freelance</button>
-          <button data-tab="profile">Profile</button>
-        </div>
-      </div>
-    </div>
+<h2>Earnings: $<span id="earnings">0</span></h2>
+<button onclick="addMoney()">Add $5</button>
 
-    <div class="app">
-      <section class="hero">
-        <div class="card">
-          <h1>AI Creator + Analysis + Growth + Trust Platform</h1>
-          <p class="muted" id="heroWelcome">
-            Welcome. Ye logged-in SAZIO dashboard hai. Yahan AI Studio, SEO tools, product analysis, language, freelance aur future tools phase by phase add honge.
-          </p>
-          <div class="toolbar">
-            <button onclick="sazioLogout()" class="btn primary">Logout</button>
-            <button onclick="addClick()" class="btn">Add Click</button>
-            <button onclick="addMoney()" class="btn">Add $5</button>
-          </div>
-          <div class="badges">
-            <span class="badge">Trust First</span>
-            <span class="badge">Safe Output</span>
-            <span class="badge">Creator Tools</span>
-            <span class="badge">Deep Analysis</span>
-            <span class="badge">Future Ready</span>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Master Build Notes</h3>
-          <ul class="tool-list muted">
-            <li>Working now: dashboard, AI tools starter logic, SEO pack starter, analysis cards, navigation, save profile.</li>
-            <li>UI-ready for future: live price APIs, live news/trends, advanced multilingual engine, voice engine, video engine, freelance payments.</li>
-            <li>Safe by default: no fake earning claims, no vulgar output mode, no misleading promise language.</li>
-          </ul>
-        </div>
-      </section>
+<h3>Referral Code:</h3>
+<p id="refCode"></p>
 
-      <section id="dashboard" class="section active">
-        <div class="grid grid-4">
-          <div class="card stat"><h3>Total Clicks</h3><div class="num" id="statClicks">0</div></div>
-          <div class="card stat"><h3>Estimated Earnings</h3><div class="num" id="statEarnings">$0</div></div>
-          <div class="card stat"><h3>Saved Outputs</h3><div class="num" id="statSaved">0</div></div>
-          <div class="card stat"><h3>Trust Score</h3><div class="num">High</div></div>
-        </div>
+<h3>Referral Link:</h3>
+<p id="refLink"></p>
 
-        <div class="grid grid-2" style="margin-top:18px;">
-          <div class="card">
-            <h2>Quick Start</h2>
-            <p class="muted">Idea do → AI Studio use karo → SEO pack lo → product/deals/analyze section use karo → future me publish/earn/freelance flows add honge.</p>
-            <div class="toolbar">
-              <button class="btn primary" onclick="goTab('ai-studio')">Open AI Studio</button>
-              <button class="btn" onclick="goTab('seo-viral')">Open SEO System</button>
-              <button class="btn" onclick="goTab('product-ai')">Open Product AI</button>
-            </div>
-          </div>
-          <div class="card">
-            <h2>Permanent Rules</h2>
-            <ul class="tool-list muted">
-              <li>No scam promises</li>
-              <li>No fake earning claims</li>
-              <li>No vulgar/dirty output mode</li>
-              <li>Safe rewrite by default</li>
-              <li>Trust-first UI and language</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+<h3>Referrals:</h3>
+<p id="refCount">0</p>
 
-      <section id="ai-studio" class="section">
-        <div class="card">
-          <h2>AI Studio Master</h2>
-          <div class="row-3">
-            <select id="aiMode">
-              <option value="script">Script Generator</option>
-              <option value="hook">Hook Generator</option>
-              <option value="thumbnail">Thumbnail Text</option>
-              <option value="caption">Caption Generator</option>
-              <option value="prompt">Prompt Fixer</option>
-              <option value="analysis">Deep Analysis</option>
-            </select>
-            <select id="aiStyle">
-              <option>Luxury</option>
-              <option>Garibi / Emotional</option>
-              <option>Natural</option>
-              <option>Cinematic</option>
-              <option>Funny</option>
-              <option>Business</option>
-              <option>Kids Safe</option>
-            </select>
-            <select id="aiDuration">
-              <option>30 sec</option>
-              <option>1 min</option>
-              <option>2 min</option>
-              <option>5 min</option>
-              <option>10 min</option>
-              <option>1 hour</option>
-            </select>
-          </div>
-          <textarea id="aiInput" placeholder="Topic / idea / question likho"></textarea>
-          <div class="toolbar">
-            <button class="btn primary" onclick="runAIStudio()">Generate</button>
-            <button class="btn" onclick="makeMoreViral()">Make More Viral</button>
-            <button class="btn" onclick="saveOutput('aiOutput')">Save Output</button>
-            <button class="btn" onclick="copyOutput('aiOutput')">Copy</button>
-          </div>
-          <div class="output" id="aiOutput">Output yahan aayega.</div>
-        </div>
-      </section>
+<button onclick="logout()">Logout</button>
+</div>
 
-      <section id="seo-viral" class="section">
-        <div class="card">
-          <h2>SEO + CTR + Viral Engine</h2>
-          <textarea id="seoTopic" placeholder="Topic likho"></textarea>
-          <div class="toolbar">
-            <button class="btn primary" onclick="generateSEO()">Generate SEO Package</button>
-            <button class="btn" onclick="saveOutput('seoOutput')">Save</button>
-            <button class="btn" onclick="copyOutput('seoOutput')">Copy</button>
-          </div>
-          <div class="output" id="seoOutput">SEO output yahan aayega.</div>
-        </div>
-      </section>
+<script type="module">
 
-      <section id="product-ai" class="section">
-        <div class="grid grid-2">
-          <div class="card">
-            <h2>Product Analysis AI</h2>
-            <input id="productName" placeholder="Product name" />
-            <input id="productBudget" placeholder="Budget" />
-            <div class="toolbar">
-              <button class="btn primary" onclick="analyzeProduct()">Analyze Product</button>
-              <button class="btn" onclick="copyOutput('productOutput')">Copy</button>
-            </div>
-            <div class="output" id="productOutput">Analysis yahan aayega.</div>
-          </div>
-          <div class="card">
-            <h2>Top 10 Platform Comparison</h2>
-            <p class="small">Starter comparison UI. Live prices later API se aayengi.</p>
-            <div class="deal"><span>Amazon</span><span>₹72,999</span><span class="chip">Verified Offer</span></div>
-            <div class="deal"><span>Flipkart</span><span>₹71,499</span><span class="warn">Cheapest</span></div>
-            <div class="deal"><span>Croma</span><span>₹73,200</span><span class="chip">Trusted</span></div>
-            <div class="deal"><span>Reliance Digital</span><span>₹72,800</span><span class="chip">Verified Offer</span></div>
-            <div class="deal"><span>Myntra</span><span>N/A</span><span class="small">Category specific</span></div>
-            <div class="deal"><span>AJIO</span><span>N/A</span><span class="small">Category specific</span></div>
-            <div class="deal"><span>Tata CLiQ</span><span>₹72,950</span><span class="chip">Verified Offer</span></div>
-            <div class="deal"><span>Nykaa</span><span>N/A</span><span class="small">Category specific</span></div>
-            <div class="deal"><span>Meesho</span><span>N/A</span><span class="small">Budget/value</span></div>
-            <div class="deal"><span>Snapdeal</span><span>N/A</span><span class="small">Budget/value</span></div>
-          </div>
-        </div>
-      </section>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-      <section id="deals" class="section">
-        <div class="card">
-          <h2>Verified Deals Hub</h2>
-          <div class="grid grid-3" style="margin-top:12px;">
-            <div class="card">
-              <span class="chip">Verified Offer</span>
-              <h3 style="margin-top:10px;">Wireless Headphones</h3>
-              <p class="muted">Best quality sound, trusted store, clean purchase flow.</p>
-              <div class="toolbar"><button class="btn primary">Buy Now</button></div>
-            </div>
-            <div class="card">
-              <span class="chip">Verified Offer</span>
-              <h3 style="margin-top:10px;">Creator Lighting Kit</h3>
-              <p class="muted">Good for video creators, beginner friendly.</p>
-              <div class="toolbar"><button class="btn primary">Buy Now</button></div>
-            </div>
-            <div class="card">
-              <span class="chip">Verified Offer</span>
-              <h3 style="margin-top:10px;">Editing Tool Subscription</h3>
-              <p class="muted">Future affiliate-ready structure.</p>
-              <div class="toolbar"><button class="btn primary">Buy Now</button></div>
-            </div>
-          </div>
-        </div>
-      </section>
+const firebaseConfig = {
+apiKey: "AIzaSyAsCSXhw4939IEx379MDiXl9CTVJjvJLEI",
+authDomain: "sazio-1.firebaseapp.com",
+projectId: "sazio-1",
+storageBucket: "sazio-1.firebasestorage.app",
+messagingSenderId: "82743199739",
+appId: "1:82743199739:web:952840299f517d1e47ed5e"
+};
 
-      <section id="trends" class="section">
-        <div class="grid grid-2">
-          <div class="card">
-            <h2>Daily Trends</h2>
-            <div class="output">1. Emotional rescue stories
-2. AI vs human skill videos
-3. Product comparison shorts
-4. Before/after transformation stories
-5. Fast learning content</div>
-          </div>
-          <div class="card">
-            <h2>News Summary</h2>
-            <div class="output">• AI tools ecosystem grow kar raha hai
-• Creator economy me multilingual content strong ho raha hai
-• Safe trusted shopping + analysis tools ki demand high hai</div>
-          </div>
-        </div>
-      </section>
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-      <section id="language" class="section">
-        <div class="card">
-          <h2>Dialogue Translator Pro</h2>
-          <div class="row-3">
-            <select id="sourceLang">
-              <option>Auto Detect</option>
-              <option>English</option>
-              <option>Hindi</option>
-              <option>Arabic</option>
-              <option>Spanish</option>
-              <option>French</option>
-            </select>
-            <select id="targetLang">
-              <option>English</option>
-              <option>Hindi</option>
-              <option>Arabic</option>
-              <option>Spanish</option>
-              <option>French</option>
-            </select>
-            <select id="translateMode">
-              <option>Natural</option>
-              <option>Simple</option>
-              <option>Cinematic</option>
-              <option>Literal</option>
-            </select>
-          </div>
-          <textarea id="translateInput" placeholder="Dialogue / script paste karo"></textarea>
-          <div class="toolbar">
-            <button class="btn primary" onclick="translateDialogue()">Convert</button>
-            <button class="btn" onclick="downloadText('translateOutput','translated-dialogue.txt')">Download TXT</button>
-            <button class="btn" onclick="copyOutput('translateOutput')">Copy</button>
-          </div>
-          <div class="output" id="translateOutput">Converted output yahan aayega.</div>
-        </div>
-      </section>
+function makeCode(uid){
+return "SAZ" + uid.slice(0,6).toUpperCase();
+}
 
-      <section id="freelance" class="section">
-        <div class="grid grid-2">
-          <div class="card">
-            <h2>Post a Job</h2>
-            <input placeholder="Job title" />
-            <input placeholder="Budget" />
-            <textarea placeholder="Job details"></textarea>
-            <div class="toolbar"><button class="btn primary">Post Job</button></div>
-          </div>
-          <div class="card">
-            <h2>Create a Gig</h2>
-            <input placeholder="Gig title" />
-            <input placeholder="Price" />
-            <textarea placeholder="Service details"></textarea>
-            <div class="toolbar"><button class="btn primary">Publish Gig</button></div>
-          </div>
-        </div>
-      </section>
+async function createUserDoc(user){
+const ref = doc(db,"users",user.uid);
+const snap = await getDoc(ref);
 
-      <section id="profile" class="section">
-        <div class="grid grid-2">
-          <div class="card">
-            <h2>Profile</h2>
-            <input id="profileName" placeholder="Your name" />
-            <input id="profileRole" placeholder="Role" />
-            <input id="profileLanguage" placeholder="Preferred language" />
-            <div class="toolbar">
-              <button class="btn primary" onclick="saveProfile()">Save Profile</button>
-              <button class="btn" onclick="loadProfile()">Load Profile</button>
-            </div>
-            <div class="output" id="profileOutput">Profile status yahan aayega.</div>
-          </div>
-          <div class="card">
-            <h2>Saved Outputs</h2>
-            <div class="output" id="savedOutputs">Abhi koi saved output nahi.</div>
-          </div>
-        </div>
-      </section>
+if(!snap.exists()){
+await setDoc(ref,{
+email:user.email,
+clicks:0,
+earnings:0,
+referrals:0,
+refCode:makeCode(user.uid),
+referredBy:null
+});
+}
+return ref;
+}
 
-      <div class="footer">SAZIO X — Strong foundation first, advanced engines phase by phase.</div>
-    </div>
-  </div>
+async function handleReferral(user){
+const url = new URL(window.location.href);
+const code = url.searchParams.get("ref");
+if(!code) return;
 
-  <script>
-    const authView = document.getElementById('authView');
-    const dashboardView = document.getElementById('dashboardView');
-    const loginTab = document.getElementById('loginTab');
-    const signupTab = document.getElementById('signupTab');
-    const authSubmit = document.getElementById('authSubmit');
-    const authMsg = document.getElementById('authMsg');
-    let authMode = 'login';
+const myRef = doc(db,"users",user.uid);
+const mySnap = await getDoc(myRef);
+if(mySnap.data()?.referredBy) return;
 
-    loginTab.addEventListener('click', () => {
-      authMode = 'login';
-      loginTab.classList.add('primary');
-      signupTab.classList.remove('primary');
-      authSubmit.textContent = 'Login';
-      authMsg.textContent = '';
-    });
+const q = query(collection(db,"users"), where("refCode","==",code));
+const res = await getDocs(q);
 
-    signupTab.addEventListener('click', () => {
-      authMode = 'signup';
-      signupTab.classList.add('primary');
-      loginTab.classList.remove('primary');
-      authSubmit.textContent = 'Signup';
-      authMsg.textContent = '';
-    });
+if(res.empty) return;
 
-    const tabs = () => document.querySelectorAll('#navTabs button');
-    const sections = () => document.querySelectorAll('.section');
+const refUser = res.docs[0];
 
-    window.goTab = function(tab) {
-      tabs().forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-      sections().forEach(s => s.classList.toggle('active', s.id === tab));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+await updateDoc(doc(db,"users",refUser.id),{
+referrals: increment(1),
+earnings: increment(10)
+});
 
-    function getInput(id){ return document.getElementById(id).value.trim(); }
-    function setOutput(id, text){ document.getElementById(id).textContent = text; }
+await updateDoc(myRef,{
+referredBy: code
+});
+}
 
-    window.copyOutput = function(id){
-      const text = document.getElementById(id).textContent;
-      navigator.clipboard.writeText(text);
-      alert('Copied ✅');
-    };
+onAuthStateChanged(auth, async (user)=>{
+if(!user){
+document.getElementById("loginBox").style.display="block";
+document.getElementById("dashboard").style.display="none";
+return;
+}
 
-    window.saveOutput = function(id){
-      const text = document.getElementById(id).textContent.trim();
-      const arr = JSON.parse(localStorage.getItem('sazio_saved_outputs') || '[]');
-      if(text && !arr.includes(text)) arr.unshift(text);
-      localStorage.setItem('sazio_saved_outputs', JSON.stringify(arr.slice(0,20)));
-      renderSaved();
-      alert('Saved ✅');
-    };
+document.getElementById("loginBox").style.display="none";
+document.getElementById("dashboard").style.display="block";
 
-    function renderSaved(){
-      const arr = JSON.parse(localStorage.getItem('sazio_saved_outputs') || '[]');
-      const statSaved = document.getElementById('statSaved');
-      const savedOutputs = document.getElementById('savedOutputs');
-      if (statSaved) statSaved.textContent = arr.length;
-      if (savedOutputs) savedOutputs.textContent = arr.length ? arr.join('\n\n-----\n\n') : 'Abhi koi saved output nahi.';
-    }
+document.getElementById("userEmail").innerText=user.email;
 
-    window.saveProfile = function(){
-      const data = {
-        name: getInput('profileName'),
-        role: getInput('profileRole'),
-        language: getInput('profileLanguage')
-      };
-      localStorage.setItem('sazio_profile', JSON.stringify(data));
-      setOutput('profileOutput', `Saved ✅\nName: ${data.name || '-'}\nRole: ${data.role || '-'}\nLanguage: ${data.language || '-'}`);
-    };
+const ref = await createUserDoc(user);
+await handleReferral(user);
 
-    window.loadProfile = function(){
-      const data = JSON.parse(localStorage.getItem('sazio_profile') || '{}');
-      const n = document.getElementById('profileName');
-      const r = document.getElementById('profileRole');
-      const l = document.getElementById('profileLanguage');
-      if (n) n.value = data.name || '';
-      if (r) r.value = data.role || '';
-      if (l) l.value = data.language || '';
-      const currentText = document.getElementById('profileOutput').textContent || '';
-      if (!currentText.startsWith('Logged in:')) {
-        setOutput('profileOutput', `Loaded ✅\nName: ${data.name || '-'}\nRole: ${data.role || '-'}\nLanguage: ${data.language || '-'}`);
-      }
-    };
+const data = (await getDoc(ref)).data();
 
-    window.runAIStudio = function(){
-      const mode = getInput('aiMode');
-      const style = getInput('aiStyle');
-      const duration = getInput('aiDuration');
-      const topic = getInput('aiInput');
-      if(!topic) return setOutput('aiOutput','Pehle topic likho.');
-      let out = '';
-      if(mode === 'script') {
-        out = `Mode: Script Generator\nStyle: ${style}\nDuration: ${duration}\n\nTitle: ${capitalize(topic)}\n\nHook: Start with a strong visual shock or emotional curiosity.\n\nFlow:\n1. Hook\n2. Setup\n3. Problem\n4. Struggle\n5. Suspense\n6. Twist\n7. Rescue / payoff`;
-      } else if(mode === 'hook') {
-        out = `Topic: ${topic}\nStyle: ${style}\n\nHook Score: 7.5/10\n\nImproved Hook:\n“Just when nobody expected it, ${topic} changed everything.”`;
-      } else if(mode === 'thumbnail') {
-        out = `Thumbnail Text Ideas:\n1. WAIT… WHAT?\n2. THIS CHANGED EVERYTHING\n3. NOBODY EXPECTED THIS`;
-      } else if(mode === 'caption') {
-        out = `Caption Pack for "${topic}"\n\nShort Caption:\nThis hit hard.\n\nHashtags:\n#viral #story #creator #sazio #shorts`;
-      } else if(mode === 'prompt') {
-        out = `Easy Prompt Fixed ✅\n\nRaw Idea: ${topic}\n\nImproved Prompt:\nUltra-detailed ${style.toLowerCase()} visual around ${topic}, clean composition, cinematic framing, safe output.`;
-      } else {
-        out = `Deep Analysis for: ${topic}\nStyle: ${style}\n\nStrengths:\n- Useful topic potential\n\nWeaknesses:\n- Needs sharper hook\n- Needs clearer audience angle`;
-      }
-      setOutput('aiOutput', out);
-    };
+document.getElementById("clicks").innerText=data.clicks;
+document.getElementById("earnings").innerText=data.earnings;
+document.getElementById("refCount").innerText=data.referrals;
 
-    window.makeMoreViral = function(){
-      const current = document.getElementById('aiOutput').textContent;
-      setOutput('aiOutput', current + `\n\nMake More Viral ✅\n- Stronger curiosity added\n- Better hook direction added`);
-    };
+document.getElementById("refCode").innerText=data.refCode;
+document.getElementById("refLink").innerText=window.location.origin+"?ref="+data.refCode;
+});
 
-    window.generateSEO = function(){
-      const topic = getInput('seoTopic');
-      if(!topic) return setOutput('seoOutput','Pehle topic likho.');
-      const out = `SEO Package for: ${topic}\n\nTitle:\nNobody Expected This… ${capitalize(topic)} 😳\n\nDescription:\nThis video explores ${topic} in a clean, engaging style.\n\nTags:\n${topic}, viral, shorts, creator, trending\n\nThumbnail Text:\nWAIT… WHAT?`;
-      setOutput('seoOutput', out);
-    };
+window.signup = async ()=>{
+await createUserWithEmailAndPassword(auth,email.value,password.value);
+};
 
-    window.analyzeProduct = function(){
-      const name = getInput('productName');
-      const budget = getInput('productBudget');
-      if(!name) return setOutput('productOutput','Pehle product name likho.');
-      const out = `Product Analysis: ${name}\nBudget: ${budget || 'Not specified'}\n\nDecision:\nCompare first → check trusted store → buy only if value matches your need.`;
-      setOutput('productOutput', out);
-    };
+window.login = async ()=>{
+await signInWithEmailAndPassword(auth,email.value,password.value);
+};
 
-    window.translateDialogue = function(){
-      const text = getInput('translateInput');
-      const target = getInput('targetLang');
-      const mode = getInput('translateMode');
-      if(!text) return setOutput('translateOutput','Pehle text paste karo.');
-      const out = `Converted Output (${target} | ${mode})\n\n${text}`;
-      setOutput('translateOutput', out);
-    };
+window.logout = async ()=>{
+await signOut(auth);
+};
 
-    window.downloadText = function(id, filename){
-      const text = document.getElementById(id).textContent;
-      const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = filename;
-      a.click();
-      URL.revokeObjectURL(a.href);
-    };
+window.addClick = async ()=>{
+const user=auth.currentUser;
+const ref=doc(db,"users",user.uid);
+await updateDoc(ref,{clicks:increment(1)});
+location.reload();
+};
 
-    function capitalize(str){
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    }
+window.addMoney = async ()=>{
+const user=auth.currentUser;
+const ref=doc(db,"users",user.uid);
+await updateDoc(ref,{earnings:increment(5)});
+location.reload();
+};
 
-    loadProfile();
-    renderSaved();
-  </script>
+</script>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import {
-      getAuth,
-      onAuthStateChanged,
-      signInWithEmailAndPassword,
-      createUserWithEmailAndPassword,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      getDoc,
-      setDoc,
-      updateDoc
-    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAsCSXhw4939IEx379MDiXl9CTVJjvJLEI",
-      authDomain: "sazio-1.firebaseapp.com",
-      projectId: "sazio-1",
-      storageBucket: "sazio-1.firebasestorage.app",
-      messagingSenderId: "82743199739",
-      appId: "1:82743199739:web:952840299f517d1e47ed5e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    let currentUser = null;
-
-    authSubmit.addEventListener('click', async () => {
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-
-      if (!email || !password) {
-        authMsg.textContent = 'Email aur password dono bharo.';
-        return;
-      }
-
-      try {
-        authMsg.textContent = authMode === 'login' ? 'Logging in...' : 'Creating account...';
-
-        if (authMode === 'login') {
-          await signInWithEmailAndPassword(auth, email, password);
-        } else {
-          await createUserWithEmailAndPassword(auth, email, password);
-        }
-
-        authMsg.textContent = '';
-      } catch (err) {
-        authMsg.textContent = err.message;
-      }
-    });
-
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        currentUser = null;
-        authView.classList.remove('hidden');
-        dashboardView.classList.add('hidden');
-        return;
-      }
-
-      currentUser = user;
-      authView.classList.add('hidden');
-      dashboardView.classList.remove('hidden');
-
-      const heroWelcome = document.getElementById("heroWelcome");
-      if (heroWelcome) {
-        heroWelcome.textContent = "Welcome " + user.email + ". Ye logged-in SAZIO dashboard hai. Yahan AI Studio, SEO tools, product analysis, language, freelance aur future tools phase by phase add honge.";
-      }
-
-      const profileBox = document.getElementById("profileOutput");
-      if (profileBox) {
-        profileBox.textContent = "Logged in: " + user.email;
-      }
-
-      const ref = doc(db, "users", user.uid);
-      const snap = await getDoc(ref);
-
-      if (!snap.exists()) {
-        await setDoc(ref, {
-          email: user.email,
-          clicks: 0,
-          earnings: 0
-        });
-      }
-
-      const data = (await getDoc(ref)).data() || {};
-      document.getElementById("statClicks").textContent = data.clicks ?? 0;
-      document.getElementById("statEarnings").textContent = "$" + (data.earnings ?? 0);
-    });
-
-    window.addClick = async function () {
-      if (!currentUser) return;
-      const ref = doc(db, "users", currentUser.uid);
-      const snap = await getDoc(ref);
-      const data = snap.data() || {};
-      const newClicks = (data.clicks || 0) + 1;
-      await updateDoc(ref, { clicks: newClicks });
-      document.getElementById("statClicks").textContent = newClicks;
-    };
-
-    window.addMoney = async function () {
-      if (!currentUser) return;
-      const ref = doc(db, "users", currentUser.uid);
-      const snap = await getDoc(ref);
-      const data = snap.data() || {};
-      const newEarnings = (data.earnings || 0) + 5;
-      await updateDoc(ref, { earnings: newEarnings });
-      document.getElementById("statEarnings").textContent = "$" + newEarnings;
-    };
-
-    window.sazioLogout = async function () {
-      await signOut(auth);
-    };
-  </script>
 </body>
-  </html>
+</html>
