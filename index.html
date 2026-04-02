@@ -822,8 +822,8 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // Signup
 window.signup = async () => {
-  const email = document.querySelector('input[type="email"]').value;
-  const password = document.querySelector('input[type="password"]').value;
+const email = document.getElementById('authEmail').value;
+const password = document.getElementById('authPassword').value;
 
   try {
     await createUserWithEmailAndPassword(auth, email, password);
@@ -835,8 +835,8 @@ window.signup = async () => {
 
 // Login
 window.login = async () => {
-  const email = document.querySelector('input[type="email"]').value;
-  const password = document.querySelector('input[type="password"]').value;
+const email = document.getElementById('authEmail').value;
+const password = document.getElementById('authPassword').value;
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
