@@ -97,12 +97,28 @@ window.login = async () => {
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
+    showDashboard(email);
     document.getElementById('authOutput').textContent = "Login successful 🚀";
   } catch (error) {
     document.getElementById('authOutput').textContent = error.message;
   }
 };
-</script>
+  function showDashboard(email){
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('userEmail').textContent = "Logged in as: " + email;
+  document.querySelector('.card').style.display = 'none';
+}
 
+function logout(){
+  document.getElementById('dashboard').style.display = 'none';
+  document.querySelector('.card').style.display = 'block';
+}
+  
+</script>
+<div id="dashboard" style="display:none; text-align:center; color:white;">
+  <h2>Welcome Dashboard 🚀</h2>
+  <p id="userEmail"></p>
+  <button onclick="logout()">Logout</button>
+</div>
 </body>
 </html>
