@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAZIO X Phase12 Pro Plus</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#050505; --panel:#101010; --panel2:#181818; --line:rgba(255,255,255,.08);
+      --text:#fff; --muted:#bdbdbd; --accent:#ff5a5a; --accent2:#ffd166; --ok:#25c46b;
+      --info:#6fb7ff; --kids:#7a5cff; --bad:#ff7b7b; --radius:22px;
+    }
+    body{
+      font-family:Arial,sans-serif;color:var(--text);min-height:100vh;
+      background:
+        radial-gradient(circle at top left, rgba(255,90,90,.10), transparent 20%),
+        radial-gradient(circle at top right, rgba(122,92,255,.08), transparent 18%),
+        linear-gradient(180deg,#000,#0a0a0a 45%, #050505);
+    }
+    .wrap{max-width:1440px;margin:0 auto;padding:18px}
+    .topbar{
+      position:sticky;top:0;z-index:20;background:rgba(0,0,0,.8);
+      backdrop-filter:blur(8px);border-bottom:1px solid var(--line)
+    }
+    .topbar-inner{
+      max-width:1440px;margin:0 auto;padding:12px 18px;
+      display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap
+    }
+    .brand{font-size:24px;font-weight:900}
+    .nav{display:flex;gap:10px;flex-wrap:wrap}
+    .nav button,.btn{
+      background:var(--panel2);color:#fff;border:1px solid var(--line);
+      border-radius:14px;padding:11px 15px;font-weight:700;cursor:pointer
+    }
+    .nav button.active,.btn.primary{background:var(--accent)}
+    .btn.good{background:var(--ok);color:#07140b}
+    .btn.info{background:var(--info);color:#06131f}
+    .btn.warn{background:var(--accent2);color:#201500}
+    .btn.kids{background:var(--kids)}
+    .btn.bad{background:var(--bad);color:#220606}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid var(--line);border-radius:var(--radius);padding:20px;
+      box-shadow:0 16px 40px rgba(0,0,0,.35)
+    }
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;padding:24px 0 18px}
+    .hero h1{font-size:42px;line-height:1.03;margin-bottom:10px}
+    .muted{color:var(--muted);line-height:1.6}
+    .toolbar,.badges,.grid{display:flex;gap:10px;flex-wrap:wrap}
+    .toolbar{margin-top:14px}
+    .badges{margin-top:14px}
+    .badge{
+      background:var(--panel2);border:1px solid var(--line);border-radius:999px;
+      padding:7px 10px;font-size:13px;color:#f0f0f0
+    }
+    .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+    .grid5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
+    .stat .label{color:var(--muted);font-size:14px}
+    .stat .num{font-size:34px;font-weight:900;margin-top:10px;color:var(--accent2)}
+    .section{display:none;padding-bottom:24px}
+    .section.active{display:block}
+    h2{font-size:30px;margin-bottom:10px}
+    h3{font-size:20px;margin-bottom:8px}
+    input,textarea,select{
+      width:100%;margin-top:12px;background:#0a0a0a;color:#fff;border:1px solid var(--line);
+      border-radius:14px;padding:14px;font-size:15px;outline:none
+    }
+    textarea{min-height:130px;resize:vertical}
+    .output{
+      margin-top:14px;background:#090909;border:1px solid var(--line);border-radius:16px;
+      min-height:130px;padding:16px;line-height:1.65;white-space:pre-wrap;word-break:break-word
+    }
+    .mini{
+      background:#0b0b0b;border:1px solid var(--line);border-radius:16px;padding:14px
+    }
+    .price{font-weight:800;color:var(--accent2);margin-top:6px}
+    .footer{text-align:center;color:#8f8f8f;padding:28px 0 50px}
+    @media (max-width:980px){
+      .hero,.grid2,.grid3,.grid4,.grid5{grid-template-columns:1fr}
+      .hero h1{font-size:34px}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">SAZIO X 🚀</div>
+      <div class="nav" id="navTabs">
+        <button data-tab="dashboard" class="active">Dashboard</button>
+        <button data-tab="router">AI Router</button>
+        <button data-tab="product">Product AI</button>
+        <button data-tab="kids">Kids</button>
+        <button data-tab="moderation">Moderation</button>
+        <button data-tab="analytics">Analytics</button>
+        <button data-tab="profile">Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <section class="hero">
+      <div class="card">
+        <h1>Phase 12 Pro Plus Intelligence Layer</h1>
+        <p class="muted" id="heroText">Ye upgraded layer AI routing, product intelligence, moderation starter, analytics polish aur future backend-ready structure ko ek jagah laati hai.</p>
+        <div class="toolbar">
+          <button class="btn primary" onclick="fakeAction('Logout action demo')">Logout</button>
+          <button class="btn" onclick="inc('clicks',1)">Add Click</button>
+          <button class="btn good" onclick="inc('money',2)">Daily Bonus +2</button>
+          <button class="btn warn" onclick="inc('money',3)">Task Reward +3</button>
+          <button class="btn info" onclick="goTab('router')">Open Router</button>
+          <button class="btn kids" onclick="goTab('kids')">Open Kids</button>
+        </div>
+        <div class="badges">
+          <span class="badge">AI Router Pro</span>
+          <span class="badge">Product Intelligence</span>
+          <span class="badge">Moderation Starter</span>
+          <span class="badge">Kids Safe</span>
+          <span class="badge">Backend-Ready Hook</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>System Status</h3>
+        <div class="output" id="statusBox">System ready.
+Current mode: Dashboard
+Phase 12 Pro Plus loaded.
+Backend hook placeholder active.</div>
+      </div>
+    </section>
+
+    <section id="dashboard" class="section active">
+      <div class="grid5">
+        <div class="card stat"><div class="label">Clicks</div><div class="num" id="clicks">0</div></div>
+        <div class="card stat"><div class="label">Earnings</div><div class="num">$<span id="money">0</span></div></div>
+        <div class="card stat"><div class="label">AI Runs</div><div class="num" id="aiRuns">0</div></div>
+        <div class="card stat"><div class="label">Product Runs</div><div class="num" id="productRuns">0</div></div>
+        <div class="card stat"><div class="label">Flags</div><div class="num" id="flags">0</div></div>
+      </div>
+
+      <div class="grid2" style="margin-top:18px;">
+        <div class="card">
+          <h2>Quick Launch</h2>
+          <p class="muted">Router se smart intent detect karo, Product AI me compare request draft banao, Kids me safe learning output lo, Moderation me suspicious text flag karo.</p>
+          <div class="toolbar">
+            <button class="btn info" onclick="goTab('router')">AI Router</button>
+            <button class="btn primary" onclick="goTab('product')">Product AI</button>
+            <button class="btn kids" onclick="goTab('kids')">Kids</button>
+            <button class="btn bad" onclick="goTab('moderation')">Moderation</button>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Phase 12 Rules</h2>
+          <div class="output">1. No API key in frontend
+2. Real AI must use secure backend route
+3. Product output uses "best available detected deal"
+4. Kids output stays clean and educational
+5. Moderation flags suspicious wording only
+6. Trust-first messaging on every critical flow</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="router" class="section">
+      <div class="card">
+        <h2>AI Router Pro Max</h2>
+        <textarea id="routerInput" placeholder="Type anything... example: emotional story, seo title, kids jungle quiz, cheapest phone under 20000, freelance thumbnail gig"></textarea>
+        <div class="toolbar">
+          <button class="btn primary" onclick="runRouter()">Analyze & Generate</button>
+          <button class="btn" onclick="copyOutput('routerOutput')">Copy</button>
+        </div>
+
+        <div class="grid3" style="margin-top:14px;">
+          <div class="card"><h3>Intent</h3><div class="output" id="routerIntent">Waiting...</div></div>
+          <div class="card"><h3>Score</h3><div class="output" id="routerScore">Waiting...</div></div>
+          <div class="card"><h3>Safety</h3><div class="output" id="routerSafety">Waiting...</div></div>
+        </div>
+
+        <div class="card" style="margin-top:18px;">
+          <h3>Main Output</h3>
+          <div class="output" id="routerOutput">Router output yahan aayega.</div>
+        </div>
+
+        <div class="card" style="margin-top:18px;">
+          <h3>Backend Hook</h3>
+          <div class="output" id="backendHook">Future secure AI call:
+POST /api/ai-route
+Body:
+{
+  "prompt": "...",
+  "mode": "router"
+}</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="product" class="section">
+      <div class="grid2">
+        <div class="card">
+          <h2>Product Intelligence</h2>
+          <input id="productQuery" placeholder="Example: iphone 15, shoes under 3000, laptop for editing" />
+          <textarea id="productFilters" placeholder="Optional filters: budget, color, storage, brand, city"></textarea>
+          <div class="toolbar">
+            <button class="btn primary" onclick="runProductAI()">Run Product AI</button>
+            <button class="btn" onclick="copyOutput('productOutput')">Copy</button>
+          </div>
+          <div class="output" id="productOutput">Product result yahan aayega.</div>
+        </div>
+
+        <div class="card">
+          <h2>Product Engine Notes</h2>
+          <div class="output">Safe compare wording:
+- best available detected deal
+- prices may vary by time and location
+- shipping and fees can change at checkout
+- trust score matters
+- partner links where available
+
+Real compare later:
+1. secure backend query
+2. provider/API connectors
+3. affiliate-ready result cards</div>
+
+          <div class="grid2" style="margin-top:14px;">
+            <div class="mini">
+              <h3>Best Deal Card</h3>
+              <div>Platform A</div>
+              <div class="price">₹39,999</div>
+            </div>
+            <div class="mini">
+              <h3>Trust Card</h3>
+              <div>Seller trust, returns, warranty, fees</div>
+              <div class="price">Reviewed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="kids" class="section">
+      <div class="grid2">
+        <div class="card">
+          <h2>Kids Safe Mode</h2>
+          <select id="kidsModeType">
+            <option value="story">Safe Story</option>
+            <option value="quiz">Quiz</option>
+            <option value="homework">Homework Helper</option>
+            <option value="learning">Learning Helper</option>
+          </select>
+          <textarea id="kidsInput" placeholder="Example: jungle story, class 2 math help, animals quiz"></textarea>
+          <div class="toolbar">
+            <button class="btn kids" onclick="runKidsMode()">Generate</button>
+            <button class="btn" onclick="copyOutput('kidsOutput')">Copy</button>
+          </div>
+          <div class="output" id="kidsOutput">Kids-safe output yahan aayega.</div>
+        </div>
+
+        <div class="card">
+          <h2>Parent Friendly Rules</h2>
+          <div class="output">Allowed:
+- stories
+- quizzes
+- simple homework help
+- easy learning
+
+Blocked:
+- adult topics
+- scams
+- harmful instructions
+- violent requests</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="moderation" class="section">
+      <div class="grid2">
+        <div class="card">
+          <h2>Moderation Starter</h2>
+          <textarea id="modInput" placeholder="Paste suspicious text here..."></textarea>
+          <div class="toolbar">
+            <button class="btn bad" onclick="runModeration()">Scan Text</button>
+            <button class="btn" onclick="copyOutput('modOutput')">Copy</button>
+          </div>
+          <div class="output" id="modOutput">Moderation result yahan aayega.</div>
+        </div>
+
+        <div class="card">
+          <h2>Flag Categories</h2>
+          <div class="output">Scans for:
+- scam words
+- fake guarantee claims
+- adult terms
+- betting terms
+- harmful kids requests
+- manipulative urgency patterns</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="analytics" class="section">
+      <div class="grid4">
+        <div class="card"><h2>Clicks</h2><div class="output" id="aClicks">0</div></div>
+        <div class="card"><h2>Earnings</h2><div class="output" id="aMoney">$0</div></div>
+        <div class="card"><h2>AI Runs</h2><div class="output" id="aAiRuns">0</div></div>
+        <div class="card"><h2>Flags</h2><div class="output" id="aFlags">0</div></div>
+      </div>
+    </section>
+
+    <section id="profile" class="section">
+      <div class="grid2">
+        <div class="card">
+          <h2>Profile</h2>
+          <input id="profileName" placeholder="Your name" />
+          <input id="profileRole" placeholder="Role" />
+          <input id="profileLanguage" placeholder="Preferred language" />
+          <div class="toolbar">
+            <button class="btn primary" onclick="saveProfile()">Save Profile</button>
+            <button class="btn" onclick="loadProfile()">Load Profile</button>
+          </div>
+          <div class="output" id="profileOutput">Profile status yahan aayega.</div>
+        </div>
+
+        <div class="card">
+          <h2>System Memory</h2>
+          <div class="output" id="memoryOutput">Local profile data yahan dikhai dega.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">SAZIO X phase12proplus upgraded build.</div>
+  </div>
+
+  <script>
+    let state = {
+      clicks: 0,
+      money: 0,
+      aiRuns: 0,
+      productRuns: 0,
+      flags: 0
+    };
+
+    const navButtons = document.querySelectorAll('#navTabs button');
+    const sections = document.querySelectorAll('.section');
+
+    function goTab(tab){
+      navButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      sections.forEach(sec => sec.classList.toggle('active', sec.id === tab));
+      document.getElementById('statusBox').textContent =
+`System ready.
+Current mode: ${tab}
+Phase 12 Pro Plus loaded.
+Backend hook placeholder active.`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    navButtons.forEach(btn => btn.addEventListener('click', () => goTab(btn.dataset.tab)));
+
+    function updateStats(){
+      document.getElementById('clicks').textContent = state.clicks;
+      document.getElementById('money').textContent = state.money;
+      document.getElementById('aiRuns').textContent = state.aiRuns;
+      document.getElementById('productRuns').textContent = state.productRuns;
+      document.getElementById('flags').textContent = state.flags;
+
+      document.getElementById('aClicks').textContent = state.clicks;
+      document.getElementById('aMoney').textContent = '$' + state.money;
+      document.getElementById('aAiRuns').textContent = state.aiRuns;
+      document.getElementById('aFlags').textContent = state.flags;
+    }
+
+    function fakeAction(msg){
+      alert(msg);
+    }
+
+    function inc(key, amount){
+      state[key] += amount;
+      updateStats();
+    }
+
+    function copyOutput(id){
+      const el = document.getElementById(id);
+      if (!el) return;
+      navigator.clipboard.writeText(el.textContent || '');
+      alert('Copied ✅');
+    }
+
+    function detectIntent(text){
+      const t = text.toLowerCase();
+      if (!t) return 'none';
+      if (t.includes('kids') || t.includes('quiz') || t.includes('homework')) return 'kids';
+      if (t.includes('product') || t.includes('cheap') || t.includes('phone') || t.includes('laptop')) return 'product';
+      if (t.includes('market') || t.includes('pack') || t.includes('listing')) return 'marketplace';
+      if (t.includes('gig') || t.includes('service') || t.includes('freelance')) return 'freelance';
+      if (t.includes('seo') || t.includes('title') || t.includes('tags')) return 'seo';
+      if (t.includes('story') || t.includes('emotional')) return 'story';
+      return 'general';
+    }
+
+    function scoreIntent(text, intent){
+      let score = 58;
+      if (intent === 'product' || intent === 'marketplace' || intent === 'freelance') score += 12;
+      if (intent === 'kids') score += 8;
+      if (intent === 'seo' || intent === 'story') score += 10;
+      if (text.length < 8) score -= 8;
+      if (score > 95) score = 95;
+      if (score < 20) score = 20;
+      return score;
+    }
+
+    function safetyCheck(text){
+      const t = text.toLowerCase();
+      const risky = ['adult', 'betting', 'scam', 'violence', 'fake guarantee', 'sure win', 'double money'];
+      const hit = risky.find(x => t.includes(x));
+      if (hit) return `Warning\nSuspicious phrase detected: ${hit}\nSafe mode response applied.`;
+      return 'Safe\nNo obvious risky phrase detected.';
+    }
+
+    function generateRouterOutput(text, intent){
+      if (intent === 'kids') {
+        return `Detected as: Kids Request
+
+Recommended:
+- Open Kids Mode
+- Keep output clean and parent-friendly
+- Use simple educational tone
+
+Starter:
+Topic: ${text}`;
+      }
+      if (intent === 'product') {
+        return `Detected as: Product Request
+
+Recommended:
+- Open Product AI
+- Compare using trust-first wording
+- Use "best available detected deal"
+
+Starter:
+Product query: ${text}`;
+      }
+      if (intent === 'marketplace') {
+        return `Detected as: Marketplace Request
+
+Recommended:
+- Create digital listing
+- Use honest title and pricing
+- Add clean description
+
+Starter:
+Listing idea: ${text}`;
+      }
+      if (intent === 'freelance') {
+        return `Detected as: Freelance Request
+
+Recommended:
+- Create a gig
+- Define scope clearly
+- Keep delivery realistic
+
+Starter:
+Service idea: ${text}`;
+      }
+      if (intent === 'seo') {
+        return `Detected as: SEO Request
+
+Title:
+Nobody Expected This… ${text} 😳
+
+Description:
+Optimized short-form content pack ready.
+
+Tags:
+viral, trending, sazio, ${text}`;
+      }
+      if (intent === 'story') {
+        return `Detected as: Story Request
+
+Hook:
+Nobody expected what happened next in ${text}.
+
+Structure:
+1. Hook
+2. Emotion
+3. Conflict
+4. Twist
+5. Ending`;
+      }
+      return `Detected as: General Request
+
+Suggested next step:
+- AI Router
+- Product AI
+- Kids
+- Marketplace
+- Freelance`;
+    }
+
+    function runRouter(){
+      const text = document.getElementById('routerInput').value.trim();
+      if (!text) {
+        document.getElementById('routerIntent').textContent = 'No input';
+        document.getElementById('routerScore').textContent = '0/100';
+        document.getElementById('routerSafety').textContent = 'Waiting...';
+        document.getElementById('routerOutput').textContent = 'Pehle kuch likho.';
+        return;
+      }
+
+      const intent = detectIntent(text);
+      const score = scoreIntent(text, intent);
+      const safety = safetyCheck(text);
+      const output = generateRouterOutput(text, intent);
+
+      state.aiRuns += 1;
+      updateStats();
+
+      document.getElementById('routerIntent').textContent = intent.toUpperCase();
+      document.getElementById('routerScore').textContent = `${score}/100`;
+      document.getElementById('routerSafety').textContent = safety;
+      document.getElementById('routerOutput').textContent = output;
+    }
+
+    function runProductAI(){
+      const query = document.getElementById('productQuery').value.trim();
+      const filters = document.getElementById('productFilters').value.trim();
+
+      if (!query) {
+        document.getElementById('productOutput').textContent = 'Pehle product query likho.';
+        return;
+      }
+
+      state.productRuns += 1;
+      updateStats();
+
+      document.getElementById('productOutput').textContent =
+`Product Intelligence Result
+
+Query: ${query}
+Filters: ${filters || 'No extra filters'}
+
+Best Available Detected Deal:
+1. Platform A — ₹39,999
+2. Platform B — ₹40,499
+3. Platform C — ₹41,200
+
+Safe Notes:
+- prices may vary by location and time
+- shipping and fees can change at checkout
+- trust score matters
+- partner links where available`;
+    }
+
+    function kidsSafetyCheck(text){
+      const t = text.toLowerCase();
+      const blocked = ['violence', 'gun', 'kill', 'adult', 'betting', 'scam', 'money trap'];
+      const hit = blocked.find(x => t.includes(x));
+      if (hit) return { safe:false, reason:`Blocked topic detected: ${hit}` };
+      return { safe:true, reason:'Kids-safe topic detected.' };
+    }
+
+    function runKidsMode(){
+      const mode = document.getElementById('kidsModeType').value;
+      const text = document.getElementById('kidsInput').value.trim();
+
+      if (!text) {
+        document.getElementById('kidsOutput').textContent = 'Pehle kids-friendly topic likho.';
+        return;
+      }
+
+      const safety = kidsSafetyCheck(text);
+      if (!safety.safe) {
+        document.getElementById('kidsOutput').textContent =
+`Kids Safe Filter Active ❌
+
+${safety.reason}
+
+Please use a safe learning or story topic.`;
+        return;
+      }
+
+      let out = '';
+      if (mode === 'story') {
+        out = `Kids Safe Story
+
+Title:
+${text}
+
+Story:
+Ek pyara sa dost tha jo har din kuch naya seekhta tha.
+Usne honesty, kindness aur curiosity ki value seekhi.
+
+Lesson:
+Always be kind and keep learning.`;
+      } else if (mode === 'quiz') {
+        out = `Kids Quiz
+
+Topic: ${text}
+
+Q1. Is topic ki basic definition kya hai?
+Q2. Iska ek example do.
+Q3. Is topic se hum kya seekhte hain?`;
+      } else if (mode === 'homework') {
+        out = `Homework Helper
+
+Topic: ${text}
+
+Easy steps:
+1. Definition
+2. 2 examples
+3. 1 conclusion`;
+      } else {
+        out = `Learning Helper
+
+Topic: ${text}
+
+Steps:
+1. Read
+2. Note 3 points
+3. Think 1 example
+4. Write short summary`;
+      }
+
+      document.getElementById('kidsOutput').textContent = out;
+    }
+
+    function runModeration(){
+      const text = document.getElementById('modInput').value.trim();
+      if (!text) {
+        document.getElementById('modOutput').textContent = 'Pehle suspicious text paste karo.';
+        return;
+      }
+
+      const low = text.toLowerCase();
+      const patterns = ['sure win','double money','adult','betting','fixed match','guaranteed profit','urgent payment'];
+      const hit = patterns.filter(p => low.includes(p));
+
+      if (hit.length) {
+        state.flags += 1;
+        updateStats();
+        document.getElementById('modOutput').textContent =
+`Flagged ✅
+
+Risk Level: HIGH
+Matched Patterns: ${hit.join(', ')}
+
+Advice:
+- verify source
+- avoid payment
+- avoid guaranteed claims
+- review manually before approval`;
+      } else {
+        document.getElementById('modOutput').textContent =
+`Scan Complete
+
+Risk Level: LOW
+No major suspicious pattern detected.
+Still review context manually.`;
+      }
+    }
+
+    function saveProfile(){
+      const data = {
+        name: document.getElementById('profileName').value.trim(),
+        role: document.getElementById('profileRole').value.trim(),
+        language: document.getElementById('profileLanguage').value.trim()
+      };
+      localStorage.setItem('sazio_phase12_profile', JSON.stringify(data));
+      document.getElementById('profileOutput').textContent =
+`Saved ✅
+Name: ${data.name || '-'}
+Role: ${data.role || '-'}
+Language: ${data.language || '-'}`;
+      document.getElementById('memoryOutput').textContent = JSON.stringify(data, null, 2);
+    }
+
+    function loadProfile(){
+      const data = JSON.parse(localStorage.getItem('sazio_phase12_profile') || '{}');
+      document.getElementById('profileName').value = data.name || '';
+      document.getElementById('profileRole').value = data.role || '';
+      document.getElementById('profileLanguage').value = data.language || '';
+      document.getElementById('profileOutput').textContent =
+`Loaded ✅
+Name: ${data.name || '-'}
+Role: ${data.role || '-'}
+Language: ${data.language || '-'}`;
+      document.getElementById('memoryOutput').textContent = Object.keys(data).length ? JSON.stringify(data, null, 2) : 'No local profile saved yet.';
+    }
+
+    loadProfile();
+    updateStats();
+  </script>
+</body>
+</html>
