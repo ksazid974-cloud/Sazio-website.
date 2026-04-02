@@ -1,2 +1,0 @@
-# Sazio-website.
-SAZIO — AI-powered earning system to create content, track smart links, and grow income worldwide.
