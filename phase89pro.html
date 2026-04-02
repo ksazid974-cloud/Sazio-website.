@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAZIO X Phase89 Pro</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root{
+      --bg:#060606;
+      --panel:#101010;
+      --panel2:#191919;
+      --line:rgba(255,255,255,.08);
+      --text:#fff;
+      --muted:#bdbdbd;
+      --accent:#ff5a5a;
+      --accent2:#ffd166;
+      --ok:#25c46b;
+      --bad:#ff7b7b;
+      --info:#6fb7ff;
+      --kids:#7a5cff;
+      --radius:22px;
+      --shadow:0 16px 40px rgba(0,0,0,.35);
+    }
+
+    body{
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255,90,90,.10), transparent 20%),
+        radial-gradient(circle at top right, rgba(122,92,255,.08), transparent 18%),
+        linear-gradient(180deg,#000,#0a0a0a 45%, #050505);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .hidden{ display:none !important; }
+    .wrap{ max-width:1440px; margin:0 auto; padding:18px; }
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:20px;
+      box-shadow:var(--shadow);
+    }
+
+    .auth-wrap{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:18px;
+    }
+    .auth-card{ width:100%; max-width:540px; }
+    .logo{
+      font-size:42px;
+      font-weight:900;
+      line-height:1.03;
+      margin-bottom:10px;
+    }
+    .muted{ color:var(--muted); line-height:1.6; }
+
+    .tabs,.toolbar,.nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .tabs{ margin-top:14px; }
+
+    .btn{
+      border:1px solid var(--line);
+      background:var(--panel2);
+      color:#fff;
+      border-radius:14px;
+      padding:11px 15px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .btn.primary{ background:var(--accent); }
+    .btn.good{ background:var(--ok); color:#07140b; }
+    .btn.warn{ background:var(--accent2); color:#201500; }
+    .btn.bad{ background:var(--bad); color:#220606; }
+    .btn.info{ background:var(--info); color:#06131f; }
+    .btn.kids{ background:var(--kids); color:#fff; }
+
+    input,textarea,select{
+      width:100%;
+      margin-top:12px;
+      background:#0a0a0a;
+      color:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      font-size:15px;
+      outline:none;
+    }
+    textarea{ min-height:130px; resize:vertical; }
+
+    .msg{
+      margin-top:12px;
+      min-height:24px;
+      white-space:pre-wrap;
+      color:var(--accent2);
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter:blur(8px);
+      background:rgba(0,0,0,.78);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar-inner{
+      max-width:1440px;
+      margin:0 auto;
+      padding:12px 18px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .brand{ font-size:24px; font-weight:900; }
+
+    .nav button{
+      border:1px solid var(--line);
+      background:var(--panel2);
+      color:#fff;
+      border-radius:12px;
+      padding:10px 14px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .nav button.active{ background:var(--accent); }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:18px;
+      padding:24px 0 18px;
+    }
+    .hero h1{
+      font-size:44px;
+      line-height:1.03;
+      margin-bottom:10px;
+    }
+
+    .badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+    .badge{
+      background:var(--panel2);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:13px;
+      color:#f0f0f0;
+    }
+
+    .grid{ display:grid; gap:18px; }
+    .grid-5{ grid-template-columns:repeat(5,minmax(0,1fr)); }
+    .grid-4{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+    .grid-3{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .grid-2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+
+    .stat .label{ color:var(--muted); font-size:14px; }
+    .stat .num{
+      font-size:34px;
+      font-weight:900;
+      margin-top:10px;
+      color:var(--accent2);
+    }
+
+    .section{ display:none; padding-bottom:24px; }
+    .section.active{ display:block; }
+
+    .output{
+      background:#090909;
+      border:1px solid var(--line);
+      border-radius:16px;
+      min-height:130px;
+      padding:16px;
+      line-height:1.65;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    .catalog{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin-top:12px;
+    }
+    .mini-card{
+      background:#0b0b0b;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+    }
+    .mini-card h4{
+      font-size:16px;
+      margin-bottom:6px;
+    }
+    .price{
+      font-weight:800;
+      color:var(--accent2);
+      margin-top:6px;
+    }
+
+    h2{ font-size:30px; margin-bottom:10px; }
+    h3{ font-size:20px; margin-bottom:8px; }
+
+    .footer{
+      text-align:center;
+      color:#8f8f8f;
+      padding:28px 0 50px;
+    }
+
+    @media (max-width:980px){
+      .hero,.grid-5,.grid-4,.grid-3,.grid-2,.catalog{ grid-template-columns:1fr; }
+      .hero h1,.logo{ font-size:34px; }
+      .topbar-inner{ align-items:flex-start; flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+  <div id="authView" class="auth-wrap">
+    <div class="card auth-card">
+      <div class="logo">SAZIO X PHASE89 PRO 🚀</div>
+      <p class="muted">Login ya signup karke Kids Safe Mode + Marketplace Pro dashboard open karo.</p>
+
+      <div class="tabs">
+        <button id="loginTab" class="btn primary" type="button">Login</button>
+        <button id="signupTab" class="btn" type="button">Signup</button>
+      </div>
+
+      <input id="email" type="email" placeholder="Email address" />
+      <input id="password" type="password" placeholder="Password" />
+      <div class="toolbar" style="margin-top:12px;">
+        <button id="authSubmit" class="btn primary" type="button">Login</button>
+      </div>
+      <div id="authMsg" class="msg"></div>
+    </div>
+  </div>
+
+  <div id="appView" class="hidden">
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">SAZIO X 🚀</div>
+        <div class="nav" id="navTabs">
+          <button data-tab="dashboard" class="active">Dashboard</button>
+          <button data-tab="kids">Kids Mode</button>
+          <button data-tab="marketplace">Marketplace</button>
+          <button data-tab="freelance">Freelance</button>
+          <button data-tab="earn">Earn</button>
+          <button data-tab="withdraw">Withdraw</button>
+          <button data-tab="analytics">Analytics</button>
+          <button data-tab="profile">Profile</button>
+          <button data-tab="admin" id="adminNav" class="hidden">Admin</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <section class="hero">
+        <div class="card">
+          <h1>Kids Safe Mode + Marketplace Pro Platform</h1>
+          <p class="muted" id="heroText">Welcome. Yahan Kids Safe Mode, learning helper, marketplace starter, freelance gigs, safe rewards aur admin-reviewed withdraw system ek hi jagah milta hai.</p>
+          <div class="toolbar" style="margin-top:14px;">
+            <button class="btn primary" onclick="sazioLogout()">Logout</button>
+            <button class="btn" onclick="addClick()">Add Click</button>
+            <button class="btn good" onclick="claimDailyBonus()">Daily Bonus +2</button>
+            <button class="btn warn" onclick="claimTaskReward()">Task Reward +3</button>
+            <button class="btn kids" onclick="goTab('kids')">Open Kids Mode</button>
+          </div>
+          <div class="badges">
+            <span class="badge">Kids Safe</span>
+            <span class="badge">Parent Friendly</span>
+            <span class="badge">Marketplace Pro</span>
+            <span class="badge">Freelance Starter</span>
+            <span class="badge">Minimum Withdraw $100</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>System Status</h3>
+          <div class="output" id="statusBox">Loading status...</div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="section active">
+        <div class="grid grid-5">
+          <div class="card stat">
+            <div class="label">Clicks</div>
+            <div class="num" id="statClicks">0</div>
+          </div>
+          <div class="card stat">
+            <div class="label">Earnings</div>
+            <div class="num" id="statEarnings">$0</div>
+          </div>
+          <div class="card stat">
+            <div class="label">Referrals</div>
+            <div class="num" id="statReferrals">0</div>
+          </div>
+          <div class="card stat">
+            <div class="label">Withdraws</div>
+            <div class="num" id="statWithdrawCount">0</div>
+          </div>
+          <div class="card stat">
+            <div class="label">Streak</div>
+            <div class="num" id="statStreak">0</div>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:18px;">
+          <div class="card">
+            <h2>Quick Start</h2>
+            <p class="muted">Kids section me safe story aur quiz try karo. Marketplace me digital product listing banao. Freelance me apni service gig set karo.</p>
+            <div class="toolbar" style="margin-top:12px;">
+              <button class="btn kids" onclick="goTab('kids')">Open Kids Mode</button>
+              <button class="btn primary" onclick="goTab('marketplace')">Open Marketplace</button>
+              <button class="btn" onclick="goTab('freelance')">Open Freelance</button>
+            </div>
+          </div>
+          <div class="card">
+            <h2>Rules</h2>
+            <div class="output" id="rulesBox">Loading rules...</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="kids" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Kids Safe Mode</h2>
+            <select id="kidsModeType">
+              <option value="story">Safe Story</option>
+              <option value="quiz">Quiz</option>
+              <option value="homework">Homework Helper</option>
+              <option value="learning">Learning Helper</option>
+            </select>
+            <textarea id="kidsInput" placeholder="Example: jungle story, class 2 math help, animals quiz"></textarea>
+            <div class="toolbar" style="margin-top:12px;">
+              <button class="btn kids" onclick="runKidsMode()">Generate Kids Output</button>
+              <button class="btn" onclick="copyOutput('kidsOutput')">Copy</button>
+              <button class="btn" onclick="saveOutput('kidsOutput')">Save</button>
+            </div>
+            <div class="output" id="kidsOutput">Kids-safe output yahan aayega.</div>
+          </div>
+
+          <div class="card">
+            <h2>Parent Safe Notes</h2>
+            <div class="output">Kids Mode safety rules:
+- no adult content
+- no violent instructions
+- no scam language
+- no money trapping
+- simple educational tone
+- parent-friendly structure
+- clean language only</div>
+
+            <div class="catalog">
+              <div class="mini-card">
+                <h4>Safe Story Pack</h4>
+                <div>Animal stories, kindness stories, bedtime stories</div>
+                <div class="price">$5 starter</div>
+              </div>
+              <div class="mini-card">
+                <h4>Kids Learning Pack</h4>
+                <div>Quiz + homework help + simple learning templates</div>
+                <div class="price">$7 starter</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="marketplace" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Marketplace Pro Starter</h2>
+            <select id="marketType">
+              <option value="prompt">Prompt Pack</option>
+              <option value="seo">SEO Pack</option>
+              <option value="script">Script Pack</option>
+              <option value="template">Template Pack</option>
+              <option value="service">Service Listing</option>
+            </select>
+            <input id="marketTitle" placeholder="Product / service title" />
+            <input id="marketPrice" placeholder="Price" />
+            <textarea id="marketDesc" placeholder="Short description"></textarea>
+            <div class="toolbar" style="margin-top:12px;">
+              <button class="btn primary" onclick="createMarketListing()">Create Listing</button>
+            </div>
+            <div class="output" id="marketOutput">Marketplace result yahan aayega.</div>
+          </div>
+
+          <div class="card">
+            <h2>Marketplace Notes</h2>
+            <div class="output">Marketplace beta rules:
+- digital items only
+- no fake claims
+- no illegal products
+- no copied copyrighted packs
+- no scammy guarantees
+- payment backend not active yet
+- structure only for safe future scaling</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px;">
+          <h2>Sample Listings</h2>
+          <div class="catalog">
+            <div class="mini-card">
+              <h4>Viral Thumbnail Prompt Pack</h4>
+              <div>50 high-click prompt ideas for thumbnails</div>
+              <div class="price">$9</div>
+            </div>
+            <div class="mini-card">
+              <h4>Shorts SEO Mega Pack</h4>
+              <div>Titles, descriptions and tag bundles</div>
+              <div class="price">$12</div>
+            </div>
+            <div class="mini-card">
+              <h4>Emotional Story Script Bundle</h4>
+              <div>Story starter templates for creators</div>
+              <div class="price">$15</div>
+            </div>
+            <div class="mini-card">
+              <h4>Kids Learning Content Pack</h4>
+              <div>Safe worksheets and quiz prompts</div>
+              <div class="price">$11</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="freelance" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Freelance Gig Starter</h2>
+            <select id="gigType">
+              <option value="thumbnail">Thumbnail Design</option>
+              <option value="script">Script Writing</option>
+              <option value="seo">SEO Service</option>
+              <option value="prompt">Prompt Writing</option>
+              <option value="editing">Editing Service</option>
+            </select>
+            <input id="gigTitle" placeholder="Gig title" />
+            <input id="gigPrice" placeholder="Starting price" />
+            <textarea id="gigDesc" placeholder="Gig description"></textarea>
+            <div class="toolbar" style="margin-top:12px;">
+              <button class="btn primary" onclick="createGig()">Create Gig</button>
+            </div>
+            <div class="output" id="gigOutput">Gig result yahan aayega.</div>
+          </div>
+
+          <div class="card">
+            <h2>Freelance Notes</h2>
+            <div class="output">Freelance beta rules:
+- no fake portfolio claims
+- no hidden charges
+- no guaranteed impossible delivery
+- keep service clear and honest
+- order backend not active yet
+- safe gig structure only</div>
+
+            <div class="catalog">
+              <div class="mini-card">
+                <h4>Thumbnail Service</h4>
+                <div>Starter gig for basic thumbnail creation</div>
+                <div class="price">from $10</div>
+              </div>
+              <div class="mini-card">
+                <h4>SEO Service</h4>
+                <div>Title, description and tag optimization</div>
+                <div class="price">from $8</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="earn" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Safe Earning Tools</h2>
+            <div class="toolbar">
+              <button class="btn" onclick="addClick()">Add Click</button>
+              <button class="btn good" onclick="claimDailyBonus()">Daily Bonus +2</button>
+              <button class="btn warn" onclick="claimTaskReward()">Task Reward +3</button>
+            </div>
+            <div class="output" id="earnStatus">Loading earn status...</div>
+          </div>
+          <div class="card">
+            <h2>Reward Status</h2>
+            <div class="output" id="rewardBox">Loading reward status...</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="withdraw" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Withdraw Request</h2>
+            <input id="withdrawUpi" placeholder="UPI ID (example: name@upi)" />
+            <input id="withdrawAmount" type="number" placeholder="Amount" />
+            <textarea id="withdrawNote" placeholder="Optional note"></textarea>
+            <div class="toolbar" style="margin-top:12px;">
+              <button class="btn primary" onclick="submitWithdraw()">Submit Withdraw</button>
+            </div>
+            <div class="output" id="withdrawMsg">Request status yahan aayega.</div>
+          </div>
+          <div class="card">
+            <h2>Your Withdraw History</h2>
+            <div class="output" id="withdrawHistory">Loading history...</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="analytics" class="section">
+        <div class="grid grid-4">
+          <div class="card">
+            <h2>Clicks</h2>
+            <div class="output" id="analyticsClicks">0</div>
+          </div>
+          <div class="card">
+            <h2>Earnings</h2>
+            <div class="output" id="analyticsEarnings">$0</div>
+          </div>
+          <div class="card">
+            <h2>Referrals</h2>
+            <div class="output" id="analyticsReferrals">0</div>
+          </div>
+          <div class="card">
+            <h2>Streak</h2>
+            <div class="output" id="analyticsStreak">0</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="profile" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Profile</h2>
+            <input id="profileName" placeholder="Your name" />
+            <input id="profileRole" placeholder="Role" />
+            <input id="profileLanguage" placeholder="Preferred language" />
+            <div class="toolbar" style="margin-top:12px;">
+              <button class="btn primary" onclick="saveProfile()">Save Profile</button>
+              <button class="btn" onclick="loadProfile()">Load Profile</button>
+            </div>
+            <div class="output" id="profileOutput">Profile status yahan aayega.</div>
+          </div>
+          <div class="card">
+            <h2>Saved Outputs</h2>
+            <div class="output" id="savedOutputs">Abhi koi saved output nahi.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Admin Summary</h2>
+            <div class="output" id="adminSummary">Loading admin summary...</div>
+          </div>
+          <div class="card">
+            <h2>Withdraw Requests</h2>
+            <div class="output" id="adminRequests">Loading requests...</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px;">
+          <h2>Admin Action</h2>
+          <input id="adminRequestId" placeholder="Withdraw Request ID" />
+          <div class="toolbar" style="margin-top:12px;">
+            <button class="btn good" onclick="adminApproveWithdraw()">Approve</button>
+            <button class="btn bad" onclick="adminRejectWithdraw()">Reject + Refund</button>
+          </div>
+          <div class="output" id="adminActionMsg">Admin action status yahan aayega.</div>
+        </div>
+      </section>
+
+      <div class="footer">SAZIO X phase89pro safe beta build.</div>
+    </div>
+  </div>
+
+  <script>
+    const authView = document.getElementById('authView');
+    const appView = document.getElementById('appView');
+    const loginTab = document.getElementById('loginTab');
+    const signupTab = document.getElementById('signupTab');
+    const authSubmit = document.getElementById('authSubmit');
+    const authMsg = document.getElementById('authMsg');
+
+    let authMode = 'login';
+
+    loginTab.addEventListener('click', () => {
+      authMode = 'login';
+      loginTab.classList.add('primary');
+      signupTab.classList.remove('primary');
+      authSubmit.textContent = 'Login';
+      authMsg.textContent = '';
+    });
+
+    signupTab.addEventListener('click', () => {
+      authMode = 'signup';
+      signupTab.classList.add('primary');
+      loginTab.classList.remove('primary');
+      authSubmit.textContent = 'Signup';
+      authMsg.textContent = '';
+    });
+
+    const tabs = () => document.querySelectorAll('#navTabs button');
+    const sections = () => document.querySelectorAll('.section');
+
+    window.goTab = function(tab) {
+      tabs().forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      sections().forEach(sec => sec.classList.toggle('active', sec.id === tab));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    function setText(id, text){
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    function getInput(id){
+      const el = document.getElementById(id);
+      return el ? el.value.trim() : '';
+    }
+
+    window.copyOutput = function(id){
+      const el = document.getElementById(id);
+      if (!el) return;
+      navigator.clipboard.writeText(el.textContent || '');
+      alert('Copied ✅');
+    };
+
+    window.saveOutput = function(id){
+      const el = document.getElementById(id);
+      if (!el) return;
+      const text = (el.textContent || '').trim();
+      const arr = JSON.parse(localStorage.getItem('sazio_saved_outputs') || '[]');
+      if (text && !arr.includes(text)) arr.unshift(text);
+      localStorage.setItem('sazio_saved_outputs', JSON.stringify(arr.slice(0, 20)));
+      renderSaved();
+      alert('Saved ✅');
+    };
+
+    function renderSaved(){
+      const arr = JSON.parse(localStorage.getItem('sazio_saved_outputs') || '[]');
+      setText('savedOutputs', arr.length ? arr.join('\n\n-----\n\n') : 'Abhi koi saved output nahi.');
+    }
+
+    window.saveProfile = function(){
+      const data = {
+        name: getInput('profileName'),
+        role: getInput('profileRole'),
+        language: getInput('profileLanguage')
+      };
+      localStorage.setItem('sazio_profile', JSON.stringify(data));
+      setText('profileOutput', `Saved ✅\nName: ${data.name || '-'}\nRole: ${data.role || '-'}\nLanguage: ${data.language || '-'}`);
+    };
+
+    window.loadProfile = function(){
+      const data = JSON.parse(localStorage.getItem('sazio_profile') || '{}');
+      const n = document.getElementById('profileName');
+      const r = document.getElementById('profileRole');
+      const l = document.getElementById('profileLanguage');
+      if (n) n.value = data.name || '';
+      if (r) r.value = data.role || '';
+      if (l) l.value = data.language || '';
+    };
+
+    function kidsSafetyCheck(text){
+      const t = text.toLowerCase();
+      const blocked = ['violence', 'gun', 'kill', 'adult', 'betting', 'scam', 'money trap'];
+      const hit = blocked.find(x => t.includes(x));
+      if (hit) return { safe:false, reason:`Blocked topic detected: ${hit}` };
+      return { safe:true, reason:'Kids-safe topic detected.' };
+    }
+
+    window.runKidsMode = function(){
+      const mode = getInput('kidsModeType') || 'story';
+      const text = getInput('kidsInput');
+
+      if (!text) {
+        setText('kidsOutput', 'Pehle kids-friendly topic likho.');
+        return;
+      }
+
+      const safety = kidsSafetyCheck(text);
+      if (!safety.safe) {
+        setText('kidsOutput', `Kids Safe Filter Active ❌
+
+${safety.reason}
+
+Please use a safe learning or story topic.`);
+        return;
+      }
+
+      let out = '';
+      if (mode === 'story') {
+        out = `Kids Safe Story
+
+Title:
+${text}
+
+Story:
+Ek pyara sa dost tha jo har din kuch naya seekhta tha.
+Ek din usne nature, kindness aur honesty ke bare me ek nayi baat seekhi.
+End me sab khush hue aur usne apne friends ke sath apni learning share ki.
+
+Lesson:
+Always be kind, curious, and honest.`;
+      } else if (mode === 'quiz') {
+        out = `Kids Quiz
+
+Topic: ${text}
+
+Q1. Is topic se judi ek basic baat kya hai?
+Q2. Iska ek example do.
+Q3. Isse hum kya seekh sakte hain?
+
+Parent Tip:
+Bachche ko short answers likhne do.`;
+      } else if (mode === 'homework') {
+        out = `Homework Helper
+
+Topic: ${text}
+
+Simple Explanation:
+Is topic ko easy words me samjho.
+Pehle definition likho.
+Phir 2 examples likho.
+End me 1 small conclusion likho.`;
+      } else {
+        out = `Learning Helper
+
+Topic: ${text}
+
+Easy Learning Steps:
+1. Topic ko read karo
+2. 3 important points note karo
+3. 1 example socho
+4. 1 short summary likho`;
+      }
+
+      setText('kidsOutput', out);
+    };
+
+    window.createMarketListing = function(){
+      const type = getInput('marketType');
+      const title = getInput('marketTitle');
+      const price = getInput('marketPrice');
+      const desc = getInput('marketDesc');
+
+      if (!title || !price) {
+        setText('marketOutput', 'Title aur price dono required hain.');
+        return;
+      }
+
+      setText('marketOutput', `Marketplace Listing Created ✅
+
+Type: ${type}
+Title: ${title}
+Price: ${price}
+Description: ${desc || 'No description'}
+
+Safe Beta Notes:
+- real payment backend not active
+- listing structure saved as starter idea
+- use only honest, original, legal digital items`);
+    };
+
+    window.createGig = function(){
+      const type = getInput('gigType');
+      const title = getInput('gigTitle');
+      const price = getInput('gigPrice');
+      const desc = getInput('gigDesc');
+
+      if (!title || !price) {
+        setText('gigOutput', 'Gig title aur price required hain.');
+        return;
+      }
+
+      setText('gigOutput', `Freelance Gig Created ✅
+
+Service Type: ${type}
+Gig Title: ${title}
+Starting Price: ${price}
+Description: ${desc || 'No description'}
+
+Safe Beta Notes:
+- order system not active yet
+- use realistic delivery claims
+- no fake portfolio promises`);
+    };
+
+    renderSaved();
+    loadProfile();
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAsCSXhw4939IEx379MDiXl9CTVJjvJLEI",
+      authDomain: "sazio-1.firebaseapp.com",
+      projectId: "sazio-1",
+      storageBucket: "sazio-1.firebasestorage.app",
+      messagingSenderId: "82743199739",
+      appId: "1:82743199739:web:952840299f517d1e47ed5e"
+    };
+
+    const ADMIN_EMAIL = "test@gmail.com";
+    const MIN_WITHDRAW = 100;
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    function makeCode(uid){
+      return "SAZ" + uid.slice(0,6).toUpperCase();
+    }
+
+    function todayKey(){
+      const d = new Date();
+      return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    }
+
+    function yesterdayKey(){
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    }
+
+    async function ensureUserDoc(user){
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+
+      if (!snap.exists()) {
+        await setDoc(ref, {
+          email:user.email,
+          clicks:0,
+          earnings:0,
+          referrals:0,
+          refCode:makeCode(user.uid),
+          referredBy:null,
+          lastBonus:null,
+          lastTask:null,
+          streak:1,
+          lastLoginDate:todayKey()
+        });
+      } else {
+        const data = snap.data() || {};
+        const patch = {};
+        if (typeof data.referrals === "undefined") patch.referrals = 0;
+        if (!data.refCode) patch.refCode = makeCode(user.uid);
+        if (typeof data.referredBy === "undefined") patch.referredBy = null;
+        if (typeof data.lastBonus === "undefined") patch.lastBonus = null;
+        if (typeof data.lastTask === "undefined") patch.lastTask = null;
+        if (typeof data.streak === "undefined") patch.streak = 1;
+        if (typeof data.lastLoginDate === "undefined") patch.lastLoginDate = todayKey();
+        if (Object.keys(patch).length) await updateDoc(ref, patch);
+      }
+
+      return ref;
+    }
+
+    async function updateStreak(user){
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      const data = snap.data() || {};
+      const today = todayKey();
+      const yesterday = yesterdayKey();
+
+      if (data.lastLoginDate === today) return;
+
+      let nextStreak = 1;
+      if (data.lastLoginDate === yesterday) nextStreak = Number(data.streak || 0) + 1;
+
+      await updateDoc(ref, {
+        streak: nextStreak,
+        lastLoginDate: today
+      });
+    }
+
+    async function handleReferral(user){
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get("ref");
+      if (!code) return;
+
+      const myRef = doc(db, "users", user.uid);
+      const mySnap = await getDoc(myRef);
+      const myData = mySnap.data() || {};
+      if (myData.referredBy) return;
+
+      const q = query(collection(db, "users"), where("refCode", "==", code));
+      const res = await getDocs(q);
+      if (res.empty) return;
+
+      const refUser = res.docs[0];
+      if (refUser.id === user.uid) return;
+
+      await updateDoc(doc(db, "users", refUser.id), {
+        referrals: increment(1),
+        earnings: increment(10)
+      });
+
+      await updateDoc(myRef, { referredBy: code });
+    }
+
+    authSubmit.addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!email || !password) {
+        authMsg.textContent = "Email aur password dono bharo.";
+        return;
+      }
+
+      try {
+        authMsg.textContent = authMode === "login" ? "Logging in..." : "Creating account...";
+        if (authMode === "login") {
+          await signInWithEmailAndPassword(auth, email, password);
+        } else {
+          await createUserWithEmailAndPassword(auth, email, password);
+        }
+        authMsg.textContent = "";
+      } catch (err) {
+        authMsg.textContent = err.message;
+      }
+    });
+
+    async function loadWithdrawHistory(user){
+      const q = query(collection(db, "withdraw_requests"), where("userId", "==", user.uid));
+      const res = await getDocs(q);
+      const rows = [];
+      res.forEach(d => rows.push({ id:d.id, ...d.data() }));
+      rows.sort((a,b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+      setText("statWithdrawCount", String(rows.length));
+      setText("withdrawHistory", rows.length
+        ? rows.map(x => `ID: ${x.id}\nAmount: $${x.amount}\nUPI: ${x.upi}\nStatus: ${x.status}\nRefunded: ${x.refunded ? "Yes" : "No"}\nDate: ${x.createdAt}`).join("\n\n-----\n\n")
+        : "No withdraw requests yet.");
+    }
+
+    async function loadAdmin(){
+      const userRes = await getDocs(collection(db, "users"));
+      const reqRes = await getDocs(collection(db, "withdraw_requests"));
+
+      let totalUsers = 0;
+      let totalClicks = 0;
+      let totalEarnings = 0;
+
+      userRes.forEach(d => {
+        totalUsers++;
+        const x = d.data() || {};
+        totalClicks += Number(x.clicks || 0);
+        totalEarnings += Number(x.earnings || 0);
+      });
+
+      const reqs = [];
+      reqRes.forEach(d => reqs.push({ id:d.id, ...d.data() }));
+      reqs.sort((a,b)=> (b.createdAt || "").localeCompare(a.createdAt || ""));
+
+      setText("adminSummary", `Total Users: ${totalUsers}\nTotal Clicks: ${totalClicks}\nTotal Earnings: $${totalEarnings}\nTotal Withdraw Requests: ${reqs.length}`);
+      setText("adminRequests", reqs.length
+        ? reqs.map(x => `ID: ${x.id}\nEmail: ${x.email}\nAmount: $${x.amount}\nUPI: ${x.upi}\nStatus: ${x.status}\nRefunded: ${x.refunded ? "Yes" : "No"}\nDate: ${x.createdAt}`).join("\n\n-----\n\n")
+        : "No withdraw requests yet.");
+    }
+
+    async function refreshUI(user){
+      const ref = await ensureUserDoc(user);
+      await updateStreak(user);
+      await handleReferral(user);
+
+      const data = (await getDoc(ref)).data() || {};
+
+      setText("heroText", "Welcome " + user.email + ". Ye phase89pro build hai jahan Kids Safe Mode, Marketplace Pro, Freelance starter, trust-first rewards aur admin-reviewed withdraw system milta hai.");
+      setText("statusBox", `Email: ${user.email}\nReferral Code: ${data.refCode}\nReferred By: ${data.referredBy || "-"}\nStreak: ${data.streak || 1}\nLast Bonus: ${data.lastBonus || "-"}\nLast Task: ${data.lastTask || "-"}`);
+
+      setText("rulesBox", `Safe Rules
+
+1. Kids mode is clean-content only
+2. No adult or harmful outputs in kids flow
+3. Marketplace is digital-safe starter only
+4. Freelance gigs must be honest
+5. Minimum withdraw: $${MIN_WITHDRAW}
+6. Admin approval required
+7. No fake claims or hidden charges`);
+
+      setText("earnStatus", `Current Stats
+
+Clicks: ${data.clicks}
+Available Earnings: $${data.earnings}
+
+Active Sources:
+- Daily Bonus
+- Task Reward
+- Referral Bonus`);
+
+      setText("rewardBox", `Today: ${todayKey()}\nLast Daily Bonus: ${data.lastBonus || "-"}\nLast Task Reward: ${data.lastTask || "-"}\nCurrent Streak: ${data.streak || 1}`);
+
+      setText("statClicks", String(data.clicks || 0));
+      setText("statEarnings", "$" + String(data.earnings || 0));
+      setText("statReferrals", String(data.referrals || 0));
+      setText("statStreak", String(data.streak || 1));
+
+      setText("analyticsClicks", String(data.clicks || 0));
+      setText("analyticsEarnings", "$" + String(data.earnings || 0));
+      setText("analyticsReferrals", String(data.referrals || 0));
+      setText("analyticsStreak", String(data.streak || 1));
+
+      await loadWithdrawHistory(user);
+
+      if (user.email === ADMIN_EMAIL) {
+        document.getElementById("adminNav").classList.remove("hidden");
+        await loadAdmin();
+      } else {
+        document.getElementById("adminNav").classList.add("hidden");
+      }
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        authView.classList.remove("hidden");
+        appView.classList.add("hidden");
+        return;
+      }
+      authView.classList.add("hidden");
+      appView.classList.remove("hidden");
+      await refreshUI(user);
+    });
+
+    window.sazioLogout = async function(){
+      await signOut(auth);
+    };
+
+    window.addClick = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+      const ref = doc(db, "users", user.uid);
+      await updateDoc(ref, { clicks: increment(1) });
+      await refreshUI(user);
+    };
+
+    window.claimDailyBonus = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      const data = snap.data() || {};
+      const today = todayKey();
+
+      if (data.lastBonus === today) {
+        alert("Daily bonus already claimed today.");
+        return;
+      }
+
+      await updateDoc(ref, {
+        earnings: increment(2),
+        lastBonus: today
+      });
+
+      await refreshUI(user);
+      alert("Daily bonus added ✅");
+    };
+
+    window.claimTaskReward = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      const data = snap.data() || {};
+      const today = todayKey();
+
+      if (data.lastTask === today) {
+        alert("Task reward already claimed today.");
+        return;
+      }
+
+      await updateDoc(ref, {
+        earnings: increment(3),
+        lastTask: today
+      });
+
+      await refreshUI(user);
+      alert("Task reward added ✅");
+    };
+
+    window.submitWithdraw = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const upi = getInput("withdrawUpi");
+      const amount = Number(getInput("withdrawAmount"));
+      const note = getInput("withdrawNote");
+
+      if (!upi) {
+        setText("withdrawMsg", "UPI ID required.");
+        return;
+      }
+      if (!amount || amount <= 0) {
+        setText("withdrawMsg", "Valid amount required.");
+        return;
+      }
+      if (amount < MIN_WITHDRAW) {
+        setText("withdrawMsg", "Minimum withdraw is $" + MIN_WITHDRAW);
+        return;
+      }
+
+      const userRef = doc(db, "users", user.uid);
+      const userData = (await getDoc(userRef)).data() || {};
+      const currentEarnings = Number(userData.earnings || 0);
+
+      if (amount > currentEarnings) {
+        setText("withdrawMsg", "Insufficient earnings.");
+        return;
+      }
+
+      await addDoc(collection(db, "withdraw_requests"), {
+        userId: user.uid,
+        email: user.email,
+        upi,
+        amount,
+        note,
+        status: "pending",
+        refunded: false,
+        createdAt: new Date().toISOString()
+      });
+
+      await updateDoc(userRef, {
+        earnings: currentEarnings - amount
+      });
+
+      document.getElementById("withdrawUpi").value = "";
+      document.getElementById("withdrawAmount").value = "";
+      document.getElementById("withdrawNote").value = "";
+
+      setText("withdrawMsg", "Withdraw request submitted successfully ✅\nYour request is now pending admin review.");
+      await refreshUI(user);
+    };
+
+    window.adminApproveWithdraw = async function(){
+      const user = auth.currentUser;
+      if (!user || user.email !== ADMIN_EMAIL) {
+        setText("adminActionMsg", "Admin access only.");
+        return;
+      }
+
+      const requestId = getInput("adminRequestId");
+      if (!requestId) {
+        setText("adminActionMsg", "Request ID required.");
+        return;
+      }
+
+      const reqRef = doc(db, "withdraw_requests", requestId);
+      const snap = await getDoc(reqRef);
+      if (!snap.exists()) {
+        setText("adminActionMsg", "Request not found.");
+        return;
+      }
+
+      const data = snap.data() || {};
+      if (data.status !== "pending") {
+        setText("adminActionMsg", "Only pending request can be approved.");
+        return;
+      }
+
+      await updateDoc(reqRef, { status: "approved" });
+      setText("adminActionMsg", "Request approved ✅");
+      await loadAdmin();
+    };
+
+    window.adminRejectWithdraw = async function(){
+      const user = auth.currentUser;
+      if (!user || user.email !== ADMIN_EMAIL) {
+        setText("adminActionMsg", "Admin access only.");
+        return;
+      }
+
+      const requestId = getInput("adminRequestId");
+      if (!requestId) {
+        setText("adminActionMsg", "Request ID required.");
+        return;
+      }
+
+      const reqRef = doc(db, "withdraw_requests", requestId);
+      const snap = await getDoc(reqRef);
+      if (!snap.exists()) {
+        setText("adminActionMsg", "Request not found.");
+        return;
+      }
+
+      const data = snap.data() || {};
+      if (data.status !== "pending") {
+        setText("adminActionMsg", "Only pending request can be rejected.");
+        return;
+      }
+      if (data.refunded) {
+        setText("adminActionMsg", "Already refunded.");
+        return;
+      }
+
+      await updateDoc(doc(db, "users", data.userId), {
+        earnings: increment(Number(data.amount || 0))
+      });
+
+      await updateDoc(reqRef, {
+        status: "rejected",
+        refunded: true
+      });
+
+      setText("adminActionMsg", "Request rejected and refunded ✅");
+      await loadAdmin();
+    };
+  </script>
+</body>
+</html>
