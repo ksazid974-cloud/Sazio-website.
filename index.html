@@ -1,161 +1,820 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>SAZIO FINAL</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAZIO X Master</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root{
+      --bg:#050505;
+      --panel:#111111;
+      --panel2:#181818;
+      --line:rgba(255,255,255,.08);
+      --text:#ffffff;
+      --muted:#b8b8b8;
+      --accent:#ff5c5c;
+      --green:#29cc72;
+      --blue:#6fb7ff;
+      --purple:#7a5cff;
+      --yellow:#ffd166;
+      --radius:22px;
+    }
+    body{
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255,92,92,.10), transparent 20%),
+        radial-gradient(circle at top right, rgba(122,92,255,.08), transparent 18%),
+        linear-gradient(180deg,#000,#090909 45%, #050505);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .wrap{max-width:1400px;margin:0 auto;padding:18px;}
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(0,0,0,.82);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar-inner{
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .brand{
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: .3px;
+    }
+    .nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .nav button,.btn{
+      border:none;
+      cursor:pointer;
+      background:var(--panel2);
+      color:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px 16px;
+      font-size:15px;
+      font-weight:700;
+    }
+    .nav button.active,.btn.primary{background:var(--accent);}
+    .btn.green{background:var(--green); color:#062212;}
+    .btn.blue{background:var(--blue); color:#051826;}
+    .btn.purple{background:var(--purple);}
+    .btn.yellow{background:var(--yellow); color:#2b2100;}
+    .btn.ghost{background:var(--panel2);}
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:0 16px 40px rgba(0,0,0,.34);
+    }
+    .hero{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:18px;
+      padding:20px 0;
+    }
+    .hero h1{
+      font-size:52px;
+      line-height:1.02;
+      margin-bottom:12px;
+    }
+    .muted{color:var(--muted); line-height:1.7;}
+    .toolbar,.badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:14px;
+    }
+    .badge{
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--panel2);
+      border:1px solid var(--line);
+      color:#f2f2f2;
+      font-size:13px;
+    }
+    .section{display:none;padding-bottom:24px;}
+    .section.active{display:block;}
+    .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;}
+    .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;}
+    .grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;}
+    .grid5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;}
+    .stat .label{color:var(--muted);font-size:14px;}
+    .stat .num{font-size:34px;font-weight:900;margin-top:8px;color:var(--yellow);}
+    h2{font-size:30px;margin-bottom:10px;}
+    h3{font-size:20px;margin-bottom:10px;}
+    input,textarea,select{
+      width:100%;
+      background:#0b0b0b;
+      color:#fff;
+      border:1px solid var(--line);
+      border-radius:15px;
+      padding:14px;
+      font-size:15px;
+      margin-top:12px;
+      outline:none;
+    }
+    textarea{resize:vertical;min-height:130px;}
+    .output{
+      margin-top:14px;
+      background:#090909;
+      border:1px solid var(--line);
+      border-radius:16px;
+      min-height:120px;
+      padding:16px;
+      line-height:1.7;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+    .mini{
+      background:#0b0b0b;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+    }
+    .price{font-weight:900;color:var(--yellow);margin-top:6px;}
+    .auth-shell{
+      max-width:520px;
+      margin:40px auto;
+    }
+    .center{text-align:center;}
+    .hide{display:none!important;}
+    .footer{
+      text-align:center;
+      color:#8e8e8e;
+      padding:30px 0 60px;
+    }
+    @media (max-width:1024px){
+      .hero,.grid2,.grid3,.grid4,.grid5{grid-template-columns:1fr;}
+      .hero h1{font-size:38px;}
+    }
+  </style>
 </head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">🚀 SAZIO X MASTER</div>
+      <div class="nav hide" id="mainNav">
+        <button data-tab="dashboard" class="active">Dashboard</button>
+        <button data-tab="ai">AI Brain</button>
+        <button data-tab="earn">Earn</button>
+        <button data-tab="marketplace">Marketplace</button>
+        <button data-tab="kids">Kids</button>
+        <button data-tab="moderation">Moderation</button>
+        <button data-tab="profile">Profile</button>
+      </div>
+    </div>
+  </div>
 
-<body style="background:black;color:white;font-family:Arial;text-align:center;">
+  <div class="wrap">
 
-<h1>🚀 SAZIO FINAL SYSTEM</h1>
+    <!-- AUTH -->
+    <section id="authScreen" class="auth-shell">
+      <div class="card center">
+        <h1 style="font-size:40px; margin-bottom:8px;">SAZIO FINAL SYSTEM</h1>
+        <p class="muted">Login + AI + Earn + Marketplace + Kids + Moderation ek hi super dashboard me.</p>
 
-<div id="loginBox">
-<input id="email" placeholder="Email"><br><br>
-<input id="password" type="password" placeholder="Password"><br><br>
-<button onclick="signup()">Signup</button>
-<button onclick="login()">Login</button>
-</div>
+        <input id="authEmail" type="email" placeholder="Email" />
+        <input id="authPassword" type="password" placeholder="Password" />
 
-<div id="dashboard" style="display:none;">
-<h2 id="userEmail"></h2>
+        <div class="toolbar" style="justify-content:center;">
+          <button class="btn primary" onclick="signup()">Signup</button>
+          <button class="btn ghost" onclick="login()">Login</button>
+        </div>
 
-<h2>Clicks: <span id="clicks">0</span></h2>
-<button onclick="addClick()">Add Click</button>
+        <div class="output" id="authOutput">Demo auth ready.
+Signup ya Login karo.</div>
+      </div>
+    </section>
 
-<h2>Earnings: $<span id="earnings">0</span></h2>
-<button onclick="addMoney()">Add $5</button>
+    <!-- APP -->
+    <div id="appShell" class="hide">
+      <section class="hero">
+        <div class="card">
+          <h1>Unified AI + Earnings + Safe SaaS Platform</h1>
+          <p class="muted" id="heroText">
+            Welcome. Ye SAZIO X Master build hai jahan login, AI brain, earning system, marketplace tools,
+            kids-safe mode, moderation aur profile management ek hi jagah milta hai.
+          </p>
 
-<h3>Referral Code:</h3>
-<p id="refCode"></p>
+          <div class="toolbar">
+            <button class="btn primary" onclick="logout()">Logout</button>
+            <button class="btn ghost" onclick="inc('clicks',1)">Add Click</button>
+            <button class="btn green" onclick="inc('money',2)">Daily Bonus +2</button>
+            <button class="btn yellow" onclick="inc('money',3)">Task Reward +3</button>
+            <button class="btn blue" onclick="goTab('ai')">Open AI</button>
+            <button class="btn purple" onclick="goTab('kids')">Open Kids</button>
+          </div>
 
-<h3>Referral Link:</h3>
-<p id="refLink"></p>
+          <div class="badges">
+            <span class="badge">Real Login Demo</span>
+            <span class="badge">AI Router</span>
+            <span class="badge">Marketplace Pro</span>
+            <span class="badge">Kids Safe</span>
+            <span class="badge">Moderation</span>
+            <span class="badge">Rewards System</span>
+          </div>
+        </div>
 
-<h3>Referrals:</h3>
-<p id="refCount">0</p>
+        <div class="card">
+          <h3>System Status</h3>
+          <div class="output" id="statusBox">System ready.
+Current mode: Dashboard
+User session pending.
+API route: /api/ai-route</div>
+        </div>
+      </section>
 
-<button onclick="logout()">Logout</button>
-</div>
+      <section id="dashboard" class="section active">
+        <div class="grid5">
+          <div class="card stat"><div class="label">Clicks</div><div class="num" id="clicks">0</div></div>
+          <div class="card stat"><div class="label">Points</div><div class="num">$<span id="money">0</span></div></div>
+          <div class="card stat"><div class="label">AI Runs</div><div class="num" id="aiRuns">0</div></div>
+          <div class="card stat"><div class="label">Orders</div><div class="num" id="orders">0</div></div>
+          <div class="card stat"><div class="label">Flags</div><div class="num" id="flags">0</div></div>
+        </div>
 
-<script type="module">
+        <div class="grid2" style="margin-top:18px;">
+          <div class="card">
+            <h2>Quick Launch</h2>
+            <p class="muted">AI prompt banao, earning points track karo, marketplace listing draft karo, kids-safe output generate karo, suspicious text scan karo.</p>
+            <div class="toolbar">
+              <button class="btn blue" onclick="goTab('ai')">AI Brain</button>
+              <button class="btn primary" onclick="goTab('earn')">Earn</button>
+              <button class="btn ghost" onclick="goTab('marketplace')">Marketplace</button>
+              <button class="btn purple" onclick="goTab('kids')">Kids</button>
+            </div>
+          </div>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+          <div class="card">
+            <h2>User Session</h2>
+            <div class="output" id="userBox">No user loaded.</div>
+          </div>
+        </div>
+      </section>
 
-const firebaseConfig = {
-apiKey: "AIzaSyAsCSXhw4939IEx379MDiXl9CTVJjvJLEI",
-authDomain: "sazio-1.firebaseapp.com",
-projectId: "sazio-1",
-storageBucket: "sazio-1.firebasestorage.app",
-messagingSenderId: "82743199739",
-appId: "1:82743199739:web:952840299f517d1e47ed5e"
-};
+      <section id="ai" class="section">
+        <div class="grid2">
+          <div class="card">
+            <h2>AI Brain</h2>
+            <select id="aiMode">
+              <option value="router">Router</option>
+              <option value="chat">Chat</option>
+              <option value="product">Product</option>
+              <option value="kids">Kids</option>
+            </select>
+            <textarea id="aiInput" placeholder="Type prompt here..."></textarea>
+            <div class="toolbar">
+              <button class="btn primary" onclick="runAI()">Generate</button>
+              <button class="btn ghost" onclick="copyOutput('aiOutput')">Copy</button>
+            </div>
+            <div class="output" id="aiOutput">AI output yahan aayega.</div>
+          </div>
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+          <div class="card">
+            <h2>AI Notes</h2>
+            <div class="output">Backend route:
+POST /api/ai-route
 
-function makeCode(uid){
-return "SAZ" + uid.slice(0,6).toUpperCase();
+Body example:
+{
+  "prompt":"hello bhai",
+  "mode":"chat"
 }
 
-async function createUserDoc(user){
-const ref = doc(db,"users",user.uid);
-const snap = await getDoc(ref);
+Agar API unavailable ho to local smart fallback bhi chalega.</div>
+          </div>
+        </div>
+      </section>
 
-if(!snap.exists()){
-await setDoc(ref,{
-email:user.email,
-clicks:0,
-earnings:0,
-referrals:0,
-refCode:makeCode(user.uid),
-referredBy:null
-});
-}
-return ref;
-}
+      <section id="earn" class="section">
+        <div class="grid2">
+          <div class="card">
+            <h2>Earn Dashboard</h2>
+            <div class="output" id="earnOutput">Daily rewards, clicks, tasks aur withdraw summary yahan dikhegi.</div>
+            <div class="toolbar">
+              <button class="btn green" onclick="inc('money',5); updateEarn()">Claim Reward +5</button>
+              <button class="btn yellow" onclick="withdrawDemo()">Withdraw Demo</button>
+              <button class="btn ghost" onclick="updateEarn()">Refresh</button>
+            </div>
+          </div>
 
-async function handleReferral(user){
-const url = new URL(window.location.href);
-const code = url.searchParams.get("ref");
-if(!code) return;
+          <div class="card">
+            <h2>Analytics Snapshot</h2>
+            <div class="grid2">
+              <div class="mini"><h3>Total Clicks</h3><div class="price" id="aClicks">0</div></div>
+              <div class="mini"><h3>Total Points</h3><div class="price" id="aMoney">$0</div></div>
+              <div class="mini"><h3>AI Usage</h3><div class="price" id="aAiRuns">0</div></div>
+              <div class="mini"><h3>Flag Count</h3><div class="price" id="aFlags">0</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-const myRef = doc(db,"users",user.uid);
-const mySnap = await getDoc(myRef);
-if(mySnap.data()?.referredBy) return;
+      <section id="marketplace" class="section">
+        <div class="grid2">
+          <div class="card">
+            <h2>Marketplace + Freelance</h2>
+            <input id="marketTitle" placeholder="Listing or gig title" />
+            <textarea id="marketDesc" placeholder="Describe your service or product"></textarea>
+            <div class="toolbar">
+              <button class="btn primary" onclick="generateListing()">Generate Listing</button>
+              <button class="btn ghost" onclick="copyOutput('marketOutput')">Copy</button>
+            </div>
+            <div class="output" id="marketOutput">Listing output yahan aayega.</div>
+          </div>
 
-const q = query(collection(db,"users"), where("refCode","==",code));
-const res = await getDocs(q);
+          <div class="card">
+            <h2>Product Compare</h2>
+            <input id="compareQuery" placeholder="Example: best phone under 20000" />
+            <div class="toolbar">
+              <button class="btn blue" onclick="runCompare()">Compare</button>
+            </div>
+            <div class="output" id="compareOutput">Safe compare output yahan aayega.</div>
+          </div>
+        </div>
+      </section>
 
-if(res.empty) return;
+      <section id="kids" class="section">
+        <div class="grid2">
+          <div class="card">
+            <h2>Kids Safe Mode</h2>
+            <select id="kidsType">
+              <option value="story">Safe Story</option>
+              <option value="quiz">Quiz</option>
+              <option value="learning">Learning Helper</option>
+            </select>
+            <textarea id="kidsInput" placeholder="Enter kids-safe topic"></textarea>
+            <div class="toolbar">
+              <button class="btn purple" onclick="runKids()">Generate</button>
+              <button class="btn ghost" onclick="copyOutput('kidsOutput')">Copy</button>
+            </div>
+            <div class="output" id="kidsOutput">Kids output yahan aayega.</div>
+          </div>
 
-const refUser = res.docs[0];
+          <div class="card">
+            <h2>Parent Rules</h2>
+            <div class="output">Allowed:
+- stories
+- quizzes
+- easy learning
 
-await updateDoc(doc(db,"users",refUser.id),{
-referrals: increment(1),
-earnings: increment(10)
-});
+Blocked:
+- adult
+- gambling
+- harmful instructions
+- violent requests</div>
+          </div>
+        </div>
+      </section>
 
-await updateDoc(myRef,{
-referredBy: code
-});
-}
+      <section id="moderation" class="section">
+        <div class="grid2">
+          <div class="card">
+            <h2>Moderation</h2>
+            <textarea id="modInput" placeholder="Paste suspicious text here"></textarea>
+            <div class="toolbar">
+              <button class="btn primary" onclick="runModeration()">Scan</button>
+              <button class="btn ghost" onclick="copyOutput('modOutput')">Copy</button>
+            </div>
+            <div class="output" id="modOutput">Moderation result yahan aayega.</div>
+          </div>
 
-onAuthStateChanged(auth, async (user)=>{
-if(!user){
-document.getElementById("loginBox").style.display="block";
-document.getElementById("dashboard").style.display="none";
-return;
-}
+          <div class="card">
+            <h2>Flag Types</h2>
+            <div class="output">Scans:
+- scam terms
+- fixed match
+- double money
+- adult terms
+- unsafe kids terms
+- manipulative urgency</div>
+          </div>
+        </div>
+      </section>
 
-document.getElementById("loginBox").style.display="none";
-document.getElementById("dashboard").style.display="block";
+      <section id="profile" class="section">
+        <div class="grid2">
+          <div class="card">
+            <h2>Profile</h2>
+            <input id="profileName" placeholder="Name" />
+            <input id="profileRole" placeholder="Role" />
+            <input id="profileLang" placeholder="Language" />
+            <div class="toolbar">
+              <button class="btn primary" onclick="saveProfile()">Save Profile</button>
+              <button class="btn ghost" onclick="loadProfile()">Load Profile</button>
+            </div>
+            <div class="output" id="profileOutput">Profile status yahan aayega.</div>
+          </div>
 
-document.getElementById("userEmail").innerText=user.email;
+          <div class="card">
+            <h2>Memory</h2>
+            <div class="output" id="memoryOutput">Saved local memory yahan dikhai degi.</div>
+          </div>
+        </div>
+      </section>
 
-const ref = await createUserDoc(user);
-await handleReferral(user);
+      <div class="footer">SAZIO X Master merged build live.</div>
+    </div>
+  </div>
 
-const data = (await getDoc(ref)).data();
+  <script>
+    const state = {
+      clicks: 0,
+      money: 0,
+      aiRuns: 0,
+      orders: 0,
+      flags: 0,
+      user: null
+    };
 
-document.getElementById("clicks").innerText=data.clicks;
-document.getElementById("earnings").innerText=data.earnings;
-document.getElementById("refCount").innerText=data.referrals;
+    const navButtons = document.querySelectorAll('#mainNav button');
+    const sections = document.querySelectorAll('.section');
 
-document.getElementById("refCode").innerText=data.refCode;
-document.getElementById("refLink").innerText=window.location.origin+"?ref="+data.refCode;
-});
+    function goTab(tab){
+      navButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      sections.forEach(sec => sec.classList.toggle('active', sec.id === tab));
+      document.getElementById('statusBox').textContent =
+`System ready.
+Current mode: ${tab}
+User: ${state.user?.email || 'Guest'}
+API route: /api/ai-route`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-window.signup = async ()=>{
-await createUserWithEmailAndPassword(auth,email.value,password.value);
-};
+    navButtons.forEach(btn => btn.addEventListener('click', () => goTab(btn.dataset.tab)));
 
-window.login = async ()=>{
-await signInWithEmailAndPassword(auth,email.value,password.value);
-};
+    function updateStats(){
+      document.getElementById('clicks').textContent = state.clicks;
+      document.getElementById('money').textContent = state.money;
+      document.getElementById('aiRuns').textContent = state.aiRuns;
+      document.getElementById('orders').textContent = state.orders;
+      document.getElementById('flags').textContent = state.flags;
 
-window.logout = async ()=>{
-await signOut(auth);
-};
+      document.getElementById('aClicks').textContent = state.clicks;
+      document.getElementById('aMoney').textContent = '$' + state.money;
+      document.getElementById('aAiRuns').textContent = state.aiRuns;
+      document.getElementById('aFlags').textContent = state.flags;
+      updateEarn();
+    }
 
-window.addClick = async ()=>{
-const user=auth.currentUser;
-const ref=doc(db,"users",user.uid);
-await updateDoc(ref,{clicks:increment(1)});
-location.reload();
-};
+    function updateEarn(){
+      document.getElementById('earnOutput').textContent =
+`Earning Summary
 
-window.addMoney = async ()=>{
-const user=auth.currentUser;
-const ref=doc(db,"users",user.uid);
-await updateDoc(ref,{earnings:increment(5)});
-location.reload();
-};
+Clicks: ${state.clicks}
+Points: ${state.money}
+AI Runs: ${state.aiRuns}
+Orders: ${state.orders}
 
-</script>
+Withdraw Rule:
+- demo minimum withdraw: 100 points
+- admin review needed`;
+    }
 
+    function inc(key, amount){
+      state[key] += amount;
+      updateStats();
+    }
+
+    function copyOutput(id){
+      const el = document.getElementById(id);
+      navigator.clipboard.writeText(el.textContent || '');
+      alert('Copied ✅');
+    }
+
+    function signup(){
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value.trim();
+
+      if(!email || !password){
+        document.getElementById('authOutput').textContent = 'Email aur password dono likho.';
+        return;
+      }
+
+      const user = { email, password };
+      localStorage.setItem('sazio_user', JSON.stringify(user));
+      document.getElementById('authOutput').textContent = 'Signup successful ✅\nAb login ho gaya.';
+      state.user = user;
+      enterApp();
+    }
+
+    function login(){
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value.trim();
+      const saved = JSON.parse(localStorage.getItem('sazio_user') || 'null');
+
+      if(!saved){
+        document.getElementById('authOutput').textContent = 'Pehle signup karo.';
+        return;
+      }
+
+      if(saved.email === email && saved.password === password){
+        state.user = saved;
+        document.getElementById('authOutput').textContent = 'Login successful ✅';
+        enterApp();
+      } else {
+        document.getElementById('authOutput').textContent = 'Wrong email ya password.';
+      }
+    }
+
+    function logout(){
+      state.user = null;
+      document.getElementById('appShell').classList.add('hide');
+      document.getElementById('authScreen').classList.remove('hide');
+      document.getElementById('mainNav').classList.add('hide');
+      document.getElementById('authOutput').textContent = 'Logged out.';
+    }
+
+    function enterApp(){
+      document.getElementById('authScreen').classList.add('hide');
+      document.getElementById('appShell').classList.remove('hide');
+      document.getElementById('mainNav').classList.remove('hide');
+      document.getElementById('userBox').textContent =
+`Logged in user
+
+Email: ${state.user.email}
+Mode: Master Dashboard`;
+      updateStats();
+      loadProfile();
+      goTab('dashboard');
+    }
+
+    function localAIFallback(prompt, mode){
+      const p = prompt.toLowerCase();
+
+      if(mode === 'product'){
+        return `Product mode result
+
+Query: ${prompt}
+
+Best available detected option:
+1. Platform A
+2. Platform B
+3. Platform C
+
+Note:
+Prices may vary by time and location.`;
+      }
+
+      if(mode === 'kids'){
+        return `Kids safe result
+
+Topic: ${prompt}
+
+Short answer:
+Ye ek safe aur educational topic hai.
+Hum iske baare me simple aur clean tarike se seekh sakte hain.`;
+      }
+
+      if(p.includes('seo')){
+        return `SEO pack
+
+Title:
+Amazing result from ${prompt}
+
+Description:
+Short optimized content pack ready.
+
+Tags:
+viral, seo, sazio, trending`;
+      }
+
+      return `AI response
+
+Mode: ${mode}
+Prompt: ${prompt}
+
+Demo local answer:
+Ye smart fallback response hai. Backend connected hone par real AI reply yahan aayega.`;
+    }
+
+    async function runAI(){
+      const prompt = document.getElementById('aiInput').value.trim();
+      const mode = document.getElementById('aiMode').value;
+
+      if(!prompt){
+        document.getElementById('aiOutput').textContent = 'Pehle prompt likho.';
+        return;
+      }
+
+      document.getElementById('aiOutput').textContent = 'Generating...';
+      state.aiRuns += 1;
+      updateStats();
+
+      try{
+        const res = await fetch('/api/ai-route', {
+          method: 'POST',
+          headers: { 'Content-Type':'application/json' },
+          body: JSON.stringify({ prompt, mode })
+        });
+
+        const data = await res.json();
+
+        if(!res.ok){
+          throw new Error(data.error || 'API error');
+        }
+
+        document.getElementById('aiOutput').textContent = data.text || 'No response';
+      } catch (error){
+        document.getElementById('aiOutput').textContent = localAIFallback(prompt, mode) + `
+
+Fallback reason:
+${error.message}`;
+      }
+    }
+
+    function withdrawDemo(){
+      if(state.money < 100){
+        alert('Minimum 100 points required.');
+        return;
+      }
+      alert('Withdraw request submitted (demo).');
+    }
+
+    function generateListing(){
+      const title = document.getElementById('marketTitle').value.trim();
+      const desc = document.getElementById('marketDesc').value.trim();
+
+      if(!title || !desc){
+        document.getElementById('marketOutput').textContent = 'Title aur description dono likho.';
+        return;
+      }
+
+      state.orders += 1;
+      updateStats();
+
+      document.getElementById('marketOutput').textContent =
+`Marketplace / Freelance Listing
+
+Title:
+${title}
+
+Description:
+${desc}
+
+Suggested CTA:
+Message now for fast delivery.
+
+Pricing Tip:
+Start with simple package, then offer premium upgrade.`;
+    }
+
+    function runCompare(){
+      const q = document.getElementById('compareQuery').value.trim();
+      if(!q){
+        document.getElementById('compareOutput').textContent = 'Pehle query likho.';
+        return;
+      }
+
+      document.getElementById('compareOutput').textContent =
+`Safe Compare Result
+
+Query: ${q}
+
+Best available detected options:
+1. Seller A
+2. Seller B
+3. Seller C
+
+Reminder:
+- prices may vary
+- trust score matters
+- shipping can change`;
+    }
+
+    function runKids(){
+      const type = document.getElementById('kidsType').value;
+      const input = document.getElementById('kidsInput').value.trim().toLowerCase();
+
+      if(!input){
+        document.getElementById('kidsOutput').textContent = 'Pehle topic likho.';
+        return;
+      }
+
+      const blocked = ['adult','gun','kill','betting','scam'];
+      if(blocked.some(x => input.includes(x))){
+        document.getElementById('kidsOutput').textContent = 'Blocked topic detected. Please use kids-safe topic.';
+        return;
+      }
+
+      if(type === 'story'){
+        document.getElementById('kidsOutput').textContent =
+`Kids Safe Story
+
+Ek pyara baccha tha jo har din kuch naya seekhta tha.
+Usne kindness, honesty aur sharing ki value samjhi.
+
+Lesson:
+Always be kind.`;
+      } else if(type === 'quiz'){
+        document.getElementById('kidsOutput').textContent =
+`Kids Quiz
+
+Topic: ${input}
+
+Q1. Is topic ka basic meaning kya hai?
+Q2. Ek example do.
+Q3. Isse hum kya seekhte hain?`;
+      } else {
+        document.getElementById('kidsOutput').textContent =
+`Learning Helper
+
+Topic: ${input}
+
+1. Read topic
+2. Note 3 points
+3. Write 1 example
+4. Summarize simply`;
+      }
+    }
+
+    function runModeration(){
+      const text = document.getElementById('modInput').value.trim().toLowerCase();
+      if(!text){
+        document.getElementById('modOutput').textContent = 'Pehle text paste karo.';
+        return;
+      }
+
+      const patterns = ['double money','sure win','fixed match','adult','urgent payment','guaranteed profit'];
+      const hit = patterns.filter(x => text.includes(x));
+
+      if(hit.length){
+        state.flags += 1;
+        updateStats();
+        document.getElementById('modOutput').textContent =
+`Flagged ✅
+
+Risk Level: HIGH
+Matches: ${hit.join(', ')}
+
+Advice:
+- verify manually
+- avoid payment
+- block misleading claims`;
+      } else {
+        document.getElementById('modOutput').textContent =
+`Scan Complete
+
+Risk Level: LOW
+No major suspicious pattern found.`;
+      }
+    }
+
+    function saveProfile(){
+      const data = {
+        name: document.getElementById('profileName').value.trim(),
+        role: document.getElementById('profileRole').value.trim(),
+        language: document.getElementById('profileLang').value.trim()
+      };
+      localStorage.setItem('sazio_profile', JSON.stringify(data));
+      document.getElementById('profileOutput').textContent =
+`Saved ✅
+Name: ${data.name || '-'}
+Role: ${data.role || '-'}
+Language: ${data.language || '-'}`;
+      document.getElementById('memoryOutput').textContent = JSON.stringify(data, null, 2);
+    }
+
+    function loadProfile(){
+      const data = JSON.parse(localStorage.getItem('sazio_profile') || '{}');
+      document.getElementById('profileName').value = data.name || '';
+      document.getElementById('profileRole').value = data.role || '';
+      document.getElementById('profileLang').value = data.language || '';
+      document.getElementById('profileOutput').textContent =
+`Loaded ✅
+Name: ${data.name || '-'}
+Role: ${data.role || '-'}
+Language: ${data.language || '-'}`;
+      document.getElementById('memoryOutput').textContent =
+        Object.keys(data).length ? JSON.stringify(data, null, 2) : 'No local memory saved yet.';
+    }
+
+    (function init(){
+      const savedUser = JSON.parse(localStorage.getItem('sazio_user') || 'null');
+      if(savedUser){
+        state.user = savedUser;
+        enterApp();
+      } else {
+        document.getElementById('authScreen').classList.remove('hide');
+      }
+      updateStats();
+    })();
+  </script>
 </body>
 </html>
