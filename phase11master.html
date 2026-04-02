@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAZIO X Phase11 Master</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root{
+      --bg:#050505;
+      --panel:#101010;
+      --panel2:#181818;
+      --line:rgba(255,255,255,.08);
+      --text:#fff;
+      --muted:#bdbdbd;
+      --accent:#ff5a5a;
+      --accent2:#ffd166;
+      --ok:#25c46b;
+      --bad:#ff7b7b;
+      --info:#6fb7ff;
+      --kids:#7a5cff;
+      --radius:22px;
+      --shadow:0 16px 40px rgba(0,0,0,.35);
+    }
+
+    body{
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255,90,90,.10), transparent 20%),
+        radial-gradient(circle at top right, rgba(122,92,255,.08), transparent 18%),
+        linear-gradient(180deg,#000,#0a0a0a 45%, #050505);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .hidden{ display:none !important; }
+    .wrap{ max-width:1440px; margin:0 auto; padding:18px; }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:20px;
+      box-shadow:var(--shadow);
+    }
+
+    .auth-wrap{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:18px;
+    }
+
+    .auth-card{
+      width:100%;
+      max-width:540px;
+    }
+
+    .logo{
+      font-size:42px;
+      font-weight:900;
+      line-height:1.03;
+      margin-bottom:10px;
+    }
+
+    .muted{
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter:blur(8px);
+      background:rgba(0,0,0,.78);
+      border-bottom:1px solid var(--line);
+    }
+
+    .topbar-inner{
+      max-width:1440px;
+      margin:0 auto;
+      padding:12px 18px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .brand{
+      font-size:24px;
+      font-weight:900;
+    }
+
+    .nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .nav button{
+      background:var(--panel2);
+      border:1px solid var(--line);
+      color:#fff;
+      padding:10px 14px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    .nav button.active{
+      background:var(--accent);
+    }
+
+    .tabs,.toolbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .tabs{ margin-top:14px; }
+
+    .btn{
+      border:1px solid var(--line);
+      background:var(--panel2);
+      color:#fff;
+      border-radius:14px;
+      padding:11px 15px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .btn.primary{ background:var(--accent); }
+    .btn.good{ background:var(--ok); color:#07140b; }
+    .btn.warn{ background:var(--accent2); color:#201500; }
+    .btn.bad{ background:var(--bad); color:#220606; }
+    .btn.info{ background:var(--info); color:#06131f; }
+    .btn.kids{ background:var(--kids); color:#fff; }
+
+    input, textarea, select{
+      width:100%;
+      margin-top:12px;
+      background:#0a0a0a;
+      color:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      font-size:15px;
+      outline:none;
+    }
+
+    textarea{
+      min-height:130px;
+      resize:vertical;
+    }
+
+    .msg{
+      margin-top:12px;
+      min-height:24px;
+      white-space:pre-wrap;
+      color:var(--accent2);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:18px;
+      padding:24px 0 18px;
+    }
+
+    .hero h1{
+      font-size:42px;
+      line-height:1.03;
+      margin-bottom:10px;
+    }
+
+    .badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .badge{
+      background:var(--panel2);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:13px;
+      color:#f0f0f0;
+    }
+
+    .grid{ display:grid; gap:18px; }
+    .grid-5{ grid-template-columns:repeat(5,minmax(0,1fr)); }
+    .grid-4{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+    .grid-3{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .grid-2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+
+    .section{
+      display:none;
+      padding-bottom:24px;
+    }
+
+    .section.active{
+      display:block;
+    }
+
+    .stat .label{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .stat .num{
+      font-size:34px;
+      font-weight:900;
+      margin-top:10px;
+      color:var(--accent2);
+    }
+
+    .output{
+      margin-top:14px;
+      background:#090909;
+      border:1px solid var(--line);
+      border-radius:16px;
+      min-height:130px;
+      padding:16px;
+      line-height:1.65;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    .catalog{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin-top:14px;
+    }
+
+    .mini-card{
+      background:#0b0b0b;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+    }
+
+    .mini-card h4{
+      font-size:16px;
+      margin-bottom:6px;
+    }
+
+    .price{
+      font-weight:800;
+      color:var(--accent2);
+      margin-top:6px;
+    }
+
+    h2{
+      font-size:30px;
+      margin-bottom:10px;
+    }
+
+    h3{
+      font-size:20px;
+      margin-bottom:8px;
+    }
+
+    .footer{
+      text-align:center;
+      color:#8f8f8f;
+      padding:28px 0 50px;
+    }
+
+    @media (max-width:980px){
+      .hero,.grid-5,.grid-4,.grid-3,.grid-2,.catalog{
+        grid-template-columns:1fr;
+      }
+      .hero h1,.logo{
+        font-size:34px;
+      }
+      .topbar-inner{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="authView" class="auth-wrap">
+    <div class="card auth-card">
+      <div class="logo">SAZIO X PHASE11 MASTER 🚀</div>
+      <p class="muted">Login ya signup karke real-data master dashboard open karo.</p>
+
+      <div class="tabs">
+        <button id="loginTab" class="btn primary" type="button">Login</button>
+        <button id="signupTab" class="btn" type="button">Signup</button>
+      </div>
+
+      <input id="email" type="email" placeholder="Email address" />
+      <input id="password" type="password" placeholder="Password" />
+      <div class="toolbar" style="margin-top:12px;">
+        <button id="authSubmit" class="btn primary" type="button">Login</button>
+      </div>
+      <div id="authMsg" class="msg"></div>
+    </div>
+  </div>
+
+  <div id="appView" class="hidden">
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">SAZIO X 🚀</div>
+        <div class="nav" id="navTabs">
+          <button data-tab="dashboard" class="active">Dashboard</button>
+          <button data-tab="router">AI Router</button>
+          <button data-tab="kids">Kids Mode</button>
+          <button data-tab="marketplace">Marketplace</button>
+          <button data-tab="freelance">Freelance</button>
+          <button data-tab="earn">Earn</button>
+          <button data-tab="withdraw">Withdraw</button>
+          <button data-tab="analytics">Analytics</button>
+          <button data-tab="profile">Profile</button>
+          <button data-tab="admin" id="adminNav" class="hidden">Admin</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <section class="hero">
+        <div class="card">
+          <h1>Phase 11 Master Real-Data Platform</h1>
+          <p class="muted" id="heroText">SAZIO X master build me AI Router, Kids Safe Mode, Marketplace, Freelance, Earn, Withdraw aur real Firestore data ek hi jagah connected hain.</p>
+          <div class="toolbar">
+            <button class="btn primary" onclick="sazioLogout()">Logout</button>
+            <button class="btn" onclick="addClick()">Add Click</button>
+            <button class="btn good" onclick="claimDailyBonus()">Daily Bonus +2</button>
+            <button class="btn warn" onclick="claimTaskReward()">Task Reward +3</button>
+            <button class="btn info" onclick="goTab('router')">Open AI Router</button>
+            <button class="btn kids" onclick="goTab('kids')">Open Kids Mode</button>
+          </div>
+          <div class="badges">
+            <span class="badge">Real Firestore Data</span>
+            <span class="badge">AI Router</span>
+            <span class="badge">Kids Safe</span>
+            <span class="badge">Marketplace</span>
+            <span class="badge">Freelance</span>
+            <span class="badge">Trust First</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>System Status</h3>
+          <div class="output" id="statusBox">Loading system status...</div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="section active">
+        <div class="grid grid-5">
+          <div class="card stat">
+            <div class="label">Clicks</div>
+            <div class="num" id="statClicks">0</div>
+          </div>
+          <div class="card stat">
+            <div class="label">Earnings</div>
+            <div class="num" id="statMoney">$0</div>
+          </div>
+          <div class="card stat">
+            <div class="label">AI Runs</div>
+            <div class="num" id="statAiRuns">0</div>
+          </div>
+          <div class="card stat">
+            <div class="label">Saved Outputs</div>
+            <div class="num" id="statSaved">0</div>
+          </div>
+          <div class="card stat">
+            <div class="label">Listings</div>
+            <div class="num" id="statListings">0</div>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:18px;">
+          <div class="card">
+            <h2>Quick Modules</h2>
+            <p class="muted">Router se output banao, Kids Mode me safe content generate karo, Marketplace aur Freelance me real Firestore records save karo.</p>
+            <div class="toolbar">
+              <button class="btn info" onclick="goTab('router')">AI Router</button>
+              <button class="btn kids" onclick="goTab('kids')">Kids Mode</button>
+              <button class="btn primary" onclick="goTab('marketplace')">Marketplace</button>
+              <button class="btn" onclick="goTab('freelance')">Freelance</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Master Rules</h2>
+            <div class="output">1. Real data saves to Firestore
+2. No fake guarantees
+3. No harmful kids content
+4. Marketplace only for legal digital items
+5. Freelance only for honest services
+6. Minimum withdraw: $100
+7. Future real AI backend can be connected later</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="router" class="section">
+        <div class="card">
+          <h2>AI Router</h2>
+          <textarea id="routerInput" placeholder="Type anything... example: emotional story, seo title, kids quiz, marketplace idea, freelance gig"></textarea>
+          <div class="toolbar">
+            <button class="btn primary" onclick="runRouter()">Analyze & Generate</button>
+            <button class="btn" onclick="copyOutput('routerOutput')">Copy</button>
+            <button class="btn" onclick="saveRouterOutput()">Save Output</button>
+          </div>
+
+          <div class="grid grid-3" style="margin-top:14px;">
+            <div class="card">
+              <h3>Detected Intent</h3>
+              <div class="output" id="routerIntent">Waiting...</div>
+            </div>
+            <div class="card">
+              <h3>Score</h3>
+              <div class="output" id="routerScore">Waiting...</div>
+            </div>
+            <div class="card">
+              <h3>Safety</h3>
+              <div class="output" id="routerSafety">Waiting...</div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:18px;">
+            <h3>Main Output</h3>
+            <div class="output" id="routerOutput">Router output yahan aayega.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="kids" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Kids Safe Mode</h2>
+            <select id="kidsModeType">
+              <option value="story">Safe Story</option>
+              <option value="quiz">Quiz</option>
+              <option value="homework">Homework Helper</option>
+              <option value="learning">Learning Helper</option>
+            </select>
+            <textarea id="kidsInput" placeholder="Example: jungle story, class 2 math help, animals quiz"></textarea>
+            <div class="toolbar">
+              <button class="btn kids" onclick="runKidsMode()">Generate Kids Output</button>
+              <button class="btn" onclick="copyOutput('kidsOutput')">Copy</button>
+            </div>
+            <div class="output" id="kidsOutput">Kids-safe output yahan aayega.</div>
+          </div>
+
+          <div class="card">
+            <h2>Parent Friendly Notes</h2>
+            <div class="output">Kids Mode safety rules:
+- no adult content
+- no violent instructions
+- no scam language
+- clean educational tone
+- parent-friendly explanation
+- simple moral and learning focus</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="marketplace" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Marketplace</h2>
+            <select id="marketType">
+              <option value="prompt">Prompt Pack</option>
+              <option value="seo">SEO Pack</option>
+              <option value="script">Script Pack</option>
+              <option value="template">Template Pack</option>
+              <option value="service">Service Listing</option>
+            </select>
+            <input id="marketTitle" placeholder="Product / service title" />
+            <input id="marketPrice" placeholder="Price" />
+            <textarea id="marketDesc" placeholder="Short description"></textarea>
+            <div class="toolbar">
+              <button class="btn primary" onclick="createMarketListing()">Create Listing</button>
+            </div>
+            <div class="output" id="marketOutput">Marketplace result yahan aayega.</div>
+          </div>
+
+          <div class="card">
+            <h2>Saved Listings</h2>
+            <div class="output" id="marketListingsOutput">Loading listings...</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="freelance" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Freelance Gig Builder</h2>
+            <select id="gigType">
+              <option value="thumbnail">Thumbnail Design</option>
+              <option value="script">Script Writing</option>
+              <option value="seo">SEO Service</option>
+              <option value="prompt">Prompt Writing</option>
+              <option value="editing">Editing Service</option>
+            </select>
+            <input id="gigTitle" placeholder="Gig title" />
+            <input id="gigPrice" placeholder="Starting price" />
+            <textarea id="gigDesc" placeholder="Gig description"></textarea>
+            <div class="toolbar">
+              <button class="btn primary" onclick="createGig()">Create Gig</button>
+            </div>
+            <div class="output" id="gigOutput">Gig result yahan aayega.</div>
+          </div>
+
+          <div class="card">
+            <h2>Saved Gigs</h2>
+            <div class="output" id="gigListingsOutput">Loading gigs...</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="earn" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Earning Controls</h2>
+            <div class="toolbar">
+              <button class="btn" onclick="addClick()">Add Click</button>
+              <button class="btn good" onclick="claimDailyBonus()">Daily Bonus +2</button>
+              <button class="btn warn" onclick="claimTaskReward()">Task Reward +3</button>
+            </div>
+            <div class="output" id="earnOutput">Use buttons to update your real user stats in Firestore.</div>
+          </div>
+
+          <div class="card">
+            <h2>Safe Earning Notes</h2>
+            <div class="output">Active safe sources:
+- clicks
+- daily bonus
+- task reward
+- referrals
+
+Future scalable sources:
+- marketplace
+- freelance
+- premium tools
+- affiliate-ready modules</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="withdraw" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Withdraw Request</h2>
+            <input id="withdrawUpi" placeholder="UPI ID (example: name@upi)" />
+            <input id="withdrawAmount" type="number" placeholder="Amount" />
+            <textarea id="withdrawNote" placeholder="Optional note"></textarea>
+            <div class="toolbar">
+              <button class="btn primary" onclick="submitWithdraw()">Submit Withdraw</button>
+            </div>
+            <div class="output" id="withdrawMsg">Withdraw status yahan aayega.</div>
+          </div>
+
+          <div class="card">
+            <h2>Your Withdraw History</h2>
+            <div class="output" id="withdrawHistory">Loading history...</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="analytics" class="section">
+        <div class="grid grid-4">
+          <div class="card">
+            <h2>Clicks</h2>
+            <div class="output" id="analyticsClicks">0</div>
+          </div>
+          <div class="card">
+            <h2>Earnings</h2>
+            <div class="output" id="analyticsMoney">$0</div>
+          </div>
+          <div class="card">
+            <h2>AI Runs</h2>
+            <div class="output" id="analyticsAiRuns">0</div>
+          </div>
+          <div class="card">
+            <h2>Saved Outputs</h2>
+            <div class="output" id="analyticsSaved">0</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="profile" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Profile</h2>
+            <input id="profileName" placeholder="Your name" />
+            <input id="profileRole" placeholder="Role" />
+            <input id="profileLanguage" placeholder="Preferred language" />
+            <div class="toolbar">
+              <button class="btn primary" onclick="saveProfile()">Save Profile</button>
+              <button class="btn" onclick="loadProfileData()">Load Profile</button>
+            </div>
+            <div class="output" id="profileOutput">Profile status yahan aayega.</div>
+          </div>
+
+          <div class="card">
+            <h2>Saved Outputs</h2>
+            <div class="output" id="savedOutputs">Loading saved outputs...</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin" class="section">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Admin Summary</h2>
+            <div class="output" id="adminSummary">Loading admin summary...</div>
+          </div>
+          <div class="card">
+            <h2>Withdraw Requests</h2>
+            <div class="output" id="adminRequests">Loading requests...</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px;">
+          <h2>Admin Action</h2>
+          <input id="adminRequestId" placeholder="Withdraw Request ID" />
+          <div class="toolbar">
+            <button class="btn good" onclick="adminApproveWithdraw()">Approve</button>
+            <button class="btn bad" onclick="adminRejectWithdraw()">Reject + Refund</button>
+          </div>
+          <div class="output" id="adminActionMsg">Admin action status yahan aayega.</div>
+        </div>
+      </section>
+
+      <div class="footer">SAZIO X phase11master real-data build.</div>
+    </div>
+  </div>
+
+  <script>
+    let aiRuns = 0;
+    let currentUserEmail = '';
+
+    const loginTab = document.getElementById('loginTab');
+    const signupTab = document.getElementById('signupTab');
+    const authSubmit = document.getElementById('authSubmit');
+    const authMsg = document.getElementById('authMsg');
+    const authView = document.getElementById('authView');
+    const appView = document.getElementById('appView');
+
+    let authMode = 'login';
+
+    loginTab.addEventListener('click', () => {
+      authMode = 'login';
+      loginTab.classList.add('primary');
+      signupTab.classList.remove('primary');
+      authSubmit.textContent = 'Login';
+      authMsg.textContent = '';
+    });
+
+    signupTab.addEventListener('click', () => {
+      authMode = 'signup';
+      signupTab.classList.add('primary');
+      loginTab.classList.remove('primary');
+      authSubmit.textContent = 'Signup';
+      authMsg.textContent = '';
+    });
+
+    const navButtons = document.querySelectorAll('#navTabs button');
+    const sections = document.querySelectorAll('.section');
+
+    function goTab(tab){
+      navButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      sections.forEach(sec => sec.classList.toggle('active', sec.id === tab));
+      const status = document.getElementById('statusBox');
+      if (status) {
+        status.textContent =
+`System ready.
+Current mode: ${tab}
+Safe real-data structure active.
+Future real AI backend integration ready.`;
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => goTab(btn.dataset.tab));
+    });
+
+    function copyOutput(id){
+      const el = document.getElementById(id);
+      if (!el) return;
+      navigator.clipboard.writeText(el.textContent || '');
+      alert('Copied ✅');
+    }
+
+    function detectIntent(text){
+      const t = text.toLowerCase();
+      if (!t) return 'none';
+      if (t.includes('kids') || t.includes('quiz') || t.includes('homework')) return 'kids';
+      if (t.includes('market') || t.includes('pack') || t.includes('listing')) return 'marketplace';
+      if (t.includes('gig') || t.includes('service') || t.includes('freelance')) return 'freelance';
+      if (t.includes('seo') || t.includes('title') || t.includes('tags')) return 'seo';
+      if (t.includes('story') || t.includes('emotional')) return 'story';
+      return 'general';
+    }
+
+    function scoreIntent(text, intent){
+      let score = 55;
+      if (intent === 'kids') score += 8;
+      if (intent === 'marketplace' || intent === 'freelance') score += 10;
+      if (intent === 'story' || intent === 'seo') score += 12;
+      if (text.length < 8) score -= 8;
+      if (score > 95) score = 95;
+      if (score < 20) score = 20;
+      return score;
+    }
+
+    function safetyCheck(text){
+      const t = text.toLowerCase();
+      const risky = ['adult', 'betting', 'scam', 'violence', 'fake guarantee'];
+      const hit = risky.find(x => t.includes(x));
+      if (hit) return `Warning\nSuspicious phrase detected: ${hit}\nSafe mode response applied.`;
+      return 'Safe\nNo obvious risky phrase detected.';
+    }
+
+    function generateRouterOutput(text, intent){
+      if (intent === 'kids') {
+        return `Detected as: Kids Request
+
+Recommended:
+- Open Kids Mode
+- Use simple educational language
+- Keep output safe and parent-friendly
+
+Starter Output:
+Topic: ${text}
+Create a short, kind, educational kids response.`;
+      }
+
+      if (intent === 'marketplace') {
+        return `Detected as: Marketplace Request
+
+Recommended:
+- Open Marketplace tab
+- Create a digital product listing
+- Use honest description and realistic pricing
+
+Starter Idea:
+Title: ${text}
+Type: Digital Pack
+Safe sales wording enabled.`;
+      }
+
+      if (intent === 'freelance') {
+        return `Detected as: Freelance Request
+
+Recommended:
+- Open Freelance tab
+- Create a gig
+- Keep title, price and scope clear
+
+Starter Gig:
+Service: ${text}
+Delivery: realistic
+Claims: trust-first only.`;
+      }
+
+      if (intent === 'seo') {
+        return `Detected as: SEO Request
+
+Title:
+Nobody Expected This… ${text} 😳
+
+Description:
+Optimized short-form content pack ready.
+
+Tags:
+viral, trending, sazio, ${text}`;
+      }
+
+      if (intent === 'story') {
+        return `Detected as: Story Request
+
+Hook:
+Nobody expected what happened next in ${text}.
+
+Structure:
+1. Hook
+2. Emotion
+3. Conflict
+4. Twist
+5. Ending`;
+      }
+
+      return `Detected as: General Request
+
+Suggested next step:
+- AI Router
+- Kids Mode
+- Marketplace
+- Freelance
+
+Tip:
+Add more detail for stronger output.`;
+    }
+
+    function runRouter(){
+      const text = document.getElementById('routerInput').value.trim();
+
+      if (!text) {
+        document.getElementById('routerIntent').textContent = 'No input';
+        document.getElementById('routerScore').textContent = '0/100';
+        document.getElementById('routerSafety').textContent = 'Waiting...';
+        document.getElementById('routerOutput').textContent = 'Pehle kuch likho.';
+        return;
+      }
+
+      const intent = detectIntent(text);
+      const score = scoreIntent(text, intent);
+      const safety = safetyCheck(text);
+      const output = generateRouterOutput(text, intent);
+
+      aiRuns += 1;
+
+      document.getElementById('routerIntent').textContent = intent.toUpperCase();
+      document.getElementById('routerScore').textContent = `${score}/100`;
+      document.getElementById('routerSafety').textContent = safety;
+      document.getElementById('routerOutput').textContent = output;
+
+      document.getElementById('statAiRuns').textContent = aiRuns;
+      document.getElementById('analyticsAiRuns').textContent = aiRuns;
+    }
+
+    function kidsSafetyCheck(text){
+      const t = text.toLowerCase();
+      const blocked = ['violence', 'gun', 'kill', 'adult', 'betting', 'scam', 'money trap'];
+      const hit = blocked.find(x => t.includes(x));
+      if (hit) return { safe:false, reason:`Blocked topic detected: ${hit}` };
+      return { safe:true, reason:'Kids-safe topic detected.' };
+    }
+
+    function runKidsMode(){
+      const mode = document.getElementById('kidsModeType').value;
+      const text = document.getElementById('kidsInput').value.trim();
+
+      if (!text) {
+        document.getElementById('kidsOutput').textContent = 'Pehle kids-friendly topic likho.';
+        return;
+      }
+
+      const safety = kidsSafetyCheck(text);
+      if (!safety.safe) {
+        document.getElementById('kidsOutput').textContent =
+`Kids Safe Filter Active ❌
+
+${safety.reason}
+
+Please use a safe learning or story topic.`;
+        return;
+      }
+
+      let out = '';
+      if (mode === 'story') {
+        out =
+`Kids Safe Story
+
+Title:
+${text}
+
+Story:
+Ek pyara sa dost tha jo har din kuch naya seekhta tha.
+Ek din usne nature, kindness aur honesty ke bare me ek nayi baat seekhi.
+End me sab khush hue aur usne apne friends ke sath apni learning share ki.
+
+Lesson:
+Always be kind, curious, and honest.`;
+      } else if (mode === 'quiz') {
+        out =
+`Kids Quiz
+
+Topic: ${text}
+
+Q1. Is topic se judi ek basic baat kya hai?
+Q2. Iska ek example do.
+Q3. Isse hum kya seekh sakte hain?
+
+Parent Tip:
+Bachche ko short answers likhne do.`;
+      } else if (mode === 'homework') {
+        out =
+`Homework Helper
+
+Topic: ${text}
+
+Simple Explanation:
+Is topic ko easy words me samjho.
+Pehle definition likho.
+Phir 2 examples likho.
+End me 1 small conclusion likho.`;
+      } else {
+        out =
+`Learning Helper
+
+Topic: ${text}
+
+Easy Learning Steps:
+1. Topic ko read karo
+2. 3 important points note karo
+3. 1 example socho
+4. 1 short summary likho`;
+      }
+
+      document.getElementById('kidsOutput').textContent = out;
+    }
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, addDoc, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAsCSXhw4939IEx379MDiXl9CTVJjvJLEI",
+      authDomain: "sazio-1.firebaseapp.com",
+      projectId: "sazio-1",
+      storageBucket: "sazio-1.firebasestorage.app",
+      messagingSenderId: "82743199739",
+      appId: "1:82743199739:web:952840299f517d1e47ed5e"
+    };
+
+    const ADMIN_EMAIL = "test@gmail.com";
+    const MIN_WITHDRAW = 100;
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    function todayKey(){
+      const d = new Date();
+      return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    }
+
+    function yesterdayKey(){
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    }
+
+    function makeCode(uid){
+      return "SAZ" + uid.slice(0,6).toUpperCase();
+    }
+
+    function authInput(id){
+      const el = document.getElementById(id);
+      return el ? el.value.trim() : '';
+    }
+
+    async function ensureUserDoc(user){
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+
+      if (!snap.exists()) {
+        await setDoc(ref, {
+          email:user.email,
+          clicks:0,
+          earnings:0,
+          referrals:0,
+          refCode:makeCode(user.uid),
+          referredBy:null,
+          lastBonus:null,
+          lastTask:null,
+          streak:1,
+          lastLoginDate:todayKey(),
+          profileName:'',
+          profileRole:'',
+          profileLanguage:''
+        });
+      } else {
+        const data = snap.data() || {};
+        const patch = {};
+        if (typeof data.clicks === "undefined") patch.clicks = 0;
+        if (typeof data.earnings === "undefined") patch.earnings = 0;
+        if (typeof data.referrals === "undefined") patch.referrals = 0;
+        if (!data.refCode) patch.refCode = makeCode(user.uid);
+        if (typeof data.referredBy === "undefined") patch.referredBy = null;
+        if (typeof data.lastBonus === "undefined") patch.lastBonus = null;
+        if (typeof data.lastTask === "undefined") patch.lastTask = null;
+        if (typeof data.streak === "undefined") patch.streak = 1;
+        if (typeof data.lastLoginDate === "undefined") patch.lastLoginDate = todayKey();
+        if (typeof data.profileName === "undefined") patch.profileName = '';
+        if (typeof data.profileRole === "undefined") patch.profileRole = '';
+        if (typeof data.profileLanguage === "undefined") patch.profileLanguage = '';
+        if (Object.keys(patch).length) await updateDoc(ref, patch);
+      }
+
+      return ref;
+    }
+
+    async function updateStreak(user){
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      const data = snap.data() || {};
+      const today = todayKey();
+      const yesterday = yesterdayKey();
+
+      if (data.lastLoginDate === today) return;
+
+      let nextStreak = 1;
+      if (data.lastLoginDate === yesterday) nextStreak = Number(data.streak || 0) + 1;
+
+      await updateDoc(ref, {
+        streak: nextStreak,
+        lastLoginDate: today
+      });
+    }
+
+    async function handleReferral(user){
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get("ref");
+      if (!code) return;
+
+      const myRef = doc(db, "users", user.uid);
+      const mySnap = await getDoc(myRef);
+      const myData = mySnap.data() || {};
+      if (myData.referredBy) return;
+
+      const q = query(collection(db, "users"), where("refCode", "==", code));
+      const res = await getDocs(q);
+      if (res.empty) return;
+
+      const refUser = res.docs[0];
+      if (refUser.id === user.uid) return;
+
+      await updateDoc(doc(db, "users", refUser.id), {
+        referrals: increment(1),
+        earnings: increment(10)
+      });
+
+      await updateDoc(myRef, { referredBy: code });
+    }
+
+    authSubmit.addEventListener("click", async () => {
+      const email = authInput("email");
+      const password = authInput("password");
+
+      if (!email || !password) {
+        authMsg.textContent = "Email aur password dono bharo.";
+        return;
+      }
+
+      try {
+        authMsg.textContent = authMode === "login" ? "Logging in..." : "Creating account...";
+        if (authMode === "login") {
+          await signInWithEmailAndPassword(auth, email, password);
+        } else {
+          await createUserWithEmailAndPassword(auth, email, password);
+        }
+        authMsg.textContent = "";
+      } catch (err) {
+        authMsg.textContent = err.message;
+      }
+    });
+
+    async function loadSavedOutputs(user){
+      const q = query(collection(db, "saved_outputs"), where("userId", "==", user.uid));
+      const res = await getDocs(q);
+      const rows = [];
+      res.forEach(d => rows.push({ id:d.id, ...d.data() }));
+      rows.sort((a,b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+      document.getElementById('savedOutputs').textContent =
+        rows.length ? rows.map(x => x.output).join("\n\n-----\n\n") : 'Abhi koi saved output nahi.';
+      document.getElementById('statSaved').textContent = rows.length;
+      document.getElementById('analyticsSaved').textContent = rows.length;
+    }
+
+    async function loadMarketplaceListings(user){
+      const q = query(collection(db, "marketplace_listings"), where("userId", "==", user.uid));
+      const res = await getDocs(q);
+      const rows = [];
+      res.forEach(d => rows.push({ id:d.id, ...d.data() }));
+      rows.sort((a,b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+      document.getElementById('marketListingsOutput').textContent =
+        rows.length
+          ? rows.map(x => `ID: ${x.id}\nType: ${x.type}\nTitle: ${x.title}\nPrice: ${x.price}\nDescription: ${x.description || '-'}`).join("\n\n-----\n\n")
+          : 'No marketplace listings yet.';
+      document.getElementById('statListings').textContent = rows.length;
+    }
+
+    async function loadGigs(user){
+      const q = query(collection(db, "freelance_gigs"), where("userId", "==", user.uid));
+      const res = await getDocs(q);
+      const rows = [];
+      res.forEach(d => rows.push({ id:d.id, ...d.data() }));
+      rows.sort((a,b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+      document.getElementById('gigListingsOutput').textContent =
+        rows.length
+          ? rows.map(x => `ID: ${x.id}\nType: ${x.type}\nTitle: ${x.title}\nPrice: ${x.price}\nDescription: ${x.description || '-'}`).join("\n\n-----\n\n")
+          : 'No freelance gigs yet.';
+    }
+
+    async function loadWithdrawHistory(user){
+      const q = query(collection(db, "withdraw_requests"), where("userId", "==", user.uid));
+      const res = await getDocs(q);
+      const rows = [];
+      res.forEach(d => rows.push({ id:d.id, ...d.data() }));
+      rows.sort((a,b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+      document.getElementById("withdrawHistory").textContent =
+        rows.length
+          ? rows.map(x => `ID: ${x.id}\nAmount: $${x.amount}\nUPI: ${x.upi}\nStatus: ${x.status}\nRefunded: ${x.refunded ? "Yes" : "No"}\nDate: ${x.createdAt}`).join("\n\n-----\n\n")
+          : "No withdraw requests yet.";
+    }
+
+    async function loadProfile(user){
+      const snap = await getDoc(doc(db, "users", user.uid));
+      const data = snap.data() || {};
+      document.getElementById('profileName').value = data.profileName || '';
+      document.getElementById('profileRole').value = data.profileRole || '';
+      document.getElementById('profileLanguage').value = data.profileLanguage || '';
+      document.getElementById('profileOutput').textContent =
+`Loaded ✅
+Name: ${data.profileName || '-'}
+Role: ${data.profileRole || '-'}
+Language: ${data.profileLanguage || '-'}`;
+    }
+
+    async function loadAdmin(){
+      const userRes = await getDocs(collection(db, "users"));
+      const reqRes = await getDocs(collection(db, "withdraw_requests"));
+
+      let totalUsers = 0;
+      let totalClicks = 0;
+      let totalEarnings = 0;
+
+      userRes.forEach(d => {
+        totalUsers++;
+        const x = d.data() || {};
+        totalClicks += Number(x.clicks || 0);
+        totalEarnings += Number(x.earnings || 0);
+      });
+
+      const reqs = [];
+      reqRes.forEach(d => reqs.push({ id:d.id, ...d.data() }));
+      reqs.sort((a,b)=> (b.createdAt || "").localeCompare(a.createdAt || ""));
+
+      document.getElementById("adminSummary").textContent =
+`Total Users: ${totalUsers}
+Total Clicks: ${totalClicks}
+Total Earnings: $${totalEarnings}
+Total Withdraw Requests: ${reqs.length}`;
+
+      document.getElementById("adminRequests").textContent =
+        reqs.length
+          ? reqs.map(x => `ID: ${x.id}\nEmail: ${x.email}\nAmount: $${x.amount}\nUPI: ${x.upi}\nStatus: ${x.status}\nRefunded: ${x.refunded ? "Yes" : "No"}\nDate: ${x.createdAt}`).join("\n\n-----\n\n")
+          : "No withdraw requests yet.";
+    }
+
+    async function refreshUI(user){
+      currentUserEmail = user.email || '';
+
+      authView.classList.add('hidden');
+      appView.classList.remove('hidden');
+
+      await ensureUserDoc(user);
+      await updateStreak(user);
+      await handleReferral(user);
+
+      const snap = await getDoc(doc(db, "users", user.uid));
+      const data = snap.data() || {};
+
+      document.getElementById('heroText').textContent =
+        `Welcome ${user.email}. Ye phase11 master build hai jahan AI Router, Kids Safe Mode, Marketplace, Freelance, Earn, Withdraw aur real Firestore data ek hi jagah connected hain.`;
+
+      document.getElementById('statusBox').textContent =
+`Email: ${user.email}
+Referral Code: ${data.refCode || '-'}
+Referred By: ${data.referredBy || '-'}
+Streak: ${data.streak || 1}
+Last Bonus: ${data.lastBonus || '-'}
+Last Task: ${data.lastTask || '-'}
+System: Real Firestore data active`;
+
+      document.getElementById('statClicks').textContent = data.clicks || 0;
+      document.getElementById('statMoney').textContent = `$${data.earnings || 0}`;
+      document.getElementById('analyticsClicks').textContent = data.clicks || 0;
+      document.getElementById('analyticsMoney').textContent = `$${data.earnings || 0}`;
+
+      await loadSavedOutputs(user);
+      await loadMarketplaceListings(user);
+      await loadGigs(user);
+      await loadWithdrawHistory(user);
+      await loadProfile(user);
+
+      if (user.email === ADMIN_EMAIL) {
+        document.getElementById("adminNav").classList.remove("hidden");
+        await loadAdmin();
+      } else {
+        document.getElementById("adminNav").classList.add("hidden");
+      }
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        authView.classList.remove('hidden');
+        appView.classList.add('hidden');
+        return;
+      }
+      await refreshUI(user);
+    });
+
+    window.sazioLogout = async function(){
+      await signOut(auth);
+    };
+
+    window.addClick = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+      await updateDoc(doc(db, "users", user.uid), {
+        clicks: increment(1)
+      });
+      await refreshUI(user);
+    };
+
+    window.claimDailyBonus = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      const data = snap.data() || {};
+      const today = todayKey();
+
+      if (data.lastBonus === today) {
+        alert("Daily bonus already claimed today.");
+        return;
+      }
+
+      await updateDoc(ref, {
+        earnings: increment(2),
+        lastBonus: today
+      });
+
+      document.getElementById('earnOutput').textContent = 'Daily bonus added ✅';
+      await refreshUI(user);
+    };
+
+    window.claimTaskReward = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      const data = snap.data() || {};
+      const today = todayKey();
+
+      if (data.lastTask === today) {
+        alert("Task reward already claimed today.");
+        return;
+      }
+
+      await updateDoc(ref, {
+        earnings: increment(3),
+        lastTask: today
+      });
+
+      document.getElementById('earnOutput').textContent = 'Task reward added ✅';
+      await refreshUI(user);
+    };
+
+    window.saveRouterOutput = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const output = document.getElementById('routerOutput').textContent.trim();
+      if (!output || output === 'Router output yahan aayega.' || output === 'Pehle kuch likho.') {
+        alert('Save karne ke liye pehle output generate karo.');
+        return;
+      }
+
+      await addDoc(collection(db, "saved_outputs"), {
+        userId: user.uid,
+        email: user.email,
+        output,
+        createdAt: new Date().toISOString()
+      });
+
+      await loadSavedOutputs(user);
+      alert('Output saved to Firestore ✅');
+    };
+
+    window.saveProfile = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const profileName = document.getElementById('profileName').value.trim();
+      const profileRole = document.getElementById('profileRole').value.trim();
+      const profileLanguage = document.getElementById('profileLanguage').value.trim();
+
+      await updateDoc(doc(db, "users", user.uid), {
+        profileName,
+        profileRole,
+        profileLanguage
+      });
+
+      document.getElementById('profileOutput').textContent =
+`Saved ✅
+Name: ${profileName || '-'}
+Role: ${profileRole || '-'}
+Language: ${profileLanguage || '-'}`;
+    };
+
+    window.loadProfileData = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+      await loadProfile(user);
+    };
+
+    window.createMarketListing = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const type = document.getElementById('marketType').value;
+      const title = document.getElementById('marketTitle').value.trim();
+      const price = document.getElementById('marketPrice').value.trim();
+      const description = document.getElementById('marketDesc').value.trim();
+
+      if (!title || !price) {
+        document.getElementById('marketOutput').textContent = 'Title aur price dono required hain.';
+        return;
+      }
+
+      await addDoc(collection(db, "marketplace_listings"), {
+        userId: user.uid,
+        email: user.email,
+        type,
+        title,
+        price,
+        description,
+        createdAt: new Date().toISOString()
+      });
+
+      document.getElementById('marketTitle').value = '';
+      document.getElementById('marketPrice').value = '';
+      document.getElementById('marketDesc').value = '';
+
+      document.getElementById('marketOutput').textContent =
+`Marketplace Listing Created ✅
+
+Type: ${type}
+Title: ${title}
+Price: ${price}
+Description: ${description || 'No description'}
+
+Saved to Firestore successfully.`;
+
+      await loadMarketplaceListings(user);
+    };
+
+    window.createGig = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const type = document.getElementById('gigType').value;
+      const title = document.getElementById('gigTitle').value.trim();
+      const price = document.getElementById('gigPrice').value.trim();
+      const description = document.getElementById('gigDesc').value.trim();
+
+      if (!title || !price) {
+        document.getElementById('gigOutput').textContent = 'Gig title aur price required hain.';
+        return;
+      }
+
+      await addDoc(collection(db, "freelance_gigs"), {
+        userId: user.uid,
+        email: user.email,
+        type,
+        title,
+        price,
+        description,
+        createdAt: new Date().toISOString()
+      });
+
+      document.getElementById('gigTitle').value = '';
+      document.getElementById('gigPrice').value = '';
+      document.getElementById('gigDesc').value = '';
+
+      document.getElementById('gigOutput').textContent =
+`Freelance Gig Created ✅
+
+Service Type: ${type}
+Gig Title: ${title}
+Starting Price: ${price}
+Description: ${description || 'No description'}
+
+Saved to Firestore successfully.`;
+
+      await loadGigs(user);
+    };
+
+    window.submitWithdraw = async function(){
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const upi = document.getElementById("withdrawUpi").value.trim();
+      const amount = Number(document.getElementById("withdrawAmount").value.trim());
+      const note = document.getElementById("withdrawNote").value.trim();
+
+      if (!upi) {
+        document.getElementById("withdrawMsg").textContent = "UPI ID required.";
+        return;
+      }
+      if (!amount || amount <= 0) {
+        document.getElementById("withdrawMsg").textContent = "Valid amount required.";
+        return;
+      }
+      if (amount < MIN_WITHDRAW) {
+        document.getElementById("withdrawMsg").textContent = "Minimum withdraw is $" + MIN_WITHDRAW;
+        return;
+      }
+
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data() || {};
+      const currentEarnings = Number(userData.earnings || 0);
+
+      if (amount > currentEarnings) {
+        document.getElementById("withdrawMsg").textContent = "Insufficient earnings.";
+        return;
+      }
+
+      await addDoc(collection(db, "withdraw_requests"), {
+        userId: user.uid,
+        email: user.email,
+        upi,
+        amount,
+        note,
+        status: "pending",
+        refunded: false,
+        createdAt: new Date().toISOString()
+      });
+
+      await updateDoc(userRef, {
+        earnings: currentEarnings - amount
+      });
+
+      document.getElementById("withdrawUpi").value = "";
+      document.getElementById("withdrawAmount").value = "";
+      document.getElementById("withdrawNote").value = "";
+
+      document.getElementById("withdrawMsg").textContent =
+`Withdraw request submitted successfully ✅
+Your request is now pending admin review.`;
+
+      await refreshUI(user);
+    };
+
+    window.adminApproveWithdraw = async function(){
+      const user = auth.currentUser;
+      if (!user || user.email !== ADMIN_EMAIL) {
+        document.getElementById("adminActionMsg").textContent = "Admin access only.";
+        return;
+      }
+
+      const requestId = document.getElementById("adminRequestId").value.trim();
+      if (!requestId) {
+        document.getElementById("adminActionMsg").textContent = "Request ID required.";
+        return;
+      }
+
+      const reqRef = doc(db, "withdraw_requests", requestId);
+      const snap = await getDoc(reqRef);
+      if (!snap.exists()) {
+        document.getElementById("adminActionMsg").textContent = "Request not found.";
+        return;
+      }
+
+      const data = snap.data() || {};
+      if (data.status !== "pending") {
+        document.getElementById("adminActionMsg").textContent = "Only pending request can be approved.";
+        return;
+      }
+
+      await updateDoc(reqRef, { status: "approved" });
+      document.getElementById("adminActionMsg").textContent = "Request approved ✅";
+      await loadAdmin();
+    };
+
+    window.adminRejectWithdraw = async function(){
+      const user = auth.currentUser;
+      if (!user || user.email !== ADMIN_EMAIL) {
+        document.getElementById("adminActionMsg").textContent = "Admin access only.";
+        return;
+      }
+
+      const requestId = document.getElementById("adminRequestId").value.trim();
+      if (!requestId) {
+        document.getElementById("adminActionMsg").textContent = "Request ID required.";
+        return;
+      }
+
+      const reqRef = doc(db, "withdraw_requests", requestId);
+      const snap = await getDoc(reqRef);
+      if (!snap.exists()) {
+        document.getElementById("adminActionMsg").textContent = "Request not found.";
+        return;
+      }
+
+      const data = snap.data() || {};
+      if (data.status !== "pending") {
+        document.getElementById("adminActionMsg").textContent = "Only pending request can be rejected.";
+        return;
+      }
+      if (data.refunded) {
+        document.getElementById("adminActionMsg").textContent = "Already refunded.";
+        return;
+      }
+
+      await updateDoc(doc(db, "users", data.userId), {
+        earnings: increment(Number(data.amount || 0))
+      });
+
+      await updateDoc(reqRef, {
+        status: "rejected",
+        refunded: true
+      });
+
+      document.getElementById("adminActionMsg").textContent = "Request rejected and refunded ✅";
+      await loadAdmin();
+    };
+  </script>
+</body>
+</html>
