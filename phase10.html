@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAZIO X MASTER</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:Arial;
+  background:#000;
+  color:#fff;
+}
+
+/* NAV */
+.nav{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:15px;
+}
+.nav button{
+  background:#111;
+  border:1px solid #222;
+  padding:10px 14px;
+  border-radius:12px;
+  color:#fff;
+  cursor:pointer;
+}
+.nav button.active{background:#ff5a5a;}
+
+/* CARD */
+.card{
+  background:#111;
+  margin:15px;
+  padding:20px;
+  border-radius:20px;
+  border:1px solid #222;
+}
+
+/* BUTTONS */
+.btn{
+  padding:12px 16px;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  margin:5px;
+}
+.primary{background:#ff5a5a;color:#fff;}
+.green{background:#25c46b;color:#000;}
+.yellow{background:#ffd166;color:#000;}
+.blue{background:#6fb7ff;color:#000;}
+.purple{background:#7a5cff;color:#fff;}
+
+textarea{
+  width:100%;
+  background:#000;
+  color:#fff;
+  border:1px solid #222;
+  padding:12px;
+  border-radius:12px;
+  margin-top:10px;
+}
+
+.output{
+  margin-top:15px;
+  padding:15px;
+  background:#000;
+  border:1px solid #222;
+  border-radius:12px;
+  white-space:pre-wrap;
+}
+
+h1{font-size:32px;margin-bottom:10px;}
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<div class="nav">
+<button class="active">Dashboard</button>
+<button onclick="go('ai')">AI Brain</button>
+<button onclick="go('kids')">Kids</button>
+<button onclick="go('market')">Market</button>
+<button onclick="go('earn')">Earn</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="card">
+<h1>🚀 SAZIO MASTER SYSTEM</h1>
+<p>All-in-one AI + Earning + Marketplace Platform</p>
+
+<button class="btn primary">Logout</button>
+<button class="btn">Add Click</button>
+<button class="btn green">Daily Bonus</button>
+<button class="btn yellow">Task Reward</button>
+
+</div>
+
+<!-- AI BRAIN -->
+<div id="ai" class="card" style="display:none;">
+<h1>🧠 AI Brain Router</h1>
+
+<textarea id="input" placeholder="Type anything..."></textarea>
+
+<button class="btn primary" onclick="runAI()">Analyze & Generate</button>
+
+<div id="intent" class="output">Intent: -</div>
+<div id="result" class="output">Output: -</div>
+</div>
+
+<!-- KIDS -->
+<div id="kids" class="card" style="display:none;">
+<h1>👶 Kids Mode</h1>
+
+<textarea id="kidsInput"></textarea>
+<button class="btn purple" onclick="kids()">Generate</button>
+
+<div id="kidsOut" class="output"></div>
+</div>
+
+<!-- MARKET -->
+<div id="market" class="card" style="display:none;">
+<h1>🛒 Marketplace</h1>
+
+<input id="title" placeholder="Title">
+<input id="price" placeholder="Price">
+<textarea id="desc"></textarea>
+
+<button class="btn blue" onclick="market()">Create</button>
+
+<div id="marketOut" class="output"></div>
+</div>
+
+<!-- EARN -->
+<div id="earn" class="card" style="display:none;">
+<h1>💰 Earning System</h1>
+
+<p>Clicks: <span id="clicks">0</span></p>
+<p>Earnings: $<span id="money">0</span></p>
+
+<button class="btn" onclick="add()">Add Click</button>
+<button class="btn green" onclick="bonus()">Bonus</button>
+
+</div>
+
+<script>
+
+/* NAV */
+function go(tab){
+  document.querySelectorAll('.card').forEach(c=>c.style.display='none');
+  document.getElementById(tab).style.display='block';
+}
+
+/* AI ROUTER */
+function runAI(){
+  let text=document.getElementById('input').value.toLowerCase();
+
+  let intent="general";
+
+  if(text.includes("story")) intent="story";
+  else if(text.includes("seo")) intent="seo";
+  else if(text.includes("product")) intent="product";
+
+  document.getElementById('intent').innerText="Intent: "+intent;
+
+  let output="";
+
+  if(intent=="story"){
+    output="Emotional Story Generated ✅\n\nEk ladka tha jo mehnat karta tha...";
+  }
+  else if(intent=="seo"){
+    output="SEO Package Generated ✅\nTitle, Tags, Description ready.";
+  }
+  else if(intent=="product"){
+    output="Product Analysis ✅\nBest price found on top platform.";
+  }
+  else{
+    output="General AI Response Ready ✅";
+  }
+
+  document.getElementById('result').innerText=output;
+}
+
+/* KIDS */
+function kids(){
+  let t=document.getElementById('kidsInput').value;
+  document.getElementById('kidsOut').innerText=
+  "Kids Safe Story:\n\n"+t+"\n\nMoral: Be kind.";
+}
+
+/* MARKET */
+function market(){
+  let t=document.getElementById('title').value;
+  let p=document.getElementById('price').value;
+
+  document.getElementById('marketOut').innerText=
+  "Listing Created:\n"+t+" - $"+p;
+}
+
+/* EARN */
+let clicks=0;
+let money=0;
+
+function add(){
+  clicks++;
+  document.getElementById('clicks').innerText=clicks;
+}
+
+function bonus(){
+  money+=2;
+  document.getElementById('money').innerText=money;
+}
+
+</script>
+
+</body>
+</html>
