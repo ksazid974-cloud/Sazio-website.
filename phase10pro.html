@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAZIO X Phase10 Pro</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root{
+      --bg:#050505;
+      --panel:#101010;
+      --panel2:#181818;
+      --line:rgba(255,255,255,.08);
+      --text:#fff;
+      --muted:#bdbdbd;
+      --accent:#ff5a5a;
+      --accent2:#ffd166;
+      --ok:#25c46b;
+      --bad:#ff7b7b;
+      --info:#6fb7ff;
+      --kids:#7a5cff;
+      --radius:22px;
+      --shadow:0 16px 40px rgba(0,0,0,.35);
+    }
+
+    body{
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255,90,90,.10), transparent 20%),
+        radial-gradient(circle at top right, rgba(122,92,255,.08), transparent 18%),
+        linear-gradient(180deg,#000,#0a0a0a 45%, #050505);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .wrap{ max-width:1440px; margin:0 auto; padding:18px; }
+    .hidden{ display:none !important; }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter:blur(8px);
+      background:rgba(0,0,0,.78);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar-inner{
+      max-width:1440px;
+      margin:0 auto;
+      padding:12px 18px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .brand{ font-size:24px; font-weight:900; }
+
+    .nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .nav button{
+      background:var(--panel2);
+      border:1px solid var(--line);
+      color:#fff;
+      padding:10px 14px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:700;
+    }
+    .nav button.active{
+      background:var(--accent);
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:20px;
+      box-shadow:var(--shadow);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:18px;
+      padding:24px 0 18px;
+    }
+
+    .hero h1{
+      font-size:44px;
+      line-height:1.03;
+      margin-bottom:10px;
+    }
+
+    .muted{ color:var(--muted); line-height:1.6; }
+
+    .toolbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .btn{
+      border:1px solid var(--line);
+      background:var(--panel2);
+      color:#fff;
+      border-radius:14px;
+      padding:11px 15px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .btn.primary{ background:var(--accent); }
+    .btn.good{ background:var(--ok); color:#07140b; }
+    .btn.warn{ background:var(--accent2); color:#201500; }
+    .btn.info{ background:var(--info); color:#06131f; }
+    .btn.kids{ background:var(--kids); color:#fff; }
+
+    .badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+    .badge{
+      background:var(--panel2);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:13px;
+      color:#f0f0f0;
+    }
+
+    .grid{ display:grid; gap:18px; }
+    .grid-5{ grid-template-columns:repeat(5,minmax(0,1fr)); }
+    .grid-4{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+    .grid-3{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .grid-2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+
+    .stat .label{
+      color:var(--muted);
+      font-size:14px;
+    }
+    .stat .num{
+      font-size:34px;
+      font-weight:900;
+      margin-top:10px;
+      color:var(--accent2);
+    }
+
+    .section{
+      display:none;
+      padding-bottom:24px;
+    }
+    .section.active{
+      display:block;
+    }
+
+    h2{
+      font-size:30px;
+      margin-bottom:10px;
+    }
+    h3{
+      font-size:20px;
+      margin-bottom:8px;
+    }
+
+    input, textarea, select{
+      width:100%;
+      margin-top:12px;
+      background:#0a0a0a;
+      color:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      font-size:15px;
+      outline:none;
+    }
+    textarea{
+      min-height:130px;
+      resize:vertical;
+    }
+
+    .output{
+      margin-top:14px;
+      background:#090909;
+      border:1px solid var(--line);
+      border-radius:16px;
+      min-height:130px;
+      padding:16px;
+      line-height:1.65;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    .catalog{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin-top:14px;
+    }
+    .mini-card{
+      background:#0b0b0b;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+    }
+    .mini-card h4{
+      font-size:16px;
+      margin-bottom:6px;
+    }
+    .price{
+      font-weight:800;
+      color:var(--accent2);
+      margin-top:6px;
+    }
+
+    .footer{
+      text-align:center;
+      color:#8f8f8f;
+      padding:28px 0 50px;
+    }
+
+    @media (max-width:980px){
+      .hero,.grid-5,.grid-4,.grid-3,.grid-2,.catalog{
+        grid-template-columns:1fr;
+      }
+      .hero h1{
+        font-size:34px;
+      }
+      .topbar-inner{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">SAZIO X 🚀</div>
+      <div class="nav" id="navTabs">
+        <button data-tab="dashboard" class="active">Dashboard</button>
+        <button data-tab="router">AI Router</button>
+        <button data-tab="kids">Kids Mode</button>
+        <button data-tab="marketplace">Marketplace</button>
+        <button data-tab="freelance">Freelance</button>
+        <button data-tab="earn">Earn</button>
+        <button data-tab="analytics">Analytics</button>
+        <button data-tab="profile">Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <section class="hero">
+      <div class="card">
+        <h1>Final Polished Super Platform</h1>
+        <p class="muted" id="heroText">SAZIO X phase10pro ek unified trust-first super platform hai jahan AI Router, Kids Safe Mode, Marketplace, Freelance, Rewards aur polished dashboard experience ek hi jagah milta hai.</p>
+        <div class="toolbar">
+          <button class="btn primary" onclick="fakeAction('Logout action demo')">Logout</button>
+          <button class="btn" onclick="addClick()">Add Click</button>
+          <button class="btn good" onclick="dailyBonus()">Daily Bonus +2</button>
+          <button class="btn warn" onclick="taskReward()">Task Reward +3</button>
+          <button class="btn info" onclick="goTab('router')">Open AI Router</button>
+          <button class="btn kids" onclick="goTab('kids')">Open Kids Mode</button>
+        </div>
+        <div class="badges">
+          <span class="badge">Unified Dashboard</span>
+          <span class="badge">AI Router</span>
+          <span class="badge">Kids Safe</span>
+          <span class="badge">Marketplace Pro</span>
+          <span class="badge">Freelance Starter</span>
+          <span class="badge">Trust First</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>System Status</h3>
+        <div class="output" id="statusBox">System ready.
+Current mode: Dashboard
+Safe beta structure active.
+Future API integration friendly.</div>
+      </div>
+    </section>
+
+    <section id="dashboard" class="section active">
+      <div class="grid grid-5">
+        <div class="card stat">
+          <div class="label">Clicks</div>
+          <div class="num" id="clicks">0</div>
+        </div>
+        <div class="card stat">
+          <div class="label">Earnings</div>
+          <div class="num">$<span id="money">0</span></div>
+        </div>
+        <div class="card stat">
+          <div class="label">AI Runs</div>
+          <div class="num" id="aiRuns">0</div>
+        </div>
+        <div class="card stat">
+          <div class="label">Saved Outputs</div>
+          <div class="num" id="savedCount">0</div>
+        </div>
+        <div class="card stat">
+          <div class="label">Current Phase</div>
+          <div class="num" style="font-size:20px;">10 PRO</div>
+        </div>
+      </div>
+
+      <div class="grid grid-2" style="margin-top:18px;">
+        <div class="card">
+          <h2>Quick Modules</h2>
+          <p class="muted">Jo chahiye us tab me jao. Router se smart output lo, Kids Mode me safe educational content banao, Marketplace me product listing aur Freelance me gig structure banao.</p>
+          <div class="toolbar">
+            <button class="btn info" onclick="goTab('router')">AI Router</button>
+            <button class="btn kids" onclick="goTab('kids')">Kids Mode</button>
+            <button class="btn primary" onclick="goTab('marketplace')">Marketplace</button>
+            <button class="btn" onclick="goTab('freelance')">Freelance</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Master Rules</h2>
+          <div class="output">1. Safe and legal wording only
+2. No fake guarantees
+3. No harmful kids content
+4. Marketplace only for legal digital items
+5. Freelance only for honest services
+6. Fast, simple, trust-first UX
+7. Modular build for future upgrades</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="router" class="section">
+      <div class="card">
+        <h2>AI Router Pro</h2>
+        <textarea id="routerInput" placeholder="Type anything... example: emotional story, seo title for phone, kids jungle story, thumbnail pack idea, freelance gig"></textarea>
+        <div class="toolbar">
+          <button class="btn primary" onclick="runRouter()">Analyze & Generate</button>
+          <button class="btn" onclick="copyOutput('routerOutput')">Copy</button>
+          <button class="btn" onclick="saveOutput('routerOutput')">Save</button>
+        </div>
+
+        <div class="grid grid-3" style="margin-top:14px;">
+          <div class="card">
+            <h3>Detected Intent</h3>
+            <div class="output" id="routerIntent">Waiting...</div>
+          </div>
+          <div class="card">
+            <h3>Score</h3>
+            <div class="output" id="routerScore">Waiting...</div>
+          </div>
+          <div class="card">
+            <h3>Safety</h3>
+            <div class="output" id="routerSafety">Waiting...</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px;">
+          <h3>Main Output</h3>
+          <div class="output" id="routerOutput">Router output yahan aayega.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="kids" class="section">
+      <div class="grid grid-2">
+        <div class="card">
+          <h2>Kids Safe Mode Pro</h2>
+          <select id="kidsModeType">
+            <option value="story">Safe Story</option>
+            <option value="quiz">Quiz</option>
+            <option value="homework">Homework Helper</option>
+            <option value="learning">Learning Helper</option>
+          </select>
+          <textarea id="kidsInput" placeholder="Example: jungle story, class 2 math help, animals quiz"></textarea>
+          <div class="toolbar">
+            <button class="btn kids" onclick="runKidsMode()">Generate Kids Output</button>
+            <button class="btn" onclick="copyOutput('kidsOutput')">Copy</button>
+            <button class="btn" onclick="saveOutput('kidsOutput')">Save</button>
+          </div>
+          <div class="output" id="kidsOutput">Kids-safe output yahan aayega.</div>
+        </div>
+
+        <div class="card">
+          <h2>Parent Friendly Pack</h2>
+          <div class="output">Kids Mode safety rules:
+- no adult content
+- no violent instructions
+- no scam language
+- clean educational tone
+- parent-friendly explanation
+- simple moral and learning focus</div>
+
+          <div class="catalog">
+            <div class="mini-card">
+              <h4>Story Pack</h4>
+              <div>Bedtime stories, kindness stories, animal adventures</div>
+              <div class="price">$5 starter</div>
+            </div>
+            <div class="mini-card">
+              <h4>Learning Pack</h4>
+              <div>Quiz, homework prompts, easy learning templates</div>
+              <div class="price">$7 starter</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="marketplace" class="section">
+      <div class="grid grid-2">
+        <div class="card">
+          <h2>Marketplace Pro</h2>
+          <select id="marketType">
+            <option value="prompt">Prompt Pack</option>
+            <option value="seo">SEO Pack</option>
+            <option value="script">Script Pack</option>
+            <option value="template">Template Pack</option>
+            <option value="service">Service Listing</option>
+          </select>
+          <input id="marketTitle" placeholder="Product / service title" />
+          <input id="marketPrice" placeholder="Price" />
+          <textarea id="marketDesc" placeholder="Short description"></textarea>
+          <div class="toolbar">
+            <button class="btn primary" onclick="createMarketListing()">Create Listing</button>
+          </div>
+          <div class="output" id="marketOutput">Marketplace result yahan aayega.</div>
+        </div>
+
+        <div class="card">
+          <h2>Marketplace Catalog</h2>
+          <div class="catalog">
+            <div class="mini-card">
+              <h4>Viral Thumbnail Prompt Pack</h4>
+              <div>50 high-click ideas</div>
+              <div class="price">$9</div>
+            </div>
+            <div class="mini-card">
+              <h4>SEO Mega Pack</h4>
+              <div>Titles, descriptions, tags</div>
+              <div class="price">$12</div>
+            </div>
+            <div class="mini-card">
+              <h4>Story Script Bundle</h4>
+              <div>Emotional story templates</div>
+              <div class="price">$15</div>
+            </div>
+            <div class="mini-card">
+              <h4>Kids Learning Pack</h4>
+              <div>Safe worksheets and quiz prompts</div>
+              <div class="price">$11</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="freelance" class="section">
+      <div class="grid grid-2">
+        <div class="card">
+          <h2>Freelance Gig Builder</h2>
+          <select id="gigType">
+            <option value="thumbnail">Thumbnail Design</option>
+            <option value="script">Script Writing</option>
+            <option value="seo">SEO Service</option>
+            <option value="prompt">Prompt Writing</option>
+            <option value="editing">Editing Service</option>
+          </select>
+          <input id="gigTitle" placeholder="Gig title" />
+          <input id="gigPrice" placeholder="Starting price" />
+          <textarea id="gigDesc" placeholder="Gig description"></textarea>
+          <div class="toolbar">
+            <button class="btn primary" onclick="createGig()">Create Gig</button>
+          </div>
+          <div class="output" id="gigOutput">Gig result yahan aayega.</div>
+        </div>
+
+        <div class="card">
+          <h2>Freelance Starter Notes</h2>
+          <div class="output">Freelance safe rules:
+- no fake portfolio claims
+- no hidden charges
+- no impossible delivery promises
+- keep pricing honest
+- clear service description
+- trust-first client messaging</div>
+
+          <div class="catalog">
+            <div class="mini-card">
+              <h4>Thumbnail Service</h4>
+              <div>Starter gig for basic thumbnails</div>
+              <div class="price">from $10</div>
+            </div>
+            <div class="mini-card">
+              <h4>SEO Service</h4>
+              <div>Title, description, tags optimization</div>
+              <div class="price">from $8</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="earn" class="section">
+      <div class="grid grid-2">
+        <div class="card">
+          <h2>Earning Controls</h2>
+          <div class="toolbar">
+            <button class="btn" onclick="addClick()">Add Click</button>
+            <button class="btn good" onclick="dailyBonus()">Daily Bonus +2</button>
+            <button class="btn warn" onclick="taskReward()">Task Reward +3</button>
+          </div>
+          <div class="output" id="earnOutput">Clicks aur earnings dashboard ke top par update honge.</div>
+        </div>
+
+        <div class="card">
+          <h2>Safe Earning Notes</h2>
+          <div class="output">Active demo-safe sources:
+- clicks
+- daily bonus
+- task reward
+
+Future scalable sources:
+- marketplace
+- freelance
+- premium tools
+- credits
+- affiliate-ready modules</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="analytics" class="section">
+      <div class="grid grid-4">
+        <div class="card">
+          <h2>Clicks</h2>
+          <div class="output" id="analyticsClicks">0</div>
+        </div>
+        <div class="card">
+          <h2>Earnings</h2>
+          <div class="output" id="analyticsMoney">$0</div>
+        </div>
+        <div class="card">
+          <h2>AI Runs</h2>
+          <div class="output" id="analyticsAiRuns">0</div>
+        </div>
+        <div class="card">
+          <h2>Saved Outputs</h2>
+          <div class="output" id="analyticsSaved">0</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="profile" class="section">
+      <div class="grid grid-2">
+        <div class="card">
+          <h2>Profile</h2>
+          <input id="profileName" placeholder="Your name" />
+          <input id="profileRole" placeholder="Role" />
+          <input id="profileLanguage" placeholder="Preferred language" />
+          <div class="toolbar">
+            <button class="btn primary" onclick="saveProfile()">Save Profile</button>
+            <button class="btn" onclick="loadProfile()">Load Profile</button>
+          </div>
+          <div class="output" id="profileOutput">Profile status yahan aayega.</div>
+        </div>
+
+        <div class="card">
+          <h2>Saved Outputs</h2>
+          <div class="output" id="savedOutputs">Abhi koi saved output nahi.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">SAZIO X phase10pro polished super platform build.</div>
+  </div>
+
+  <script>
+    let clicks = 0;
+    let money = 0;
+    let aiRuns = 0;
+
+    const navButtons = document.querySelectorAll('#navTabs button');
+    const sections = document.querySelectorAll('.section');
+
+    function goTab(tab){
+      navButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      sections.forEach(sec => sec.classList.toggle('active', sec.id === tab));
+      document.getElementById('statusBox').textContent =
+        'System ready.\nCurrent mode: ' + tab + '\nSafe beta structure active.\nFuture API integration friendly.';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => goTab(btn.dataset.tab));
+    });
+
+    function updateStats(){
+      document.getElementById('clicks').textContent = clicks;
+      document.getElementById('money').textContent = money;
+      document.getElementById('aiRuns').textContent = aiRuns;
+      document.getElementById('analyticsClicks').textContent = clicks;
+      document.getElementById('analyticsMoney').textContent = '$' + money;
+      document.getElementById('analyticsAiRuns').textContent = aiRuns;
+
+      const saved = JSON.parse(localStorage.getItem('sazio_saved_outputs') || '[]');
+      document.getElementById('savedCount').textContent = saved.length;
+      document.getElementById('analyticsSaved').textContent = saved.length;
+    }
+
+    function fakeAction(msg){
+      alert(msg);
+    }
+
+    function addClick(){
+      clicks += 1;
+      updateStats();
+    }
+
+    function dailyBonus(){
+      money += 2;
+      updateStats();
+      document.getElementById('earnOutput').textContent = 'Daily bonus added ✅';
+    }
+
+    function taskReward(){
+      money += 3;
+      updateStats();
+      document.getElementById('earnOutput').textContent = 'Task reward added ✅';
+    }
+
+    function detectIntent(text){
+      const t = text.toLowerCase();
+      if (!t) return 'none';
+      if (t.includes('kids') || t.includes('quiz') || t.includes('homework')) return 'kids';
+      if (t.includes('market') || t.includes('pack') || t.includes('listing')) return 'marketplace';
+      if (t.includes('gig') || t.includes('service') || t.includes('freelance')) return 'freelance';
+      if (t.includes('seo') || t.includes('title') || t.includes('tags')) return 'seo';
+      if (t.includes('story') || t.includes('emotional')) return 'story';
+      return 'general';
+    }
+
+    function scoreIntent(text, intent){
+      let score = 55;
+      if (intent === 'kids') score += 8;
+      if (intent === 'marketplace' || intent === 'freelance') score += 10;
+      if (intent === 'story' || intent === 'seo') score += 12;
+      if (text.length < 8) score -= 8;
+      if (score > 95) score = 95;
+      if (score < 20) score = 20;
+      return score;
+    }
+
+    function safetyCheck(text){
+      const t = text.toLowerCase();
+      const risky = ['adult', 'betting', 'scam', 'violence', 'fake guarantee'];
+      const hit = risky.find(x => t.includes(x));
+      if (hit) return 'Warning\nSuspicious phrase detected: ' + hit + '\nSafe mode response applied.';
+      return 'Safe\nNo obvious risky phrase detected.';
+    }
+
+    function generateRouterOutput(text, intent){
+      if (intent === 'kids') {
+        return `Detected as: Kids Request
+
+Recommended:
+- Open Kids Mode
+- Use simple educational language
+- Keep output safe and parent-friendly
+
+Starter Output:
+Topic: ${text}
+Create a short, kind, educational kids response.`;
+      }
+
+      if (intent === 'marketplace') {
+        return `Detected as: Marketplace Request
+
+Recommended:
+- Open Marketplace tab
+- Create a digital product listing
+- Use honest description and realistic pricing
+
+Starter Idea:
+Title: ${text}
+Type: Digital Pack
+Safe sales wording enabled.`;
+      }
+
+      if (intent === 'freelance') {
+        return `Detected as: Freelance Request
+
+Recommended:
+- Open Freelance tab
+- Create a gig
+- Keep title, price and scope clear
+
+Starter Gig:
+Service: ${text}
+Delivery: realistic
+Claims: trust-first only.`;
+      }
+
+      if (intent === 'seo') {
+        return `Detected as: SEO Request
+
+Title:
+Nobody Expected This… ${text} 😳
+
+Description:
+Optimized short-form content pack ready.
+
+Tags:
+viral, trending, sazio, ${text}`;
+      }
+
+      if (intent === 'story') {
+        return `Detected as: Story Request
+
+Hook:
+Nobody expected what happened next in ${text}.
+
+Structure:
+1. Hook
+2. Emotion
+3. Conflict
+4. Twist
+5. Ending`;
+      }
+
+      return `Detected as: General Request
+
+Suggested next step:
+- AI Router
+- Kids Mode
+- Marketplace
+- Freelance
+
+Tip:
+Add more detail for stronger output.`;
+    }
+
+    function runRouter(){
+      const text = document.getElementById('routerInput').value.trim();
+      if (!text) {
+        document.getElementById('routerIntent').textContent = 'No input';
+        document.getElementById('routerScore').textContent = '0/100';
+        document.getElementById('routerSafety').textContent = 'Waiting...';
+        document.getElementById('routerOutput').textContent = 'Pehle kuch likho.';
+        return;
+      }
+
+      const intent = detectIntent(text);
+      const score = scoreIntent(text, intent);
+      const safety = safetyCheck(text);
+      const output = generateRouterOutput(text, intent);
+
+      aiRuns += 1;
+      updateStats();
+
+      document.getElementById('routerIntent').textContent = intent.toUpperCase();
+      document.getElementById('routerScore').textContent = score + '/100';
+      document.getElementById('routerSafety').textContent = safety;
+      document.getElementById('routerOutput').textContent = output;
+    }
+
+    function kidsSafetyCheck(text){
+      const t = text.toLowerCase();
+      const blocked = ['violence', 'gun', 'kill', 'adult', 'betting', 'scam', 'money trap'];
+      const hit = blocked.find(x => t.includes(x));
+      if (hit) return { safe:false, reason:'Blocked topic detected: ' + hit };
+      return { safe:true, reason:'Kids-safe topic detected.' };
+    }
+
+    function runKidsMode(){
+      const mode = document.getElementById('kidsModeType').value;
+      const text = document.getElementById('kidsInput').value.trim();
+
+      if (!text) {
+        document.getElementById('kidsOutput').textContent = 'Pehle kids-friendly topic likho.';
+        return;
+      }
+
+      const safety = kidsSafetyCheck(text);
+      if (!safety.safe) {
+        document.getElementById('kidsOutput').textContent =
+`Kids Safe Filter Active ❌
+
+${safety.reason}
+
+Please use a safe learning or story topic.`;
+        return;
+      }
+
+      let out = '';
+      if (mode === 'story') {
+        out =
+`Kids Safe Story
+
+Title:
+${text}
+
+Story:
+Ek pyara sa dost tha jo har din kuch naya seekhta tha.
+Ek din usne nature, kindness aur honesty ke bare me ek nayi baat seekhi.
+End me sab khush hue aur usne apne friends ke sath apni learning share ki.
+
+Lesson:
+Always be kind, curious, and honest.`;
+      } else if (mode === 'quiz') {
+        out =
+`Kids Quiz
+
+Topic: ${text}
+
+Q1. Is topic se judi ek basic baat kya hai?
+Q2. Iska ek example do.
+Q3. Isse hum kya seekh sakte hain?
+
+Parent Tip:
+Bachche ko short answers likhne do.`;
+      } else if (mode === 'homework') {
+        out =
+`Homework Helper
+
+Topic: ${text}
+
+Simple Explanation:
+Is topic ko easy words me samjho.
+Pehle definition likho.
+Phir 2 examples likho.
+End me 1 small conclusion likho.`;
+      } else {
+        out =
+`Learning Helper
+
+Topic: ${text}
+
+Easy Learning Steps:
+1. Topic ko read karo
+2. 3 important points note karo
+3. 1 example socho
+4. 1 short summary likho`;
+      }
+
+      document.getElementById('kidsOutput').textContent = out;
+    }
+
+    function createMarketListing(){
+      const type = document.getElementById('marketType').value;
+      const title = document.getElementById('marketTitle').value.trim();
+      const price = document.getElementById('marketPrice').value.trim();
+      const desc = document.getElementById('marketDesc').value.trim();
+
+      if (!title || !price) {
+        document.getElementById('marketOutput').textContent = 'Title aur price dono required hain.';
+        return;
+      }
+
+      document.getElementById('marketOutput').textContent =
+`Marketplace Listing Created ✅
+
+Type: ${type}
+Title: ${title}
+Price: ${price}
+Description: ${desc || 'No description'}
+
+Safe Beta Notes:
+- real payment backend not active
+- listing structure saved as starter idea
+- use only honest, original, legal digital items`;
+    }
+
+    function createGig(){
+      const type = document.getElementById('gigType').value;
+      const title = document.getElementById('gigTitle').value.trim();
+      const price = document.getElementById('gigPrice').value.trim();
+      const desc = document.getElementById('gigDesc').value.trim();
+
+      if (!title || !price) {
+        document.getElementById('gigOutput').textContent = 'Gig title aur price required hain.';
+        return;
+      }
+
+      document.getElementById('gigOutput').textContent =
+`Freelance Gig Created ✅
+
+Service Type: ${type}
+Gig Title: ${title}
+Starting Price: ${price}
+Description: ${desc || 'No description'}
+
+Safe Beta Notes:
+- order system not active yet
+- use realistic delivery claims
+- no fake portfolio promises`;
+    }
+
+    function copyOutput(id){
+      const el = document.getElementById(id);
+      if (!el) return;
+      navigator.clipboard.writeText(el.textContent || '');
+      alert('Copied ✅');
+    }
+
+    function saveOutput(id){
+      const el = document.getElementById(id);
+      if (!el) return;
+      const text = (el.textContent || '').trim();
+      const arr = JSON.parse(localStorage.getItem('sazio_saved_outputs') || '[]');
+      if (text && !arr.includes(text)) arr.unshift(text);
+      localStorage.setItem('sazio_saved_outputs', JSON.stringify(arr.slice(0, 20)));
+      renderSaved();
+      updateStats();
+      alert('Saved ✅');
+    }
+
+    function renderSaved(){
+      const arr = JSON.parse(localStorage.getItem('sazio_saved_outputs') || '[]');
+      document.getElementById('savedOutputs').textContent =
+        arr.length ? arr.join('\n\n-----\n\n') : 'Abhi koi saved output nahi.';
+    }
+
+    function saveProfile(){
+      const data = {
+        name: document.getElementById('profileName').value.trim(),
+        role: document.getElementById('profileRole').value.trim(),
+        language: document.getElementById('profileLanguage').value.trim()
+      };
+      localStorage.setItem('sazio_profile', JSON.stringify(data));
+      document.getElementById('profileOutput').textContent =
+`Saved ✅
+Name: ${data.name || '-'}
+Role: ${data.role || '-'}
+Language: ${data.language || '-'}`;
+    }
+
+    function loadProfile(){
+      const data = JSON.parse(localStorage.getItem('sazio_profile') || '{}');
+      document.getElementById('profileName').value = data.name || '';
+      document.getElementById('profileRole').value = data.role || '';
+      document.getElementById('profileLanguage').value = data.language || '';
+    }
+
+    renderSaved();
+    loadProfile();
+    updateStats();
+  </script>
+</body>
+</html>
