@@ -64,7 +64,7 @@ button{
 <!-- FIREBASE SCRIPT -->
 <script type="module">
 import { auth } from "./firebase-config.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 onAuthStateChanged(auth, (user) => {
   if (user) showDashboard(user.email);
 });
@@ -112,9 +112,8 @@ window.login = async () => {
   document.querySelector('.card').style.display = 'none';
 }
 
-function logout(){
-  document.getElementById('dashboard').style.display = 'none';
-  document.querySelector('.card').style.display = 'block';
+async function logout(){
+  await signOut(auth);
 }
   
 </script>
