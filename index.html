@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SAZIO X MASTER - Phase 2</title>
+  <title>SAZIO X MASTER - Phase 2+3</title>
   <style>
     body{
       font-family: Arial, sans-serif;
@@ -68,6 +68,7 @@
       font-size:15px;
       margin:10px 0;
       line-height:1.6;
+      word-break:break-word;
     }
   </style>
 </head>
@@ -89,10 +90,12 @@
   </div>
 
   <div id="dashboard">
-    <h2>Welcome Dashboard 🚀</h2>
+    <h2 id="welcomeTitle">Welcome Dashboard 🚀</h2>
     <p id="userName"></p>
     <p id="userEmail"></p>
     <p id="userUid"></p>
+    <p id="userClicks"></p>
+    <p id="userEarnings"></p>
     <button class="logout" onclick="logout()">Logout</button>
   </div>
 
@@ -115,14 +118,17 @@
       document.getElementById('dashboard').style.display = 'block';
       document.getElementById('authCard').style.display = 'none';
 
-      const finalName =
-        profileData?.name ||
-        user.displayName ||
-        "Not set";
+      const finalName = profileData?.name || user.displayName || "Not set";
+      const finalEmail = profileData?.email || user.email || "Not set";
+      const finalClicks = profileData?.clicks ?? 0;
+      const finalEarnings = profileData?.earnings ?? 0;
 
+      document.getElementById('welcomeTitle').textContent = "Welcome " + finalName + " 🚀";
       document.getElementById('userName').textContent = "Name: " + finalName;
-      document.getElementById('userEmail').textContent = "Email: " + user.email;
+      document.getElementById('userEmail').textContent = "Email: " + finalEmail;
       document.getElementById('userUid').textContent = "UID: " + user.uid;
+      document.getElementById('userClicks').textContent = "Clicks: " + finalClicks;
+      document.getElementById('userEarnings').textContent = "Earnings: " + finalEarnings;
     }
 
     function showLogin(){
@@ -138,7 +144,17 @@
         if (snap.exists()) {
           showDashboard(user, snap.data());
         } else {
-          showDashboard(user, null);
+          const fallbackData = {
+            name: user.displayName || "Not set",
+            email: user.email || "",
+            uid: user.uid,
+            clicks: 0,
+            earnings: 0,
+            createdAt: new Date().toISOString()
+          };
+
+          await setDoc(userRef, fallbackData);
+          showDashboard(user, fallbackData);
         }
       } catch (error) {
         document.getElementById('authOutput').textContent = error.message;
@@ -176,6 +192,8 @@
           name: name,
           email: email,
           uid: userCred.user.uid,
+          clicks: 0,
+          earnings: 0,
           createdAt: new Date().toISOString()
         });
 
