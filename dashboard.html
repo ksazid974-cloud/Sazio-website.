@@ -1,447 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sazio AI — The Fastest & Most Powerful AI to Create, Grow & Earn</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    .card {
-      width: 100%;
-      max-width: 430px;
-      background: #111;
-      border-radius: 24px;
-      padding: 20px 18px;
-      text-align: center;
-      box-shadow: 0 0 30px rgba(255,255,255,0.04);
-    }
-    .brand {
-      font-size: 13px;
-      color: #bdbdbd;
-      line-height: 1.5;
-      margin-bottom: 10px;
-      
-    }
-    h1 {
-      margin: 0 0 14px;
-      font-size: 26px;
-      line-height: 1.35;
-    }
-    p {
-      margin: 8px 0;
-      font-size: 15px;
-      line-height: 1.6;
-      word-break: break-word;
-    }
-    .label {
-      text-align: left;
-      margin-top: 16px;
-      margin-bottom: 8px;
-      color: #cfcfcf;
-      font-size: 14px;
-    }
-    input, select {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 12px;
-      font-size: 15px;
-      outline: none;
-    }
-    button {
-      width: 100%;
-      padding: 13px;
-      border: none;
-      border-radius: 12px;
-      margin-top: 12px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .earn-btn { background: #00f59d; color: #001b12; }
-    .ai-btn { background: #ffb703; color: #1f1200; }
-    .money-btn { background: #ff6b6b; color: #fff; }
-    .copy-btn { background: #61aee2; color: #041726; }
-    .logout-btn { background: #eee; color: #111; }
-    .box {
-      background: #181818;
-      border-radius: 14px;
-      padding: 14px;
-      margin-top: 10px;
-      text-align: left;
-      white-space: pre-wrap;
-      word-break: break-word;
-      line-height: 1.6;
-      font-size: 14px;
-    }
-    .tools-box a {
-      color: #7ec8ff;
-      text-decoration: none;
-      font-weight: 700;
-    }
-    .tools-box a:hover {
-      text-decoration: underline;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sazio Final Pro</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#000;
+color:#fff;
+text-align:center;
+}
+
+.card{
+padding:20px;
+}
+
+button{
+width:90%;
+padding:14px;
+border:none;
+border-radius:12px;
+margin:10px;
+font-size:16px;
+font-weight:bold;
+}
+
+.green{background:#00d084;color:#000}
+.yellow{background:#ffb300;color:#000}
+.red{background:#ff4d4d;color:#fff}
+.blue{background:#4da6ff;color:#000}
+
+.box{
+background:#111;
+padding:15px;
+margin:10px;
+border-radius:12px;
+text-align:left;
+word-break:break-word;
+}
+</style>
 </head>
+
 <body>
-  <div class="card">
-    <div class="brand">
-      Sazio — The Fastest & Most Powerful AI to Create, Grow & Earn 🚀
-    </div>
-
-    <h1 id="welcomeTitle">Loading...</h1>
-
-    <p id="userName">Name: Loading...</p>
-    <p id="userEmail">Email: Loading...</p>
-    <p id="userUid">UID: Loading...</p>
-    <p id="userClicks">Clicks: 0</p>
-    <p id="userEarnings">Earnings: 0</p>
-
-    <button class="earn-btn" onclick="generateEarning()">Generate Earning 💰</button>
-
-    <div class="label">AI Content Type</div>
-    <select id="contentType">
-      <option value="youtube_script">YouTube Shorts Script</option>
-      <option value="instagram_caption">Instagram Caption</option>
-      <option value="viral_hooks">Viral Hook Ideas</option>
-      <option value="thumbnail_text">Thumbnail Text</option>
-      <option value="seo_pack">SEO Title + Description + Tags</option>
-      <option value="money_plan">Money Earning Plan</option>
-    </select>
-
-    <div class="label">Topic</div>
-    <input
-      id="topicInput"
-      type="text"
-      placeholder="Enter topic like: emotional puppy rescue, AI earning, gym comeback"
-    />
-
-    <button class="ai-btn" onclick="generateAIContent()">Generate AI Content 🤖</button>
-    <button class="money-btn" onclick="generateMoneyPlan()">Generate Money Plan 💸</button>
-
-    <div class="label">AI Output</div>
-    <div class="box" id="aiOutput">No content generated yet.</div>
-
-    <div class="label">Referral Link</div>
-    <div class="box" id="referralLink">Loading referral link...</div>
-    <button class="copy-btn" onclick="copyReferral()">Copy Referral Link 🔗</button>
-
-    <div class="label">Recommended Tools (Real Earning Path)</div>
-    <div class="box tools-box">
-🔥 Recommended Tools to Create & Earn:
-
-👉 <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer">Canva</a> — thumbnails, branding, social posts
-
-👉 <a href="https://www.capcut.com/" target="_blank" rel="noopener noreferrer">CapCut</a> — short video editing
-
-👉 <a href="https://www.fiverr.com/" target="_blank" rel="noopener noreferrer">Fiverr</a> — sell skills and services
-
-👉 <a href="https://www.upwork.com/" target="_blank" rel="noopener noreferrer">Upwork</a> — freelance projects worldwide
-
-👉 <a href="https://affiliate-program.amazon.com/" target="_blank" rel="noopener noreferrer">Amazon Associates</a> — affiliate earning path
-
-💰 Use Sazio AI + content + tools = real global earning path
-    </div>
-
-    <button class="logout-btn" onclick="logout()">Logout</button>
-
-    <div class="box" id="statusBox">Dashboard loading...</div>
-  </div>
-
-  <script type="module">
-    import { auth, db } from "./firebase-config.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import {
-      doc,
-      getDoc,
-      setDoc,
-      updateDoc,
-      increment
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    let currentUser = null;
-    let currentUserRef = null;
-
-    function setText(id, value) {
-      document.getElementById(id).innerText = value;
-    }
-
-    function renderDashboard(user, data) {
-      const finalName = data?.name || user.displayName || "Sazio";
-      const finalEmail = data?.email || user.email || "Not set";
-      const finalClicks = data?.clicks ?? 0;
-      const finalEarnings = data?.earnings ?? 0;
-
-      setText("welcomeTitle", "Welcome " + finalName + " 🚀");
-      setText("userName", "Name: " + finalName);
-      setText("userEmail", "Email: " + finalEmail);
-      setText("userUid", "UID: " + user.uid);
-      setText("userClicks", "Clicks: " + finalClicks);
-      setText("userEarnings", "Earnings: " + finalEarnings);
-      setText("referralLink", window.location.origin + "/?ref=" + user.uid);
-      setText("statusBox", "Phase 5 system ready.");
-    }
-
-    async function loadUserProfile(user) {
-      try {
-        currentUser = user;
-        currentUserRef = doc(db, "users", user.uid);
-
-        const snapshot = await getDoc(currentUserRef);
-
-        if (snapshot.exists()) {
-          const data = snapshot.data();
-
-          if (!data.name) {
-            await updateDoc(currentUserRef, {
-              name: user.displayName || "Sazio"
-            });
-
-            const fixedSnapshot = await getDoc(currentUserRef);
-            renderDashboard(user, fixedSnapshot.data());
-          } else {
-            renderDashboard(user, data);
-          }
-        } else {
-          const fallbackData = {
-            name: user.displayName || "Sazio",
-            email: user.email || "",
-            uid: user.uid,
-            clicks: 0,
-            earnings: 0,
-            createdAt: new Date().toISOString()
-          };
-
-          await setDoc(currentUserRef, fallbackData);
-          renderDashboard(user, fallbackData);
-        }
-      } catch (error) {
-        setText("statusBox", error.message);
-      }
-    }
-
-    window.generateEarning = async () => {
-      if (!currentUserRef || !currentUser) return;
-
-      try {
-        await updateDoc(currentUserRef, {
-          clicks: increment(1),
-          earnings: increment(10)
-        });
-
-        const snapshot = await getDoc(currentUserRef);
-        if (snapshot.exists()) {
-          renderDashboard(currentUser, snapshot.data());
-          setText("statusBox", "Clicks +1 and Earnings +10 added.");
-        }
-      } catch (error) {
-        setText("statusBox", error.message);
-      }
-    };
-
-    function makeYoutubeScript(topic) {
-      return `Title: ${topic} Shock Story
-
-Hook:
-Aisa twist jo first 3 second me viewer ko rok de.
-
-Script:
-Scene 1: Sudden danger starts around ${topic}.
-Scene 2: Hero struggles emotionally.
-Scene 3: Crowd reacts in shock.
-Scene 4: Big reveal changes everything.
-Scene 5: Comeback moment hits hard.
-Ending: Emotional win + share-worthy finish.`;
-    }
-
-    function makeInstagramCaption(topic) {
-      return `${topic} but make it viral 🔥
-
-Caption:
-"Ye story end tak dekhna... twist tumhe hila dega 😳🔥"
-
-Hashtags:
-#viral #reels #shorts #trending #${topic.replace(/\s+/g, "").toLowerCase()}`;
-    }
-
-    function makeHooks(topic) {
-      return `Viral Hook Ideas for "${topic}":
-
-1. Sab log has rahe the... phir sab ro pade.
-2. Usne sirf ek button dabaya... aur kismat badal gayi.
-3. Kisi ne nahi socha tha ki ${topic} itna dangerous ho jayega.
-4. Last 5 seconds sab kuch badal denge.
-5. Ye dekhkar log replay karne lagenge.`;
-    }
-
-    function makeThumbnailText(topic) {
-      return `Thumbnail Text Ideas for "${topic}":
-
-1. SAB KUCH BADAL GAYA!
-2. YE VIRAL KYUN HUA?
-3. LAST TWIST SHOCKING!
-4. KOI SOCH BHI NAHI SAKTA!
-5. IS BUTTON NE PAISA BANA DIYA!`;
-    }
-
-    function makeSeoPack(topic) {
-      return `SEO Pack for "${topic}"
-
-Title:
-${topic} | Emotional Viral Story You Must Watch
-
-Description:
-This is a highly emotional and engaging story based on ${topic}. Watch till the end for a shocking twist and powerful comeback moment.
-
-Tags:
-${topic}, viral story, emotional shorts, shocking twist, youtube shorts, reels, trending video`;
-    }
-
-    function makeMoneyPlan(topic) {
-      return `Money Plan for "${topic}"
-
-1. Use Sazio to generate script ideas.
-2. Make thumbnail in Canva.
-3. Edit short video in CapCut.
-4. Upload on YouTube Shorts + Instagram Reels.
-5. Add your referral / earning links in bio or description.
-6. Offer script or editing service on Fiverr and Upwork.
-7. Turn one idea into multiple posts for more reach and more earning chances.`;
-    }
-
-    async function addAiEarning(message) {
-      await updateDoc(currentUserRef, {
-        earnings: increment(5)
-      });
-
-      const snapshot = await getDoc(currentUserRef);
-      if (snapshot.exists()) {
-        renderDashboard(currentUser, snapshot.data());
-        setText("statusBox", message);
-      }
-    }
-
-    window.generateAIContent = async () => {
-      if (!currentUserRef || !currentUser) return;
-
-      const topic = document.getElementById("topicInput").value.trim();
-      const type = document.getElementById("contentType").value;
-
-      if (!topic) {
-        setText("statusBox", "Please enter a topic first.");
-        return;
-      }
-
-      let output = "";
-
-      if (type === "youtube_script") output = makeYoutubeScript(topic);
-      if (type === "instagram_caption") output = makeInstagramCaption(topic);
-      if (type === "viral_hooks") output = makeHooks(topic);
-      if (type === "thumbnail_text") output = makeThumbnailText(topic);
-      if (type === "seo_pack") output = makeSeoPack(topic);
-      if (type === "money_plan") output = makeMoneyPlan(topic);
-
-      setText("aiOutput", output);
-
-      try {
-        await addAiEarning("AI content generated. Earnings +5 added.");
-      } catch (error) {
-        setText("statusBox", error.message);
-      }
-    };
-
-    window.generateMoneyPlan = async () => {
-      if (!currentUserRef || !currentUser) return;
-
-      const topic = document.getElementById("topicInput").value.trim() || "AI content business";
-
-      const output = `Sazio Money Growth Plan for "${topic}"
-
-Step 1:
-Generate 3 strong content ideas daily in Sazio.
-
-Step 2:
-Turn each idea into Shorts / Reels / posts.
-
-Step 3:
-Use Canva for design and CapCut for editing.
-
-Step 4:
-Offer your content service on Fiverr and Upwork.
-
-Step 5:
-Share your Sazio referral link everywhere.
-
-Step 6:
-Promote affiliate tools that match your audience.
-
-Step 7:
-Repeat daily for growth, clients, and earning opportunities.`;
-
-      setText("aiOutput", output);
-
-      try {
-        await updateDoc(currentUserRef, {
-          earnings: increment(8)
-        });
-
-        const snapshot = await getDoc(currentUserRef);
-        if (snapshot.exists()) {
-          renderDashboard(currentUser, snapshot.data());
-          setText("statusBox", "Money plan generated. Earnings +8 added.");
-        }
-      } catch (error) {
-        setText("statusBox", error.message);
-      }
-    };
-
-    window.copyReferral = async () => {
-      try {
-        const text = document.getElementById("referralLink").innerText;
-        await navigator.clipboard.writeText(text);
-        setText("statusBox", "Referral link copied successfully.");
-      } catch (error) {
-        setText("statusBox", "Copy failed. Please copy manually.");
-      }
-    };
-
-    window.logout = async () => {
-      try {
-        await signOut(auth);
-        window.location.href = "./index.html";
-      } catch (error) {
-        setText("statusBox", error.message);
-      }
-    };
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    await loadUserProfile(user);
-  } else {
-    // Allow referral visit without redirect
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get("ref");
-
-    if (ref) {
-      setText("statusBox", "Welcome! Please login to claim reward.");
-    } else {
-      window.location.href = "./index.html";
-    }
-  }
+
+<div class="card">
+
+<h2>🚀 Sazio AI Final</h2>
+
+<p id="name"></p>
+<p id="email"></p>
+<p id="uid"></p>
+<p id="clicks"></p>
+<p id="earnings"></p>
+<p id="streak"></p>
+
+<button class="green" onclick="generateEarning()">Earn 💰</button>
+<button class="yellow" onclick="dailyBonus()">Daily Bonus 🎁</button>
+
+<input id="topic" placeholder="Enter your topic" style="width:90%;padding:10px;border-radius:10px;border:none">
+
+<button onclick="generateAI()">Generate AI 🤖</button>
+
+<div class="box" id="output"></div>
+
+<h3>Referral</h3>
+<div class="box" id="ref"></div>
+
+<button class="blue" onclick="copyLink()">Copy Link 🔗</button>
+
+<h3>Share & Earn</h3>
+<button onclick="share()">Share Now 🚀</button>
+
+<div id="adminPanel" class="box"></div>
+
+<button onclick="logout()">Logout</button>
+
+</div>
+
+<script type="module">
+
+import { auth, db } from "./firebase-config.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { doc, getDoc, updateDoc, increment, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+let user;
+
+function set(id,val){
+document.getElementById(id).innerText=val;
+}
+
+onAuthStateChanged(auth, async(u)=>{
+if(!u){
+window.location.href="./";
+return;
+}
+
+user=u;
+
+const refDoc=doc(db,"users",u.uid);
+const snap=await getDoc(refDoc);
+const data=snap.data();
+
+set("name","Name: "+data.name);
+set("email","Email: "+data.email);
+set("uid","UID: "+u.uid);
+set("clicks","Clicks: "+data.clicks);
+set("earnings","Earnings: "+data.earnings);
+set("streak","Streak: "+(data.streak||0));
+
+const link=window.location.origin + "/dashboard.html?ref="+u.uid+"&v="+Date.now();
+set("ref",link);
+
+const params=new URLSearchParams(window.location.search);
+const refId=params.get("ref");
+
+if(refId && refId!==u.uid){
+await updateDoc(doc(db,"users",refId),{
+clicks:increment(1),
+earnings:increment(10)
 });
-  </script>
+}
+
+loadAdmin();
+
+});
+
+window.generateEarning=async()=>{
+await updateDoc(doc(db,"users",user.uid),{
+clicks:increment(1),
+earnings:increment(5)
+});
+location.reload();
+}
+
+window.dailyBonus=async()=>{
+await updateDoc(doc(db,"users",user.uid),{
+earnings:increment(20),
+streak:increment(1)
+});
+location.reload();
+}
+
+window.generateAI=()=>{
+const topic=document.getElementById("topic").value;
+document.getElementById("output").innerText=
+"🔥 Viral Script for "+topic+"\nHook\nScene\nTwist\nEnding";
+}
+
+window.copyLink=()=>{
+navigator.clipboard.writeText(document.getElementById("ref").innerText);
+alert("Copied");
+}
+
+window.share=()=>{
+navigator.share({
+title:"Earn from AI",
+text:"Use this AI and earn 💰",
+url:document.getElementById("ref").innerText
+});
+}
+
+window.logout=()=>{
+signOut(auth);
+}
+
+async function loadAdmin(){
+
+const adminEmail="test123@gmail.com";
+
+if(user.email!==adminEmail) return;
+
+const query=await getDocs(collection(db,"users"));
+
+let totalUsers=0;
+let totalEarnings=0;
+
+query.forEach(doc=>{
+totalUsers++;
+totalEarnings+=doc.data().earnings||0;
+});
+
+document.getElementById("adminPanel").innerText=
+"ADMIN PANEL\nUsers: "+totalUsers+"\nTotal Earnings: "+totalEarnings;
+
+}
+
+</script>
+
 </body>
 </html>
-
-
