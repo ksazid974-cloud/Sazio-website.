@@ -3,119 +3,318 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SAZIO Dashboard</title>
-
+  <title>SAZIO AI Dashboard</title>
   <style>
+    *{box-sizing:border-box}
     body{
       margin:0;
-      font-family:Arial;
+      font-family:Arial,sans-serif;
       background:#000;
       color:#fff;
+      min-height:100vh;
       display:flex;
       justify-content:center;
       align-items:center;
-      min-height:100vh;
+      padding:20px;
     }
     .card{
-      width:320px;
+      width:100%;
+      max-width:380px;
       background:#111;
-      padding:25px;
-      border-radius:20px;
+      border-radius:22px;
+      padding:24px 18px;
       text-align:center;
     }
-    h1{font-size:26px}
-    p{margin:10px 0;word-break:break-word}
-
-    button{
+    h1{
+      margin:0 0 18px;
+      font-size:24px;
+      line-height:1.3;
+    }
+    p{
+      margin:10px 0;
+      font-size:15px;
+      line-height:1.6;
+      word-break:break-word;
+    }
+    select, textarea, input{
       width:100%;
+      margin-top:12px;
       padding:12px;
       border:none;
       border-radius:10px;
-      margin-top:10px;
+      font-size:15px;
+    }
+    textarea{
+      min-height:120px;
+      resize:vertical;
+    }
+    button{
+      width:100%;
+      padding:13px;
+      border:none;
+      border-radius:12px;
+      margin-top:12px;
       cursor:pointer;
       font-size:16px;
+      font-weight:700;
     }
-
-    .earn{background:#00ff99;color:#000}
+    .earn{background:#00f59d;color:#001b12}
+    .ai{background:#ffb703;color:#1f1200}
+    .copy{background:#5dade2;color:#041726}
     .logout{background:#eee;color:#111}
+    .box{
+      background:#181818;
+      border-radius:14px;
+      padding:14px;
+      margin-top:14px;
+      text-align:left;
+      white-space:pre-wrap;
+      word-break:break-word;
+      line-height:1.6;
+      font-size:14px;
+    }
+    .label{
+      margin-top:16px;
+      font-size:14px;
+      color:#bdbdbd;
+      text-align:left;
+    }
   </style>
 </head>
-
 <body>
+  <div class="card">
+    <h1 id="welcome">Loading...</h1>
 
-<div class="card">
-  <h1 id="welcome">Loading...</h1>
+    <p id="name"></p>
+    <p id="email"></p>
+    <p id="uid"></p>
+    <p id="clicks"></p>
+    <p id="earnings"></p>
 
-  <p id="name"></p>
-  <p id="email"></p>
-  <p id="uid"></p>
-  <p id="clicks"></p>
-  <p id="earnings"></p>
+    <button class="earn" onclick="generateEarning()">Generate Earning 💰</button>
 
-  <button class="earn" onclick="generateEarning()">Generate Earning 💰</button>
-  <button class="logout" onclick="logout()">Logout</button>
-</div>
+    <div class="label">Choose Content Type</div>
+    <select id="contentType">
+      <option value="youtube">YouTube Shorts Script</option>
+      <option value="instagram">Instagram Caption</option>
+      <option value="hook">Viral Hook Ideas</option>
+      <option value="thumbnail">Thumbnail Text</option>
+    </select>
+
+    <div class="label">Topic</div>
+    <input id="topicInput" type="text" placeholder="Enter topic like: puppy rescue, AI earning, gym comeback">
+
+    <button class="ai" onclick="generateAIContent()">Generate AI Content 🤖</button>
+
+    <div class="label">AI Output</div>
+    <div class="box" id="aiOutput">No content generated yet.</div>
+
+    <div class="label">Referral Link</div>
+    <div class="box" id="refLink">Loading referral link...</div>
+
+    <button class="copy" onclick="copyReferral()">Copy Referral Link 🔗</button>
+    <button class="logout" onclick="logout()">Logout</button>
+
+    <div class="box" id="statusBox">Dashboard loading...</div>
+  </div>
 
 <script type="module">
 import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 let currentUser = null;
+let currentData = null;
 
-function fill(user,data){
-  document.getElementById("welcome").innerText =
-    "Welcome " + (data.name || "Sazio") + " 🚀";
-
-  document.getElementById("name").innerText =
-    "Name: " + (data.name || "Sazio");
-
-  document.getElementById("email").innerText =
-    "Email: " + user.email;
-
-  document.getElementById("uid").innerText =
-    "UID: " + user.uid;
-
-  document.getElementById("clicks").innerText =
-    "Clicks: " + (data.clicks || 0);
-
-  document.getElementById("earnings").innerText =
-    "Earnings: " + (data.earnings || 0);
+function setText(id, value){
+  document.getElementById(id).innerText = value;
 }
 
-onAuthStateChanged(auth, async (user)=>{
-  if(user){
-    currentUser = user;
+function fill(user, data){
+  currentUser = user;
+  currentData = data || {};
 
-    const ref = doc(db,"users",user.uid);
+  const finalName = data?.name || user.displayName || "Sazio";
+  const finalEmail = data?.email || user.email || "Not set";
+  const finalClicks = data?.clicks ?? 0;
+  const finalEarnings = data?.earnings ?? 0;
+
+  setText("welcome", "Welcome " + finalName + " 🚀");
+  setText("name", "Name: " + finalName);
+  setText("email", "Email: " + finalEmail);
+  setText("uid", "UID: " + user.uid);
+  setText("clicks", "Clicks: " + finalClicks);
+  setText("earnings", "Earnings: " + finalEarnings);
+
+  const ref = window.location.origin + "/?ref=" + user.uid;
+  setText("refLink", ref);
+
+  setText("statusBox", "Dashboard loaded successfully.");
+}
+
+async function loadProfile(user){
+  try{
+    const ref = doc(db, "users", user.uid);
     const snap = await getDoc(ref);
 
     if(snap.exists()){
-      fill(user,snap.data());
-    }
+      const data = snap.data();
 
+      if(!data.name){
+        await updateDoc(ref, {
+          name: user.displayName || "Sazio"
+        });
+        const fixedSnap = await getDoc(ref);
+        fill(user, fixedSnap.data());
+      }else{
+        fill(user, data);
+      }
+    }else{
+      const fallbackData = {
+        name: user.displayName || "Sazio",
+        email: user.email || "",
+        uid: user.uid,
+        clicks: 0,
+        earnings: 0,
+        createdAt: new Date().toISOString()
+      };
+      await setDoc(ref, fallbackData);
+      fill(user, fallbackData);
+    }
+  }catch(error){
+    setText("statusBox", error.message);
+  }
+}
+
+window.generateEarning = async () => {
+  if(!currentUser) return;
+
+  try{
+    const ref = doc(db, "users", currentUser.uid);
+    await updateDoc(ref, {
+      clicks: increment(1),
+      earnings: increment(10)
+    });
+
+    const snap = await getDoc(ref);
+    if(snap.exists()){
+      fill(currentUser, snap.data());
+      setText("statusBox", "Clicks +1 and Earnings +10 updated successfully.");
+    }
+  }catch(error){
+    setText("statusBox", error.message);
+  }
+};
+
+window.generateAIContent = async () => {
+  if(!currentUser) return;
+
+  const topic = document.getElementById("topicInput").value.trim();
+  const type = document.getElementById("contentType").value;
+
+  if(!topic){
+    setText("statusBox", "Please enter a topic first.");
+    return;
+  }
+
+  let output = "";
+
+  if(type === "youtube"){
+    output =
+`Title: ${topic} Shock Story
+
+Hook:
+Aisa twist jo first 3 second me viewer ko rok de.
+
+Script:
+Scene 1: Sudden danger starts around ${topic}.
+Scene 2: Hero struggles emotionally.
+Scene 3: Crowd reacts in shock.
+Scene 4: Big reveal changes everything.
+Scene 5: Comeback moment hits hard.
+Ending: Emotional win + share-worthy finish.`;
+  }
+
+  if(type === "instagram"){
+    output =
+`${topic} but make it viral 🔥
+
+Aaj ka idea:
+${topic} ko emotional + shocking + relatable style me present karo.
+
+Caption:
+"Ye story end tak dekhna... twist tumhe hila dega 😳🔥"
+
+Hashtags:
+#viral #trending #shorts #instagramreels #${topic.replace(/\s+/g, "").toLowerCase()}`;
+  }
+
+  if(type === "hook"){
+    output =
+`Viral Hook Ideas for "${topic}":
+
+1. Sab log has rahe the... phir sab ro pade.
+2. Usne sirf ek button dabaya... aur kismat badal gayi.
+3. Kisi ne nahi socha tha ki ${topic} itna dangerous ho jayega.
+4. Last 5 seconds sab kuch badal denge.
+5. Ye dekhkar log replay karne lagenge.`;
+  }
+
+  if(type === "thumbnail"){
+    output =
+`Thumbnail Text Ideas for "${topic}":
+
+1. SAB KUCH BADAL GAYA!
+2. IS BUTTON NE PAISA BANA DIYA!
+3. KOI SOCH BHI NAHI SAKTA!
+4. LAST TWIST SHOCKING!
+5. YE VIRAL KYUN HUA?`;
+  }
+
+  document.getElementById("aiOutput").innerText = output;
+
+  try{
+    const ref = doc(db, "users", currentUser.uid);
+    await updateDoc(ref, {
+      earnings: increment(5)
+    });
+
+    const snap = await getDoc(ref);
+    if(snap.exists()){
+      fill(currentUser, snap.data());
+      setText("statusBox", "AI content generated. Earnings +5 added.");
+    }
+  }catch(error){
+    setText("statusBox", error.message);
+  }
+};
+
+window.copyReferral = async () => {
+  const text = document.getElementById("refLink").innerText;
+  try{
+    await navigator.clipboard.writeText(text);
+    setText("statusBox", "Referral link copied successfully.");
+  }catch(error){
+    setText("statusBox", "Copy failed. Please copy manually.");
+  }
+};
+
+window.logout = async () => {
+  try{
+    await signOut(auth);
+    window.location.href = "./index.html";
+  }catch(error){
+    setText("statusBox", error.message);
+  }
+};
+
+onAuthStateChanged(auth, async (user) => {
+  if(user){
+    await loadProfile(user);
   }else{
-    window.location.href="./index.html";
+    window.location.href = "./index.html";
   }
 });
-
-window.generateEarning = async ()=>{
-  const ref = doc(db,"users",currentUser.uid);
-
-  await updateDoc(ref,{
-    clicks: increment(1),
-    earnings: increment(10)
-  });
-
-  const snap = await getDoc(ref);
-  fill(currentUser,snap.data());
-};
-
-window.logout = async ()=>{
-  await signOut(auth);
-  window.location.href="./index.html";
-};
 </script>
-
 </body>
 </html>
