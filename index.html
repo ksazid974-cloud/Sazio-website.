@@ -121,9 +121,12 @@ window.login = async () => {
   document.querySelector('.card').style.display = 'none';
 }
 
-async function logout(){
+
+  window.logout = async () => {
   await signOut(auth);
-}
+  document.getElementById('dashboard').style.display = 'none';
+  document.querySelector('.card').style.display = 'block';
+};
   
 </script>
 <div id="dashboard" style="display:none; text-align:center; color:white;">
