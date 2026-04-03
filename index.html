@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SAZIO X MASTER</title>
+  <title>SAZIO X MASTER - Phase 2</title>
   <style>
     body{
       font-family: Arial, sans-serif;
@@ -20,8 +20,9 @@
       background:#111;
       padding:30px;
       border-radius:20px;
-      width:300px;
+      width:320px;
       text-align:center;
+      box-sizing:border-box;
     }
     input{
       width:100%;
@@ -41,20 +42,32 @@
     }
     .signup{background:#ff5c5c;color:#fff;}
     .login{background:#333;color:#fff;}
-    .logout{background:#eee;color:#111;width:100%;}
-    .output{margin-top:15px;}
+    .logout{
+      background:#eee;
+      color:#111;
+      width:100%;
+      margin-top:20px;
+    }
+    .output{
+      margin-top:15px;
+      line-height:1.6;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
     #dashboard{
       display:none;
       text-align:center;
       color:#fff;
+      width:320px;
     }
     #dashboard h2{
       font-size:28px;
       margin-bottom:10px;
     }
     #dashboard p{
-      font-size:16px;
-      margin-bottom:20px;
+      font-size:15px;
+      margin:10px 0;
+      line-height:1.6;
     }
   </style>
 </head>
@@ -77,7 +90,9 @@
 
   <div id="dashboard">
     <h2>Welcome Dashboard 🚀</h2>
+    <p id="userName"></p>
     <p id="userEmail"></p>
+    <p id="userUid"></p>
     <button class="logout" onclick="logout()">Logout</button>
   </div>
 
@@ -92,16 +107,22 @@
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import {
       doc,
-      setDoc
+      setDoc,
+      getDoc
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    function showDashboard(user){
+    function showDashboard(user, profileData = null){
       document.getElementById('dashboard').style.display = 'block';
       document.getElementById('authCard').style.display = 'none';
-      document.getElementById('userEmail').textContent =
-        user.displayName
-          ? "Logged in as: " + user.displayName + " (" + user.email + ")"
-          : "Logged in as: " + user.email;
+
+      const finalName =
+        profileData?.name ||
+        user.displayName ||
+        "Not set";
+
+      document.getElementById('userName').textContent = "Name: " + finalName;
+      document.getElementById('userEmail').textContent = "Email: " + user.email;
+      document.getElementById('userUid').textContent = "UID: " + user.uid;
     }
 
     function showLogin(){
@@ -109,9 +130,25 @@
       document.getElementById('authCard').style.display = 'block';
     }
 
-    onAuthStateChanged(auth, (user) => {
+    async function loadUserProfile(user){
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const snap = await getDoc(userRef);
+
+        if (snap.exists()) {
+          showDashboard(user, snap.data());
+        } else {
+          showDashboard(user, null);
+        }
+      } catch (error) {
+        document.getElementById('authOutput').textContent = error.message;
+        showDashboard(user, null);
+      }
+    }
+
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        showDashboard(user);
+        await loadUserProfile(user);
       } else {
         showLogin();
       }
@@ -128,6 +165,7 @@
       }
 
       try {
+        document.getElementById('authOutput').textContent = "Signing up...";
         const userCred = await createUserWithEmailAndPassword(auth, email, password);
 
         await updateProfile(userCred.user, {
@@ -157,6 +195,7 @@
       }
 
       try {
+        document.getElementById('authOutput').textContent = "Logging in...";
         await signInWithEmailAndPassword(auth, email, password);
         document.getElementById('authOutput').textContent = "Login successful 🚀";
       } catch (error) {
