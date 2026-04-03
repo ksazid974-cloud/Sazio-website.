@@ -3,13 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sazio AI — Create • Grow • Earn</title>
-
+  <title>Sazio AI — The Fastest & Most Powerful AI to Create, Grow & Earn</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -21,46 +17,40 @@
       align-items: center;
       padding: 20px;
     }
-
     .card {
       width: 100%;
-      max-width: 420px;
+      max-width: 430px;
       background: #111;
-      border-radius: 22px;
-      padding: 22px 18px;
+      border-radius: 24px;
+      padding: 20px 18px;
       text-align: center;
+      box-shadow: 0 0 30px rgba(255,255,255,0.04);
     }
-
     .brand {
       font-size: 13px;
       color: #bdbdbd;
-      margin-bottom: 10px;
       line-height: 1.5;
+      margin-bottom: 10px;
     }
-
     h1 {
+      margin: 0 0 14px;
       font-size: 26px;
       line-height: 1.35;
-      margin: 0 0 16px;
     }
-
     p {
-      margin: 9px 0;
+      margin: 8px 0;
       font-size: 15px;
       line-height: 1.6;
       word-break: break-word;
     }
-
     .label {
+      text-align: left;
       margin-top: 16px;
       margin-bottom: 8px;
-      font-size: 14px;
       color: #cfcfcf;
-      text-align: left;
+      font-size: 14px;
     }
-
-    input,
-    select {
+    input, select {
       width: 100%;
       padding: 12px;
       border: none;
@@ -68,7 +58,6 @@
       font-size: 15px;
       outline: none;
     }
-
     button {
       width: 100%;
       padding: 13px;
@@ -79,27 +68,11 @@
       font-weight: 700;
       cursor: pointer;
     }
-
-    .earn-btn {
-      background: #00f59d;
-      color: #001b12;
-    }
-
-    .ai-btn {
-      background: #ffb703;
-      color: #1f1200;
-    }
-
-    .copy-btn {
-      background: #61aee2;
-      color: #041726;
-    }
-
-    .logout-btn {
-      background: #eeeeee;
-      color: #111111;
-    }
-
+    .earn-btn { background: #00f59d; color: #001b12; }
+    .ai-btn { background: #ffb703; color: #1f1200; }
+    .money-btn { background: #ff6b6b; color: #fff; }
+    .copy-btn { background: #61aee2; color: #041726; }
+    .logout-btn { background: #eee; color: #111; }
     .box {
       background: #181818;
       border-radius: 14px;
@@ -111,13 +84,11 @@
       line-height: 1.6;
       font-size: 14px;
     }
-
     .tools-box a {
       color: #7ec8ff;
       text-decoration: none;
       font-weight: 700;
     }
-
     .tools-box a:hover {
       text-decoration: underline;
     }
@@ -139,12 +110,14 @@
 
     <button class="earn-btn" onclick="generateEarning()">Generate Earning 💰</button>
 
-    <div class="label">Choose Content Type</div>
+    <div class="label">AI Content Type</div>
     <select id="contentType">
-      <option value="youtube">YouTube Shorts Script</option>
-      <option value="instagram">Instagram Caption</option>
-      <option value="hook">Viral Hook Ideas</option>
-      <option value="thumbnail">Thumbnail Text</option>
+      <option value="youtube_script">YouTube Shorts Script</option>
+      <option value="instagram_caption">Instagram Caption</option>
+      <option value="viral_hooks">Viral Hook Ideas</option>
+      <option value="thumbnail_text">Thumbnail Text</option>
+      <option value="seo_pack">SEO Title + Description + Tags</option>
+      <option value="money_plan">Money Earning Plan</option>
     </select>
 
     <div class="label">Topic</div>
@@ -155,28 +128,30 @@
     />
 
     <button class="ai-btn" onclick="generateAIContent()">Generate AI Content 🤖</button>
+    <button class="money-btn" onclick="generateMoneyPlan()">Generate Money Plan 💸</button>
 
     <div class="label">AI Output</div>
     <div class="box" id="aiOutput">No content generated yet.</div>
 
     <div class="label">Referral Link</div>
     <div class="box" id="referralLink">Loading referral link...</div>
-
     <button class="copy-btn" onclick="copyReferral()">Copy Referral Link 🔗</button>
 
     <div class="label">Recommended Tools (Real Earning Path)</div>
-    <div class="box tools-box" id="toolsBox">
+    <div class="box tools-box">
 🔥 Recommended Tools to Create & Earn:
 
-👉 <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer">Canva</a> — Design, thumbnails, branding
+👉 <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer">Canva</a> — thumbnails, branding, social posts
 
-👉 <a href="https://www.capcut.com/" target="_blank" rel="noopener noreferrer">CapCut</a> — Video editing and reels
+👉 <a href="https://www.capcut.com/" target="_blank" rel="noopener noreferrer">CapCut</a> — short video editing
 
-👉 <a href="https://www.fiverr.com/" target="_blank" rel="noopener noreferrer">Fiverr</a> — Earn from your skills
+👉 <a href="https://www.fiverr.com/" target="_blank" rel="noopener noreferrer">Fiverr</a> — sell skills and services
 
-👉 <a href="https://www.upwork.com/" target="_blank" rel="noopener noreferrer">Upwork</a> — Freelance projects worldwide
+👉 <a href="https://www.upwork.com/" target="_blank" rel="noopener noreferrer">Upwork</a> — freelance projects worldwide
 
-💰 Use AI content + these tools = real earning path
+👉 <a href="https://affiliate-program.amazon.com/" target="_blank" rel="noopener noreferrer">Amazon Associates</a> — affiliate earning path
+
+💰 Use Sazio AI + content + tools = real global earning path
     </div>
 
     <button class="logout-btn" onclick="logout()">Logout</button>
@@ -215,7 +190,7 @@
       setText("userClicks", "Clicks: " + finalClicks);
       setText("userEarnings", "Earnings: " + finalEarnings);
       setText("referralLink", window.location.origin + "/?ref=" + user.uid);
-      setText("statusBox", "Dashboard loaded successfully.");
+      setText("statusBox", "Phase 5 system ready.");
     }
 
     async function loadUserProfile(user) {
@@ -257,7 +232,7 @@
     }
 
     window.generateEarning = async () => {
-      if (!currentUser || !currentUserRef) return;
+      if (!currentUserRef || !currentUser) return;
 
       try {
         await updateDoc(currentUserRef, {
@@ -268,29 +243,15 @@
         const snapshot = await getDoc(currentUserRef);
         if (snapshot.exists()) {
           renderDashboard(currentUser, snapshot.data());
-          setText("statusBox", "Clicks +1 and Earnings +10 added successfully.");
+          setText("statusBox", "Clicks +1 and Earnings +10 added.");
         }
       } catch (error) {
         setText("statusBox", error.message);
       }
     };
 
-    window.generateAIContent = async () => {
-      if (!currentUser || !currentUserRef) return;
-
-      const topic = document.getElementById("topicInput").value.trim();
-      const type = document.getElementById("contentType").value;
-
-      if (!topic) {
-        setText("statusBox", "Please enter a topic first.");
-        return;
-      }
-
-      let output = "";
-
-      if (type === "youtube") {
-        output =
-`Title: ${topic} Shock Story
+    function makeYoutubeScript(topic) {
+      return `Title: ${topic} Shock Story
 
 Hook:
 Aisa twist jo first 3 second me viewer ko rok de.
@@ -302,52 +263,143 @@ Scene 3: Crowd reacts in shock.
 Scene 4: Big reveal changes everything.
 Scene 5: Comeback moment hits hard.
 Ending: Emotional win + share-worthy finish.`;
-      }
+    }
 
-      if (type === "instagram") {
-        output =
-`${topic} but make it viral 🔥
+    function makeInstagramCaption(topic) {
+      return `${topic} but make it viral 🔥
 
 Caption:
 "Ye story end tak dekhna... twist tumhe hila dega 😳🔥"
 
 Hashtags:
 #viral #reels #shorts #trending #${topic.replace(/\s+/g, "").toLowerCase()}`;
-      }
+    }
 
-      if (type === "hook") {
-        output =
-`Viral Hook Ideas for "${topic}":
+    function makeHooks(topic) {
+      return `Viral Hook Ideas for "${topic}":
 
 1. Sab log has rahe the... phir sab ro pade.
 2. Usne sirf ek button dabaya... aur kismat badal gayi.
 3. Kisi ne nahi socha tha ki ${topic} itna dangerous ho jayega.
 4. Last 5 seconds sab kuch badal denge.
 5. Ye dekhkar log replay karne lagenge.`;
-      }
+    }
 
-      if (type === "thumbnail") {
-        output =
-`Thumbnail Text Ideas for "${topic}":
+    function makeThumbnailText(topic) {
+      return `Thumbnail Text Ideas for "${topic}":
 
 1. SAB KUCH BADAL GAYA!
 2. YE VIRAL KYUN HUA?
 3. LAST TWIST SHOCKING!
 4. KOI SOCH BHI NAHI SAKTA!
 5. IS BUTTON NE PAISA BANA DIYA!`;
+    }
+
+    function makeSeoPack(topic) {
+      return `SEO Pack for "${topic}"
+
+Title:
+${topic} | Emotional Viral Story You Must Watch
+
+Description:
+This is a highly emotional and engaging story based on ${topic}. Watch till the end for a shocking twist and powerful comeback moment.
+
+Tags:
+${topic}, viral story, emotional shorts, shocking twist, youtube shorts, reels, trending video`;
+    }
+
+    function makeMoneyPlan(topic) {
+      return `Money Plan for "${topic}"
+
+1. Use Sazio to generate script ideas.
+2. Make thumbnail in Canva.
+3. Edit short video in CapCut.
+4. Upload on YouTube Shorts + Instagram Reels.
+5. Add your referral / earning links in bio or description.
+6. Offer script or editing service on Fiverr and Upwork.
+7. Turn one idea into multiple posts for more reach and more earning chances.`;
+    }
+
+    async function addAiEarning(message) {
+      await updateDoc(currentUserRef, {
+        earnings: increment(5)
+      });
+
+      const snapshot = await getDoc(currentUserRef);
+      if (snapshot.exists()) {
+        renderDashboard(currentUser, snapshot.data());
+        setText("statusBox", message);
+      }
+    }
+
+    window.generateAIContent = async () => {
+      if (!currentUserRef || !currentUser) return;
+
+      const topic = document.getElementById("topicInput").value.trim();
+      const type = document.getElementById("contentType").value;
+
+      if (!topic) {
+        setText("statusBox", "Please enter a topic first.");
+        return;
       }
 
-      document.getElementById("aiOutput").innerText = output;
+      let output = "";
+
+      if (type === "youtube_script") output = makeYoutubeScript(topic);
+      if (type === "instagram_caption") output = makeInstagramCaption(topic);
+      if (type === "viral_hooks") output = makeHooks(topic);
+      if (type === "thumbnail_text") output = makeThumbnailText(topic);
+      if (type === "seo_pack") output = makeSeoPack(topic);
+      if (type === "money_plan") output = makeMoneyPlan(topic);
+
+      setText("aiOutput", output);
+
+      try {
+        await addAiEarning("AI content generated. Earnings +5 added.");
+      } catch (error) {
+        setText("statusBox", error.message);
+      }
+    };
+
+    window.generateMoneyPlan = async () => {
+      if (!currentUserRef || !currentUser) return;
+
+      const topic = document.getElementById("topicInput").value.trim() || "AI content business";
+
+      const output = `Sazio Money Growth Plan for "${topic}"
+
+Step 1:
+Generate 3 strong content ideas daily in Sazio.
+
+Step 2:
+Turn each idea into Shorts / Reels / posts.
+
+Step 3:
+Use Canva for design and CapCut for editing.
+
+Step 4:
+Offer your content service on Fiverr and Upwork.
+
+Step 5:
+Share your Sazio referral link everywhere.
+
+Step 6:
+Promote affiliate tools that match your audience.
+
+Step 7:
+Repeat daily for growth, clients, and earning opportunities.`;
+
+      setText("aiOutput", output);
 
       try {
         await updateDoc(currentUserRef, {
-          earnings: increment(5)
+          earnings: increment(8)
         });
 
         const snapshot = await getDoc(currentUserRef);
         if (snapshot.exists()) {
           renderDashboard(currentUser, snapshot.data());
-          setText("statusBox", "AI content generated. Earnings +5 added.");
+          setText("statusBox", "Money plan generated. Earnings +8 added.");
         }
       } catch (error) {
         setText("statusBox", error.message);
@@ -356,8 +408,8 @@ Hashtags:
 
     window.copyReferral = async () => {
       try {
-        const referralText = document.getElementById("referralLink").innerText;
-        await navigator.clipboard.writeText(referralText);
+        const text = document.getElementById("referralLink").innerText;
+        await navigator.clipboard.writeText(text);
         setText("statusBox", "Referral link copied successfully.");
       } catch (error) {
         setText("statusBox", "Copy failed. Please copy manually.");
