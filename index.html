@@ -49,8 +49,8 @@ button{
 
 <div class="card">
   <h2>SAZIO LOGIN</h2>
-
-  <input id="authEmail" type="email" placeholder="Email">
+ <input id="authEmail" type="email" placeholder="Email">
+ <input id="authName" type="text" placeholder="Full Name">
   <input id="authPassword" type="password" placeholder="Password">
 
   <div>
@@ -76,7 +76,9 @@ onAuthStateChanged(auth, (user) => {
 
 
 // Signup
+
 window.signup = async () => {
+  const name = document.getElementById('authName').value.trim();
   const email = document.getElementById('authEmail').value.trim();
   const password = document.getElementById('authPassword').value.trim();
 
@@ -92,6 +94,8 @@ window.signup = async () => {
     document.getElementById('authOutput').textContent = error.message;
   }
 };
+
+
 
 // Login
 window.login = async () => {
