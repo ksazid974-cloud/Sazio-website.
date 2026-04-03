@@ -1,138 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAZIO X MASTER</title>
-
-<style>
-body{
-  font-family: Arial;
-  background:#000;
-  color:#fff;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-}
-.card{
-  background:#111;
-  padding:30px;
-  border-radius:20px;
-  width:300px;
-  text-align:center;
-}
-input{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border-radius:10px;
-  border:none;
-}
-button{
-  margin-top:15px;
-  padding:12px;
-  width:48%;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-}
-.signup{background:#ff5c5c;color:#fff;}
-.login{background:#333;color:#fff;}
-.output{
-  margin-top:15px;
-}
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAZIO X MASTER</title>
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background:#000;
+      color:#fff;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+      margin:0;
+      padding:20px;
+    }
+    .card{
+      background:#111;
+      padding:30px;
+      border-radius:20px;
+      width:300px;
+      text-align:center;
+    }
+    input{
+      width:100%;
+      padding:12px;
+      margin-top:10px;
+      border-radius:10px;
+      border:none;
+      box-sizing:border-box;
+    }
+    button{
+      margin-top:15px;
+      padding:12px;
+      width:48%;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+    }
+    .signup{background:#ff5c5c;color:#fff;}
+    .login{background:#333;color:#fff;}
+    .logout{background:#eee;color:#111;width:100%;}
+    .output{margin-top:15px;}
+    #dashboard{
+      display:none;
+      text-align:center;
+      color:#fff;
+    }
+    #dashboard h2{
+      font-size:28px;
+      margin-bottom:10px;
+    }
+    #dashboard p{
+      font-size:16px;
+      margin-bottom:20px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="card">
-  <h2>SAZIO LOGIN</h2>
- <input id="authEmail" type="email" placeholder="Email">
- <input id="authName" type="text" placeholder="Full Name">
-  <input id="authPassword" type="password" placeholder="Password">
+  <div class="card" id="authCard">
+    <h2>SAZIO LOGIN</h2>
 
-  <div>
-    <button class="signup" onclick="signup()">Signup</button>
-    <button class="login" onclick="login()">Login</button>
+    <input id="authName" type="text" placeholder="Full Name">
+    <input id="authEmail" type="email" placeholder="Email">
+    <input id="authPassword" type="password" placeholder="Password">
+
+    <div>
+      <button class="signup" onclick="signup()">Signup</button>
+      <button class="login" onclick="login()">Login</button>
+    </div>
+
+    <div class="output" id="authOutput">Ready...</div>
   </div>
 
-  <div class="output" id="authOutput">Ready...</div>
-</div>
+  <div id="dashboard">
+    <h2>Welcome Dashboard 🚀</h2>
+    <p id="userEmail"></p>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
 
-<!-- FIREBASE SCRIPT -->
-<script type="module">
-import { auth } from "./firebase-config.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    showDashboard(user.email);
-  } else {
-    document.getElementById('dashboard').style.display = 'none';
-    document.querySelector('.card').style.display = 'block';
-  }
-});
+  <script type="module">
+    import { auth } from "./firebase-config.js";
+    import {
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut,
+      updateProfile
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+    function showDashboard(user){
+      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('authCard').style.display = 'none';
+      document.getElementById('userEmail').textContent =
+        "Logged in as: " + (user.displayName ? user.displayName + " (" + user.email + ")" : user.email);
+    }
 
-// Signup
+    function showLogin(){
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('authCard').style.display = 'block';
+    }
 
-window.signup = async () => {
-  const name = document.getElementById('authName').value.trim();
-  const email = document.getElementById('authEmail').value.trim();
-  const password = document.getElementById('authPassword').value.trim();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        showDashboard(user);
+      } else {
+        showLogin();
+      }
+    });
 
-  if(!email || !password){
-    document.getElementById('authOutput').textContent = "Fill email & password";
-    return;
-  }
+    window.signup = async () => {
+      const name = document.getElementById('authName').value.trim();
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value.trim();
 
-  try {
-    await createUserWithEmailAndPassword(auth, email, password);
-    document.getElementById('authOutput').textContent = "Signup successful ✅";
-  } catch (error) {
-    document.getElementById('authOutput').textContent = error.message;
-  }
-};
+      if(!name || !email || !password){
+        document.getElementById('authOutput').textContent = "Fill all fields";
+        return;
+      }
 
+      try {
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(userCred.user, { displayName: name });
+        document.getElementById('authOutput').textContent = "Signup successful ✅";
+      } catch (error) {
+        document.getElementById('authOutput').textContent = error.message;
+      }
+    };
 
+    window.login = async () => {
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value.trim();
 
-// Login
-window.login = async () => {
-  const email = document.getElementById('authEmail').value.trim();
-  const password = document.getElementById('authPassword').value.trim();
+      if(!email || !password){
+        document.getElementById('authOutput').textContent = "Fill email & password";
+        return;
+      }
 
-  if(!email || !password){
-    document.getElementById('authOutput').textContent = "Fill email & password";
-    return;
-  }
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        document.getElementById('authOutput').textContent = "Login successful 🚀";
+      } catch (error) {
+        document.getElementById('authOutput').textContent = error.message;
+      }
+    };
 
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    showDashboard(email);
-    document.getElementById('authOutput').textContent = "Login successful 🚀";
-  } catch (error) {
-    document.getElementById('authOutput').textContent = error.message;
-  }
-};
-  function showDashboard(email){
-  document.getElementById('dashboard').style.display = 'block';
-  document.getElementById('userEmail').textContent = "Logged in as: " + email;
-  document.querySelector('.card').style.display = 'none';
-}
+    window.logout = async () => {
+      try {
+        await signOut(auth);
+        document.getElementById('authOutput').textContent = "Logged out ✅";
+      } catch (error) {
+        document.getElementById('authOutput').textContent = error.message;
+      }
+    };
+  </script>
 
-
-  window.logout = async () => {
-  await signOut(auth);
-  document.getElementById('dashboard').style.display = 'none';
-  document.querySelector('.card').style.display = 'block';
-};
-  
-</script>
-<div id="dashboard" style="display:none; text-align:center; color:white;">
-  <h2>Welcome Dashboard 🚀</h2>
-  <p id="userEmail"></p>
-  <button onclick="logout()">Logout</button>
-</div>
 </body>
 </html>
