@@ -425,14 +425,21 @@ Repeat daily for growth, clients, and earning opportunities.`;
         setText("statusBox", error.message);
       }
     };
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    await loadUserProfile(user);
+  } else {
+    // Allow referral visit without redirect
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        await loadUserProfile(user);
-      } else {
-        window.location.href = "./index.html";
-      }
-    });
+    if (ref) {
+      setText("statusBox", "Welcome! Please login to claim reward.");
+    } else {
+      window.location.href = "./index.html";
+    }
+  }
+});
   </script>
 </body>
 </html>
