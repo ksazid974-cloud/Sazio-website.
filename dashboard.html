@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sazio Final Pro Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sazio Final Worldwide Pro</title>
   <style>
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -16,35 +15,30 @@
       text-align: center;
       padding: 20px 12px 40px;
     }
-
     .card {
       width: 100%;
-      max-width: 460px;
+      max-width: 470px;
       margin: 0 auto;
       background: #111;
       border-radius: 22px;
       padding: 20px 14px;
       box-shadow: 0 0 30px rgba(255,255,255,0.04);
     }
-
     .brand {
       font-size: 13px;
       color: #bdbdbd;
       line-height: 1.5;
       margin-bottom: 10px;
     }
-
     h2, h3 {
       margin: 10px 0;
     }
-
     p {
       margin: 8px 0;
       font-size: 14px;
       line-height: 1.6;
       word-break: break-word;
     }
-
     input, select {
       width: 100%;
       padding: 12px;
@@ -54,7 +48,6 @@
       font-size: 15px;
       outline: none;
     }
-
     button {
       width: 100%;
       padding: 14px;
@@ -65,13 +58,12 @@
       font-weight: 700;
       cursor: pointer;
     }
-
     .green { background: #00d084; color: #000; }
     .yellow { background: #ffb300; color: #000; }
     .red { background: #ff4d4d; color: #fff; }
     .blue { background: #4da6ff; color: #000; }
+    .purple { background: #b56cff; color: #fff; }
     .gray { background: #eee; color: #111; }
-
     .box {
       background: #181818;
       padding: 14px;
@@ -83,13 +75,11 @@
       line-height: 1.6;
       font-size: 14px;
     }
-
     .tools-box a {
       color: #7ec8ff;
       text-decoration: none;
       font-weight: 700;
     }
-
     .tools-box a:hover {
       text-decoration: underline;
     }
@@ -110,9 +100,11 @@
     <p id="earnings">Earnings: 0</p>
     <p id="streak">Streak: 0</p>
     <p id="subscription">Subscription: Free</p>
+    <p id="rank">Rank: Starter</p>
 
     <button class="green" onclick="generateEarning()">Generate Earning 💰</button>
     <button class="yellow" onclick="dailyBonus()">Daily Bonus 🎁</button>
+    <button class="purple" onclick="claimTaskReward()">Claim Daily Task Reward 🚀</button>
 
     <input id="topic" placeholder="Enter your topic" />
 
@@ -126,7 +118,7 @@
     </select>
 
     <button onclick="generateAI()">Generate AI Content 🤖</button>
-    <button class="red" onclick="withdraw()">Withdraw 💸</button>
+    <button class="red" onclick="requestWithdraw()">Request Withdraw ₹100 💸</button>
     <button class="blue" onclick="shareNow()">Share Now 🚀</button>
 
     <div class="box" id="output">No content generated yet.</div>
@@ -134,6 +126,12 @@
     <h3>Referral</h3>
     <div class="box" id="ref">Loading referral...</div>
     <button class="blue" onclick="copyLink()">Copy Referral Link 🔗</button>
+
+    <h3>Withdraw Status</h3>
+    <div class="box" id="withdrawStatus">No withdraw request yet.</div>
+
+    <h3>Growth Stats</h3>
+    <div class="box" id="growthBox">Loading growth stats...</div>
 
     <h3>Recommended Tools</h3>
     <div class="box tools-box">
@@ -144,10 +142,20 @@
 👉 <a href="https://affiliate-program.amazon.com/" target="_blank" rel="noopener noreferrer">Amazon Associates</a> — affiliate earning
     </div>
 
+    <h3>Premium Plans</h3>
+    <div class="box" id="premiumBox">
+Free Plan:
+- Basic earning
+- Basic AI tools
+
+Pro Plan (manual upgrade later):
+- Better earning boost
+- Better AI content
+- Priority support
+    </div>
+
     <h3>Admin Panel</h3>
     <div class="box" id="adminPanel">Admin data hidden</div>
-
-    <p id="withdrawStatus"></p>
 
     <button class="gray" onclick="logout()">Logout</button>
 
@@ -164,7 +172,8 @@
       updateDoc,
       increment,
       getDocs,
-      collection
+      collection,
+      addDoc
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     let user = null;
@@ -173,6 +182,14 @@
 
     function set(id, val) {
       document.getElementById(id).innerText = val;
+    }
+
+    function getRank(data) {
+      const earnings = data.earnings || 0;
+      if (earnings >= 1000) return "Elite";
+      if (earnings >= 500) return "Pro";
+      if (earnings >= 200) return "Rising";
+      return "Starter";
     }
 
     function render(data) {
@@ -186,6 +203,7 @@
       set("earnings", "Earnings: " + (data.earnings || 0));
       set("streak", "Streak: " + (data.streak || 0));
       set("subscription", "Subscription: " + (data.subscription || "Free"));
+      set("rank", "Rank: " + getRank(data));
 
       const link =
         window.location.origin +
@@ -195,6 +213,14 @@
         Date.now();
 
       set("ref", link);
+      set(
+        "growthBox",
+        "Your Growth Summary\n" +
+        "Clicks: " + (data.clicks || 0) +
+        "\nEarnings: " + (data.earnings || 0) +
+        "\nStreak: " + (data.streak || 0) +
+        "\nRank: " + getRank(data)
+      );
       set("statusBox", "System ready.");
     }
 
@@ -211,14 +237,20 @@
           earnings: 0,
           streak: 0,
           subscription: "Free",
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          lastTaskRewardDate: "",
+          lastDailyBonusDate: ""
         });
       } else {
         const existing = snap.data();
-        if (!existing.name) {
-          await updateDoc(userRef, {
-            name: user.displayName || "Sazio"
-          });
+        const patch = {};
+        if (!existing.name) patch.name = user.displayName || "Sazio";
+        if (existing.subscription === undefined) patch.subscription = "Free";
+        if (existing.streak === undefined) patch.streak = 0;
+        if (existing.lastTaskRewardDate === undefined) patch.lastTaskRewardDate = "";
+        if (existing.lastDailyBonusDate === undefined) patch.lastDailyBonusDate = "";
+        if (Object.keys(patch).length > 0) {
+          await updateDoc(userRef, patch);
         }
       }
 
@@ -248,6 +280,38 @@
       }
     }
 
+    async function loadLatestWithdrawStatus() {
+      const all = await getDocs(collection(db, "withdrawRequests"));
+      let latest = null;
+
+      all.forEach((item) => {
+        const data = item.data();
+        if (data.uid !== user.uid) return;
+
+        if (!latest) {
+          latest = data;
+          return;
+        }
+
+        const latestTime = latest.createdAt || "";
+        const thisTime = data.createdAt || "";
+
+        if (thisTime > latestTime) latest = data;
+      });
+
+      if (!latest) {
+        set("withdrawStatus", "No withdraw request yet.");
+        return;
+      }
+
+      set(
+        "withdrawStatus",
+        "Status: " + (latest.status || "Pending") +
+        "\nAmount: ₹" + (latest.amount || 100) +
+        "\nRequested At: " + (latest.createdAt || "-")
+      );
+    }
+
     window.generateEarning = async () => {
       await updateDoc(userRef, {
         clicks: increment(1),
@@ -258,12 +322,43 @@
     };
 
     window.dailyBonus = async () => {
+      const today = new Date().toISOString().slice(0, 10);
+      const fresh = await getDoc(userRef);
+      const data = fresh.data();
+
+      if ((data.lastDailyBonusDate || "") === today) {
+        set("statusBox", "Daily bonus already claimed today.");
+        return;
+      }
+
       await updateDoc(userRef, {
         earnings: increment(20),
-        streak: increment(1)
+        streak: increment(1),
+        lastDailyBonusDate: today
       });
+
       await ensureUserDoc();
       set("statusBox", "Daily bonus +20 added.");
+    };
+
+    window.claimTaskReward = async () => {
+      const today = new Date().toISOString().slice(0, 10);
+      const fresh = await getDoc(userRef);
+      const data = fresh.data();
+
+      if ((data.lastTaskRewardDate || "") === today) {
+        set("statusBox", "Daily task reward already claimed today.");
+        return;
+      }
+
+      await updateDoc(userRef, {
+        earnings: increment(15),
+        clicks: increment(1),
+        lastTaskRewardDate: today
+      });
+
+      await ensureUserDoc();
+      set("statusBox", "Daily task reward +15 added.");
     };
 
     function makeYoutube(topic) {
@@ -361,25 +456,46 @@ ${topic}, viral, shorts, emotional, trending`;
       set("statusBox", "AI generated. Earnings +5 added.");
     };
 
-    window.withdraw = async () => {
+    window.requestWithdraw = async () => {
       const min = 100;
-      const currency = "$";
+      const amount = 100;
       const current = userData?.earnings || 0;
 
       if (current < min) {
-        document.getElementById("withdrawStatus").innerText =
-          "Minimum " + currency + min + " required";
+        set("withdrawStatus", "Minimum ₹100 required.");
         return;
       }
 
-      await updateDoc(userRef, {
-        earnings: increment(-100)
+      const all = await getDocs(collection(db, "withdrawRequests"));
+      let hasPending = false;
+
+      all.forEach((item) => {
+        const data = item.data();
+        if (data.uid === user.uid && data.status === "Pending") {
+          hasPending = true;
+        }
       });
 
-      await ensureUserDoc();
+      if (hasPending) {
+        set("withdrawStatus", "You already have a pending withdraw request.");
+        return;
+      }
 
-      document.getElementById("withdrawStatus").innerText =
-        "🎉 Withdrawal Successful!\n\n💰 Keep earning more rewards.\n🚀 Invite friends to boost your income.";
+      await addDoc(collection(db, "withdrawRequests"), {
+        uid: user.uid,
+        name: userData?.name || user.displayName || "Sazio",
+        email: userData?.email || user.email || "",
+        amount: amount,
+        status: "Pending",
+        createdAt: new Date().toISOString()
+      });
+
+      set(
+        "withdrawStatus",
+        "Withdraw request submitted.\nAmount: ₹100\nStatus: Pending admin approval."
+      );
+      set("statusBox", "Withdraw request created successfully.");
+      await loadAdmin();
     };
 
     window.copyLink = async () => {
@@ -418,34 +534,55 @@ ${topic}, viral, shorts, emotional, trending`;
         return;
       }
 
-      const query = await getDocs(collection(db, "users"));
+      const usersQuery = await getDocs(collection(db, "users"));
       let totalUsers = 0;
       let totalEarnings = 0;
       let paidUsers = 0;
 
-      query.forEach((item) => {
+      usersQuery.forEach((item) => {
         const d = item.data();
         totalUsers++;
         totalEarnings += d.earnings || 0;
         if ((d.subscription || "Free") !== "Free") paidUsers++;
       });
 
-      set(
-        "adminPanel",
+      const withdrawQuery = await getDocs(collection(db, "withdrawRequests"));
+      let pendingCount = 0;
+      let pendingLines = [];
+
+      withdrawQuery.forEach((item) => {
+        const d = item.data();
+        if (d.status === "Pending") {
+          pendingCount++;
+          pendingLines.push(
+            (d.name || "User") + " | " +
+            (d.email || "") + " | ₹" +
+            (d.amount || 100)
+          );
+        }
+      });
+
+      let adminText =
         "ADMIN PANEL\nUsers: " + totalUsers +
         "\nTotal Earnings: " + totalEarnings +
-        "\nPaid Users: " + paidUsers
-      );
+        "\nPaid Users: " + paidUsers +
+        "\nPending Withdraws: " + pendingCount;
+
+      if (pendingLines.length > 0) {
+        adminText += "\n\nRequests:\n" + pendingLines.join("\n");
+      }
+
+      set("adminPanel", adminText);
     }
 
     window.logout = async () => {
       await signOut(auth);
-      window.location.href = "./index.html?v=200";
+      window.location.href = "./index.html?v=300";
     };
 
     onAuthStateChanged(auth, async (u) => {
       if (!u) {
-        window.location.href = "./index.html?v=200";
+        window.location.href = "./index.html?v=300";
         return;
       }
 
@@ -453,9 +590,9 @@ ${topic}, viral, shorts, emotional, trending`;
       await ensureUserDoc();
       await processReferral();
       await ensureUserDoc();
+      await loadLatestWithdrawStatus();
       await loadAdmin();
     });
   </script>
 </body>
 </html>
-
