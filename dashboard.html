@@ -1,195 +1,460 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sazio Final Pro</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sazio Final Pro Dashboard</title>
+  <style>
+    * { box-sizing: border-box; }
 
-<style>
-body{
-margin:0;
-font-family:Arial;
-background:#000;
-color:#fff;
-text-align:center;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px 12px 40px;
+    }
 
-.card{
-padding:20px;
-}
+    .card {
+      width: 100%;
+      max-width: 460px;
+      margin: 0 auto;
+      background: #111;
+      border-radius: 22px;
+      padding: 20px 14px;
+      box-shadow: 0 0 30px rgba(255,255,255,0.04);
+    }
 
-button{
-width:90%;
-padding:14px;
-border:none;
-border-radius:12px;
-margin:10px;
-font-size:16px;
-font-weight:bold;
-}
+    .brand {
+      font-size: 13px;
+      color: #bdbdbd;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
 
-.green{background:#00d084;color:#000}
-.yellow{background:#ffb300;color:#000}
-.red{background:#ff4d4d;color:#fff}
-.blue{background:#4da6ff;color:#000}
+    h2, h3 {
+      margin: 10px 0;
+    }
 
-.box{
-background:#111;
-padding:15px;
-margin:10px;
-border-radius:12px;
-text-align:left;
-word-break:break-word;
-}
-</style>
+    p {
+      margin: 8px 0;
+      font-size: 14px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      margin-top: 10px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      margin-top: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .green { background: #00d084; color: #000; }
+    .yellow { background: #ffb300; color: #000; }
+    .red { background: #ff4d4d; color: #fff; }
+    .blue { background: #4da6ff; color: #000; }
+    .gray { background: #eee; color: #111; }
+
+    .box {
+      background: #181818;
+      padding: 14px;
+      margin-top: 10px;
+      border-radius: 12px;
+      text-align: left;
+      word-break: break-word;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .tools-box a {
+      color: #7ec8ff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .tools-box a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
-
 <body>
+  <div class="card">
+    <div class="brand">
+      Sazio — The Fastest & Most Powerful AI to Create, Grow & Earn 🚀
+    </div>
 
-<div class="card">
+    <h2 id="welcomeTitle">Loading...</h2>
 
-<h2>🚀 Sazio AI Final</h2>
+    <p id="name">Name: Loading...</p>
+    <p id="email">Email: Loading...</p>
+    <p id="uid">UID: Loading...</p>
+    <p id="clicks">Clicks: 0</p>
+    <p id="earnings">Earnings: 0</p>
+    <p id="streak">Streak: 0</p>
+    <p id="subscription">Subscription: Free</p>
 
-<p id="name"></p>
-<p id="email"></p>
-<p id="uid"></p>
-<p id="clicks"></p>
-<p id="earnings"></p>
-<p id="streak"></p>
+    <button class="green" onclick="generateEarning()">Generate Earning 💰</button>
+    <button class="yellow" onclick="dailyBonus()">Daily Bonus 🎁</button>
 
-<button class="green" onclick="generateEarning()">Earn 💰</button>
-<button class="yellow" onclick="dailyBonus()">Daily Bonus 🎁</button>
+    <input id="topic" placeholder="Enter your topic" />
 
-<input id="topic" placeholder="Enter your topic" style="width:90%;padding:10px;border-radius:10px;border:none">
+    <select id="type">
+      <option value="youtube">YouTube Shorts Script</option>
+      <option value="instagram">Instagram Caption</option>
+      <option value="hooks">Viral Hooks</option>
+      <option value="thumb">Thumbnail Text</option>
+      <option value="seo">SEO Pack</option>
+      <option value="money">Money Plan</option>
+    </select>
 
-<button onclick="generateAI()">Generate AI 🤖</button>
+    <button onclick="generateAI()">Generate AI Content 🤖</button>
+    <button class="red" onclick="withdraw()">Withdraw 💸</button>
+    <button class="blue" onclick="shareNow()">Share Now 🚀</button>
 
-<div class="box" id="output"></div>
+    <div class="box" id="output">No content generated yet.</div>
 
-<h3>Referral</h3>
-<div class="box" id="ref"></div>
+    <h3>Referral</h3>
+    <div class="box" id="ref">Loading referral...</div>
+    <button class="blue" onclick="copyLink()">Copy Referral Link 🔗</button>
 
-<button class="blue" onclick="copyLink()">Copy Link 🔗</button>
+    <h3>Recommended Tools</h3>
+    <div class="box tools-box">
+👉 <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer">Canva</a> — thumbnails, design  
+👉 <a href="https://www.capcut.com/" target="_blank" rel="noopener noreferrer">CapCut</a> — video editing  
+👉 <a href="https://www.fiverr.com/" target="_blank" rel="noopener noreferrer">Fiverr</a> — freelance earning  
+👉 <a href="https://www.upwork.com/" target="_blank" rel="noopener noreferrer">Upwork</a> — global freelance work  
+👉 <a href="https://affiliate-program.amazon.com/" target="_blank" rel="noopener noreferrer">Amazon Associates</a> — affiliate earning
+    </div>
 
-<h3>Share & Earn</h3>
-<button onclick="share()">Share Now 🚀</button>
+    <h3>Admin Panel</h3>
+    <div class="box" id="adminPanel">Admin data hidden</div>
 
-<div id="adminPanel" class="box"></div>
+    <p id="withdrawStatus"></p>
 
-<button onclick="logout()">Logout</button>
+    <button class="gray" onclick="logout()">Logout</button>
 
-</div>
+    <div class="box" id="statusBox">Loading system...</div>
+  </div>
 
-<script type="module">
+  <script type="module">
+    import { auth, db } from "./firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      doc,
+      getDoc,
+      setDoc,
+      updateDoc,
+      increment,
+      getDocs,
+      collection
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import { auth, db } from "./firebase-config.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { doc, getDoc, updateDoc, increment, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    let user = null;
+    let userRef = null;
+    let userData = null;
 
-let user;
+    function set(id, val) {
+      document.getElementById(id).innerText = val;
+    }
 
-function set(id,val){
-document.getElementById(id).innerText=val;
-}
+    function render(data) {
+      userData = data;
 
-onAuthStateChanged(auth, async(u)=>{
-if(!u){
-window.location.href="./";
-return;
-}
+      set("welcomeTitle", "Welcome " + (data.name || "Sazio") + " 🚀");
+      set("name", "Name: " + (data.name || "Sazio"));
+      set("email", "Email: " + (data.email || user.email));
+      set("uid", "UID: " + user.uid);
+      set("clicks", "Clicks: " + (data.clicks || 0));
+      set("earnings", "Earnings: " + (data.earnings || 0));
+      set("streak", "Streak: " + (data.streak || 0));
+      set("subscription", "Subscription: " + (data.subscription || "Free"));
 
-user=u;
+      const link =
+        window.location.origin +
+        "/dashboard.html?ref=" +
+        user.uid +
+        "&v=" +
+        Date.now();
 
-const refDoc=doc(db,"users",u.uid);
-const snap=await getDoc(refDoc);
-const data=snap.data();
+      set("ref", link);
+      set("statusBox", "System ready.");
+    }
 
-set("name","Name: "+data.name);
-set("email","Email: "+data.email);
-set("uid","UID: "+u.uid);
-set("clicks","Clicks: "+data.clicks);
-set("earnings","Earnings: "+data.earnings);
-set("streak","Streak: "+(data.streak||0));
+    async function ensureUserDoc() {
+      userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
 
-const link=window.location.origin + "/dashboard.html?ref="+u.uid+"&v="+Date.now();
-set("ref",link);
+      if (!snap.exists()) {
+        await setDoc(userRef, {
+          name: user.displayName || "Sazio",
+          email: user.email || "",
+          uid: user.uid,
+          clicks: 0,
+          earnings: 0,
+          streak: 0,
+          subscription: "Free",
+          createdAt: new Date().toISOString()
+        });
+      } else {
+        const existing = snap.data();
+        if (!existing.name) {
+          await updateDoc(userRef, {
+            name: user.displayName || "Sazio"
+          });
+        }
+      }
 
-const params=new URLSearchParams(window.location.search);
-const refId=params.get("ref");
+      const fresh = await getDoc(userRef);
+      render(fresh.data());
+    }
 
-if(refId && refId!==u.uid){
-await updateDoc(doc(db,"users",refId),{
-clicks:increment(1),
-earnings:increment(10)
-});
-}
+    async function processReferral() {
+      const params = new URLSearchParams(window.location.search);
+      const refId = params.get("ref");
 
-loadAdmin();
+      if (!refId) return;
+      if (refId === user.uid) return;
 
-});
+      const visitKey = `sazio_ref_${refId}_${user.uid}`;
+      if (sessionStorage.getItem(visitKey) === "done") return;
 
-window.generateEarning=async()=>{
-await updateDoc(doc(db,"users",user.uid),{
-clicks:increment(1),
-earnings:increment(5)
-});
-location.reload();
-}
+      try {
+        const refDoc = doc(db, "users", refId);
+        await updateDoc(refDoc, {
+          clicks: increment(1),
+          earnings: increment(10)
+        });
+        sessionStorage.setItem(visitKey, "done");
+      } catch (error) {
+        console.error("Referral update failed", error);
+      }
+    }
 
-window.dailyBonus=async()=>{
-await updateDoc(doc(db,"users",user.uid),{
-earnings:increment(20),
-streak:increment(1)
-});
-location.reload();
-}
+    window.generateEarning = async () => {
+      await updateDoc(userRef, {
+        clicks: increment(1),
+        earnings: increment(5)
+      });
+      await ensureUserDoc();
+      set("statusBox", "Earning +5 added.");
+    };
 
-window.generateAI=()=>{
-const topic=document.getElementById("topic").value;
-document.getElementById("output").innerText=
-"🔥 Viral Script for "+topic+"\nHook\nScene\nTwist\nEnding";
-}
+    window.dailyBonus = async () => {
+      await updateDoc(userRef, {
+        earnings: increment(20),
+        streak: increment(1)
+      });
+      await ensureUserDoc();
+      set("statusBox", "Daily bonus +20 added.");
+    };
 
-window.copyLink=()=>{
-navigator.clipboard.writeText(document.getElementById("ref").innerText);
-alert("Copied");
-}
+    function makeYoutube(topic) {
+      return `🔥 Viral Script for ${topic}
 
-window.share=()=>{
-navigator.share({
-title:"Earn from AI",
-text:"Use this AI and earn 💰",
-url:document.getElementById("ref").innerText
-});
-}
+Hook:
+Viewer ko first 3 second me rok do
 
-window.logout=()=>{
-signOut(auth);
-}
+Scene 1: sudden danger
+Scene 2: emotional struggle
+Scene 3: public reaction
+Scene 4: twist reveal
+Scene 5: comeback ending`;
+    }
 
-async function loadAdmin(){
+    function makeInstagram(topic) {
+      return `${topic} but make it viral 🔥
 
-const adminEmail="test123@gmail.com";
+Caption:
+"End tak dekhna 😳"
 
-if(user.email!==adminEmail) return;
+Hashtags:
+#viral #reels #shorts #${topic.replace(/\s+/g, "").toLowerCase()}`;
+    }
 
-const query=await getDocs(collection(db,"users"));
+    function makeHooks(topic) {
+      return `Hooks for ${topic}
 
-let totalUsers=0;
-let totalEarnings=0;
+1. Sab kuch badal gaya
+2. Last 5 sec shocking
+3. Koi expect nahi karega
+4. Sab ro pade
+5. Ye viral hoga`;
+    }
 
-query.forEach(doc=>{
-totalUsers++;
-totalEarnings+=doc.data().earnings||0;
-});
+    function makeThumb(topic) {
+      return `Thumbnail Text
 
-document.getElementById("adminPanel").innerText=
-"ADMIN PANEL\nUsers: "+totalUsers+"\nTotal Earnings: "+totalEarnings;
+${topic.toUpperCase()}
+SHOCKING!
+DON'T MISS
+LAST TWIST`;
+    }
 
-}
+    function makeSeo(topic) {
+      return `SEO Pack for ${topic}
 
-</script>
+Title:
+${topic} | Emotional Viral Story
 
+Description:
+Watch this powerful story till the end for a shocking twist.
+
+Tags:
+${topic}, viral, shorts, emotional, trending`;
+    }
+
+    function makeMoney(topic) {
+      return `Money Plan for ${topic}
+
+1. Use Sazio AI
+2. Create content
+3. Edit in CapCut
+4. Design in Canva
+5. Post on Shorts/Reels
+6. Add referral links
+7. Earn from services + affiliate`;
+    }
+
+    window.generateAI = async () => {
+      const topic = document.getElementById("topic").value.trim();
+      const type = document.getElementById("type").value;
+
+      if (!topic) {
+        set("statusBox", "Enter your topic first.");
+        return;
+      }
+
+      let result = "";
+
+      if (type === "youtube") result = makeYoutube(topic);
+      if (type === "instagram") result = makeInstagram(topic);
+      if (type === "hooks") result = makeHooks(topic);
+      if (type === "thumb") result = makeThumb(topic);
+      if (type === "seo") result = makeSeo(topic);
+      if (type === "money") result = makeMoney(topic);
+
+      set("output", result);
+
+      await updateDoc(userRef, {
+        earnings: increment(5)
+      });
+
+      await ensureUserDoc();
+      set("statusBox", "AI generated. Earnings +5 added.");
+    };
+
+    window.withdraw = async () => {
+      const min = 100;
+      const currency = "$";
+      const current = userData?.earnings || 0;
+
+      if (current < min) {
+        document.getElementById("withdrawStatus").innerText =
+          "Minimum " + currency + min + " required";
+        return;
+      }
+
+      await updateDoc(userRef, {
+        earnings: increment(-100)
+      });
+
+      await ensureUserDoc();
+
+      document.getElementById("withdrawStatus").innerText =
+        "🎉 Withdrawal Successful!\n\n💰 Keep earning more rewards.\n🚀 Invite friends to boost your income.";
+    };
+
+    window.copyLink = async () => {
+      try {
+        await navigator.clipboard.writeText(document.getElementById("ref").innerText);
+        set("statusBox", "Referral link copied.");
+      } catch {
+        set("statusBox", "Copy failed.");
+      }
+    };
+
+    window.shareNow = async () => {
+      const shareUrl = document.getElementById("ref").innerText;
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "Sazio AI",
+            text: "Free AI se content banao aur paisa kamao 💸",
+            url: shareUrl
+          });
+          set("statusBox", "Shared successfully.");
+        } catch {
+          set("statusBox", "Share cancelled.");
+        }
+      } else {
+        set("statusBox", "Share not supported on this device.");
+      }
+    };
+
+    async function loadAdmin() {
+      const adminEmail = "test123@gmail.com";
+
+      if (user.email !== adminEmail) {
+        set("adminPanel", "Admin data hidden");
+        return;
+      }
+
+      const query = await getDocs(collection(db, "users"));
+      let totalUsers = 0;
+      let totalEarnings = 0;
+      let paidUsers = 0;
+
+      query.forEach((item) => {
+        const d = item.data();
+        totalUsers++;
+        totalEarnings += d.earnings || 0;
+        if ((d.subscription || "Free") !== "Free") paidUsers++;
+      });
+
+      set(
+        "adminPanel",
+        "ADMIN PANEL\nUsers: " + totalUsers +
+        "\nTotal Earnings: " + totalEarnings +
+        "\nPaid Users: " + paidUsers
+      );
+    }
+
+    window.logout = async () => {
+      await signOut(auth);
+      window.location.href = "./index.html?v=200";
+    };
+
+    onAuthStateChanged(auth, async (u) => {
+      if (!u) {
+        window.location.href = "./index.html?v=200";
+        return;
+      }
+
+      user = u;
+      await ensureUserDoc();
+      await processReferral();
+      await ensureUserDoc();
+      await loadAdmin();
+    });
+  </script>
 </body>
 </html>
-
