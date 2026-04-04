@@ -6,6 +6,7 @@
   <title>Sazio Final Worldwide Pro</title>
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -15,6 +16,7 @@
       text-align: center;
       padding: 20px 12px 40px;
     }
+
     .card {
       width: 100%;
       max-width: 470px;
@@ -24,21 +26,25 @@
       padding: 20px 14px;
       box-shadow: 0 0 30px rgba(255,255,255,0.04);
     }
+
     .brand {
       font-size: 13px;
       color: #bdbdbd;
       line-height: 1.5;
       margin-bottom: 10px;
     }
+
     h2, h3 {
       margin: 10px 0;
     }
+
     p {
       margin: 8px 0;
       font-size: 14px;
       line-height: 1.6;
       word-break: break-word;
     }
+
     input, select {
       width: 100%;
       padding: 12px;
@@ -48,6 +54,7 @@
       font-size: 15px;
       outline: none;
     }
+
     button {
       width: 100%;
       padding: 14px;
@@ -58,12 +65,14 @@
       font-weight: 700;
       cursor: pointer;
     }
+
     .green { background: #00d084; color: #000; }
     .yellow { background: #ffb300; color: #000; }
     .red { background: #ff4d4d; color: #fff; }
     .blue { background: #4da6ff; color: #000; }
     .purple { background: #b56cff; color: #fff; }
     .gray { background: #eee; color: #111; }
+
     .box {
       background: #181818;
       padding: 14px;
@@ -75,11 +84,13 @@
       line-height: 1.6;
       font-size: 14px;
     }
+
     .tools-box a {
       color: #7ec8ff;
       text-decoration: none;
       font-weight: 700;
     }
+
     .tools-box a:hover {
       text-decoration: underline;
     }
@@ -106,22 +117,21 @@
     <button class="yellow" onclick="dailyBonus()">Daily Bonus 🎁</button>
     <button class="purple" onclick="claimTaskReward()">Claim Daily Task Reward 🚀</button>
 
-    <input id="topic" placeholder="Enter your topic" />
+    <input id="topicInput" placeholder="Enter your topic" />
 
-    <select id="type">
-      <option value="youtube">YouTube Shorts Script</option>
-      <option value="instagram">Instagram Caption</option>
-      <option value="hooks">Viral Hooks</option>
-      <option value="thumb">Thumbnail Text</option>
+    <select id="modeSelect">
+      <option value="story">YouTube Shorts Script</option>
       <option value="seo">SEO Pack</option>
       <option value="money">Money Plan</option>
+      <option value="caption">Caption</option>
+      <option value="video">Video Prompt Pack</option>
     </select>
 
     <button onclick="generateAI()">Generate AI Content 🤖</button>
     <button class="red" onclick="requestWithdraw()">Request Withdraw ₹100 💸</button>
     <button class="blue" onclick="shareNow()">Share Now 🚀</button>
 
-    <div class="box" id="output">No content generated yet.</div>
+    <div class="box" id="aiOutput">No content generated yet.</div>
 
     <h3>Referral</h3>
     <div class="box" id="ref">Loading referral...</div>
@@ -361,99 +371,52 @@ Pro Plan (manual upgrade later):
       set("statusBox", "Daily task reward +15 added.");
     };
 
-    function makeYoutube(topic) {
-      return `🔥 Viral Script for ${topic}
-
-Hook:
-Viewer ko first 3 second me rok do
-
-Scene 1: sudden danger
-Scene 2: emotional struggle
-Scene 3: public reaction
-Scene 4: twist reveal
-Scene 5: comeback ending`;
-    }
-
-    function makeInstagram(topic) {
-      return `${topic} but make it viral 🔥
-
-Caption:
-"End tak dekhna 😳"
-
-Hashtags:
-#viral #reels #shorts #${topic.replace(/\s+/g, "").toLowerCase()}`;
-    }
-
-    function makeHooks(topic) {
-      return `Hooks for ${topic}
-
-1. Sab kuch badal gaya
-2. Last 5 sec shocking
-3. Koi expect nahi karega
-4. Sab ro pade
-5. Ye viral hoga`;
-    }
-
-    function makeThumb(topic) {
-      return `Thumbnail Text
-
-${topic.toUpperCase()}
-SHOCKING!
-DON'T MISS
-LAST TWIST`;
-    }
-
-    function makeSeo(topic) {
-      return `SEO Pack for ${topic}
-
-Title:
-${topic} | Emotional Viral Story
-
-Description:
-Watch this powerful story till the end for a shocking twist.
-
-Tags:
-${topic}, viral, shorts, emotional, trending`;
-    }
-
-    function makeMoney(topic) {
-      return `Money Plan for ${topic}
-
-1. Use Sazio AI
-2. Create content
-3. Edit in CapCut
-4. Design in Canva
-5. Post on Shorts/Reels
-6. Add referral links
-7. Earn from services + affiliate`;
-    }
-
     window.generateAI = async () => {
-      const topic = document.getElementById("topic").value.trim();
-      const type = document.getElementById("type").value;
+      const topicInput = document.getElementById("topicInput");
+      const modeSelect = document.getElementById("modeSelect");
+      const outputBox = document.getElementById("aiOutput");
+
+      const topic = topicInput ? topicInput.value.trim() : "";
+      const mode = modeSelect ? modeSelect.value : "story";
 
       if (!topic) {
-        set("statusBox", "Enter your topic first.");
+        outputBox.innerText = "⚠️ Please enter topic";
         return;
       }
 
-      let result = "";
+      outputBox.innerText = "⏳ Sazio AI is generating...";
 
-      if (type === "youtube") result = makeYoutube(topic);
-      if (type === "instagram") result = makeInstagram(topic);
-      if (type === "hooks") result = makeHooks(topic);
-      if (type === "thumb") result = makeThumb(topic);
-      if (type === "seo") result = makeSeo(topic);
-      if (type === "money") result = makeMoney(topic);
+      try {
+        const res = await fetch("/api/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            topic,
+            mode
+          })
+        });
 
-      set("output", result);
+        const data = await res.json();
 
-      await updateDoc(userRef, {
-        earnings: increment(5)
-      });
+        if (data.success) {
+          outputBox.innerText = data.result;
 
-      await ensureUserDoc();
-      set("statusBox", "AI generated. Earnings +5 added.");
+          await updateDoc(userRef, {
+            earnings: increment(5)
+          });
+
+          await ensureUserDoc();
+          set("statusBox", "AI generated. Earnings +5 added.");
+        } else {
+          outputBox.innerText = "❌ " + (data.error || "Failed");
+          set("statusBox", "AI generation failed.");
+        }
+      } catch (err) {
+        outputBox.innerText = "⚠️ Server error";
+        set("statusBox", "Server error.");
+      }
     };
 
     window.requestWithdraw = async () => {
