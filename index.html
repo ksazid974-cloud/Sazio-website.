@@ -1,112 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SAZIO X MASTER - Phase 2+3</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sazio AI Login</title>
   <style>
-    body{
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background:#000;
-      color:#fff;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      min-height:100vh;
-      margin:0;
-      padding:20px;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
     }
-    .card{
-      background:#111;
-      padding:30px;
-      border-radius:20px;
-      width:320px;
-      text-align:center;
-      box-sizing:border-box;
+
+    .card {
+      width: 100%;
+      max-width: 390px;
+      background: #111;
+      border-radius: 22px;
+      padding: 24px 18px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255,255,255,0.04);
     }
-    input{
-      width:100%;
-      padding:12px;
-      margin-top:10px;
-      border-radius:10px;
-      border:none;
-      box-sizing:border-box;
+
+    .brand {
+      font-size: 13px;
+      color: #bdbdbd;
+      line-height: 1.5;
+      margin-bottom: 10px;
     }
-    button{
-      margin-top:15px;
-      padding:12px;
-      width:48%;
-      border:none;
-      border-radius:10px;
-      cursor:pointer;
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: 24px;
+      line-height: 1.35;
     }
-    .signup{background:#ff5c5c;color:#fff;}
-    .login{background:#333;color:#fff;}
-    .logout{
-      background:#eee;
-      color:#111;
-      width:100%;
-      margin-top:20px;
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      margin-top: 12px;
+      font-size: 15px;
+      outline: none;
     }
-    .output{
-      margin-top:15px;
-      line-height:1.6;
-      white-space:pre-wrap;
-      word-break:break-word;
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
     }
-    #dashboard{
-      display:none;
-      text-align:center;
-      color:#fff;
-      width:320px;
+
+    button {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
     }
-    #dashboard h2{
-      font-size:28px;
-      margin-bottom:10px;
-    }
-    #dashboard p{
-      font-size:15px;
-      margin:10px 0;
-      line-height:1.6;
-      word-break:break-word;
+
+    .signup { background: #ff5c5c; color: #fff; }
+    .login { background: #333; color: #fff; }
+
+    .box {
+      background: #181818;
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 14px;
+      text-align: left;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.6;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
+  <div class="card">
+    <div class="brand">
+      Sazio — The Fastest & Most Powerful AI to Create, Grow & Earn 🚀
+    </div>
 
-  <div class="card" id="authCard">
-    <h2>SAZIO LOGIN</h2>
+    <h1>Welcome to Sazio AI</h1>
 
-    <input id="authName" type="text" placeholder="Full Name">
-    <input id="authEmail" type="email" placeholder="Email">
-    <input id="authPassword" type="password" placeholder="Password">
+    <input id="name" type="text" placeholder="Full Name" />
+    <input id="email" type="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Password" />
 
-    <div>
+    <div class="btn-row">
       <button class="signup" onclick="signup()">Signup</button>
       <button class="login" onclick="login()">Login</button>
     </div>
 
-    <div class="output" id="authOutput">Ready...</div>
-  </div>
-
-  <div id="dashboard">
-    <h2 id="welcomeTitle">Welcome Dashboard 🚀</h2>
-    <p id="userName"></p>
-    <p id="userEmail"></p>
-    <p id="userUid"></p>
-    <p id="userClicks"></p>
-    <p id="userEarnings"></p>
-    <button class="logout" onclick="logout()">Logout</button>
+    <div class="box" id="statusBox">Ready...</div>
   </div>
 
   <script type="module">
     import { auth, db } from "./firebase-config.js";
     import {
+      onAuthStateChanged,
       createUserWithEmailAndPassword,
       signInWithEmailAndPassword,
-      onAuthStateChanged,
-      signOut,
-      updateProfile
+      updateProfile,
+      setPersistence,
+      browserLocalPersistence
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import {
       doc,
@@ -114,123 +120,137 @@
       getDoc
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    function showDashboard(user, profileData = null){
-      document.getElementById('dashboard').style.display = 'block';
-      document.getElementById('authCard').style.display = 'none';
+    const statusBox = document.getElementById("statusBox");
 
-      const finalName = profileData?.name || user.displayName || "Not set";
-      const finalEmail = profileData?.email || user.email || "Not set";
-      const finalClicks = profileData?.clicks ?? 0;
-      const finalEarnings = profileData?.earnings ?? 0;
-
-      document.getElementById('welcomeTitle').textContent = "Welcome " + finalName + " 🚀";
-      document.getElementById('userName').textContent = "Name: " + finalName;
-      document.getElementById('userEmail').textContent = "Email: " + finalEmail;
-      document.getElementById('userUid').textContent = "UID: " + user.uid;
-      document.getElementById('userClicks').textContent = "Clicks: " + finalClicks;
-      document.getElementById('userEarnings').textContent = "Earnings: " + finalEarnings;
+    function setStatus(text) {
+      statusBox.innerText = text;
     }
 
-    function showLogin(){
-      document.getElementById('dashboard').style.display = 'none';
-      document.getElementById('authCard').style.display = 'block';
+    async function enablePersistence() {
+      await setPersistence(auth, browserLocalPersistence);
     }
 
-    async function loadUserProfile(user){
-      try {
-        const userRef = doc(db, "users", user.uid);
-        const snap = await getDoc(userRef);
+    function getSavedRef() {
+      const params = new URLSearchParams(window.location.search);
+      const ref = params.get("ref");
 
-        if (snap.exists()) {
-          showDashboard(user, snap.data());
-        } else {
-          const fallbackData = {
-            name: user.displayName || "Not set",
-            email: user.email || "",
-            uid: user.uid,
-            clicks: 0,
-            earnings: 0,
-            createdAt: new Date().toISOString()
-          };
+      if (ref) {
+        localStorage.setItem("sazio_ref", ref);
+        return ref;
+      }
 
-          await setDoc(userRef, fallbackData);
-          showDashboard(user, fallbackData);
-        }
-      } catch (error) {
-        document.getElementById('authOutput').textContent = error.message;
-        showDashboard(user, null);
+      return localStorage.getItem("sazio_ref");
+    }
+
+    function makeDashboardUrl() {
+      const savedRef = getSavedRef();
+
+      if (savedRef) {
+        return "./dashboard.html?ref=" + encodeURIComponent(savedRef) + "&v=" + Date.now();
+      }
+
+      return "./dashboard.html?v=" + Date.now();
+    }
+
+    async function ensureUserDoc(user, fallbackName = "Sazio") {
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
+
+      if (!snap.exists()) {
+        await setDoc(userRef, {
+          name: user.displayName || fallbackName,
+          email: user.email || "",
+          uid: user.uid,
+          clicks: 0,
+          earnings: 0,
+          streak: 0,
+          subscription: "Free",
+          createdAt: new Date().toISOString()
+        });
+        return;
+      }
+
+      const data = snap.data();
+      if (!data.name) {
+        await setDoc(userRef, {
+          ...data,
+          name: user.displayName || fallbackName
+        });
       }
     }
-
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        await loadUserProfile(user);
-      } else {
-        showLogin();
-      }
-    });
 
     window.signup = async () => {
-      const name = document.getElementById('authName').value.trim();
-      const email = document.getElementById('authEmail').value.trim();
-      const password = document.getElementById('authPassword').value.trim();
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
 
-      if(!name || !email || !password){
-        document.getElementById('authOutput').textContent = "Fill all fields";
+      if (!name || !email || !password) {
+        setStatus("Please fill all fields.");
         return;
       }
 
       try {
-        document.getElementById('authOutput').textContent = "Signing up...";
-        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        setStatus("Creating account...");
+        await enablePersistence();
+        getSavedRef();
 
-        await updateProfile(userCred.user, {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+
+        await updateProfile(cred.user, {
           displayName: name
         });
 
-        await setDoc(doc(db, "users", userCred.user.uid), {
-          name: name,
-          email: email,
-          uid: userCred.user.uid,
+        await setDoc(doc(db, "users", cred.user.uid), {
+          name,
+          email,
+          uid: cred.user.uid,
           clicks: 0,
           earnings: 0,
+          streak: 0,
+          subscription: "Free",
           createdAt: new Date().toISOString()
         });
 
-        document.getElementById('authOutput').textContent = "Signup successful ✅";
+        setStatus("Signup successful. Redirecting...");
+        window.location.href = makeDashboardUrl();
       } catch (error) {
-        document.getElementById('authOutput').textContent = error.message;
+        setStatus(error.message);
       }
     };
 
     window.login = async () => {
-      const email = document.getElementById('authEmail').value.trim();
-      const password = document.getElementById('authPassword').value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
 
-      if(!email || !password){
-        document.getElementById('authOutput').textContent = "Fill email & password";
+      if (!email || !password) {
+        setStatus("Please enter email and password.");
         return;
       }
 
       try {
-        document.getElementById('authOutput').textContent = "Logging in...";
-        await signInWithEmailAndPassword(auth, email, password);
-        document.getElementById('authOutput').textContent = "Login successful 🚀";
+        setStatus("Logging in...");
+        await enablePersistence();
+        getSavedRef();
+
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        await ensureUserDoc(cred.user);
+
+        setStatus("Login successful. Redirecting...");
+        window.location.href = makeDashboardUrl();
       } catch (error) {
-        document.getElementById('authOutput').textContent = error.message;
+        setStatus(error.message);
       }
     };
 
-    window.logout = async () => {
-      try {
-        await signOut(auth);
-        document.getElementById('authOutput').textContent = "Logged out ✅";
-      } catch (error) {
-        document.getElementById('authOutput').textContent = error.message;
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        await enablePersistence();
+        window.location.href = makeDashboardUrl();
+      } else {
+        getSavedRef();
+        setStatus("Ready...");
       }
-    };
+    });
   </script>
-
 </body>
 </html>
-
